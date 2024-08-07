@@ -81,7 +81,7 @@ All files part of a `MODO` can be listed:
 :::{tab-item} python
 :sync: python
 ```{code-block} python
-[fi for fi in modo.list_files()]
+modo.list_files()
 # [PosixPath('data/ex/reference1.fa'), PosixPath('data/ex/demo1.cram')]
 ```
 :::
