@@ -284,6 +284,13 @@ def add(
 def show(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
+    element_id: Annotated[
+        Optional[str],
+        typer.Argument(
+            ...,
+            help="The identifier within the modo. Use modos show to check it.",
+        ),
+    ] = None,
     zarr: Annotated[
         bool,
         typer.Option(
@@ -310,11 +317,12 @@ def show(
     else:
         raise ValueError(f"{object_path} does not exists")
     if zarr:
-        out = obj.list_arrays()
+        out = obj.list_arrays(element_id)
     elif files:
         out = "\n".join([str(path) for path in obj.list_files()])
     else:
-        out = obj.show_contents()
+        out = obj.show_contents(element_id)
+
     print(out)
 
 

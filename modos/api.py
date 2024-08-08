@@ -176,9 +176,11 @@ class MODO:
         kg = attrs_to_graph(self.metadata, uri_prefix=uri_prefix)
         return kg
 
-    def show_contents(self):
+    def show_contents(self, element_id: Optional[str] = None):
         """human-readable print of the object's contents"""
         meta = self.metadata
+        if element_id:
+            meta = {element_id: meta[element_id]}
         # Pretty print metadata contents as yaml
 
         return yaml.dump(meta, sort_keys=False)
@@ -187,10 +189,10 @@ class MODO:
         """Lists files in the archive recursively (except for the zarr file)."""
         return [fi for fi in self.storage.list()]
 
-    def list_arrays(self):
+    def list_arrays(self, element_id: Optional[str] = None):
         """Lists arrays in the archive recursively."""
         root = zarr.convenience.open_consolidated(self.zarr.store)
-        return root.tree()
+        return root[element_id or "/"].tree()
 
     def query(self, query: str):
         """Use SPARQL to query the metadata graph"""
