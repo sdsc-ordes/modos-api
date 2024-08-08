@@ -111,11 +111,11 @@ For advanced use cases, the object's metadata can be queried with SPARQL!
 >>> ex.query("""
 ...   SELECT ?assay ?sample ?file
 ...   WHERE {
-...     [] schema1:name ?assay ;
+...     [] schema:name ?assay ;
 ...       modos:has_data [
 ...         modos:data_path ?file ;
 ...         modos:has_sample [
-...           schema1:name ?sample ;
+...           schema:name ?sample ;
 ...           modos:sex ?sex .
 ...         ]
 ...       ] .

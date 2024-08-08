@@ -120,12 +120,12 @@ modos publish --base-uri "http://demo-data" "data/ex"
 # @prefix EDAM: <http://edamontology.org/> .
 # @prefix NCIT: <http://purl.obolibrary.org/obo/NCIT_> .
 # @prefix modos: <https://w3id.org/sdsc-ordes/modos-schema/> .
-# @prefix schema1: <http://schema.org/> .
+# @prefix schema: <http://schema.org/> .
 # @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 #
 # <http://demo-data/assay/assay1> a modos:Assay ;
-#     schema1:description "Dummy assay for tests." ;
-#     schema1:name "Assay 1" ;
+#     schema:description "Dummy assay for tests." ;
+#     schema:name "Assay 1" ;
 #     modos:has_data <http://demo-data/demo1> ;
 #     modos:has_sample <http://demo-data/sample1> ;
 #     modos:omics_type NCIT:C84343 .

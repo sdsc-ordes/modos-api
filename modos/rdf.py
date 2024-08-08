@@ -16,7 +16,7 @@ def attrs_to_graph(meta: dict, uri_prefix: str) -> rdflib.Graph:
     """Convert a attribute dictionary to an RDF graph of metadata."""
     kg = rdflib.Graph()
     for prefix in load_prefixmap().values():
-        kg.bind(prefix.prefix_prefix, prefix.prefix_reference)
+        kg.bind(prefix.prefix_prefix, prefix.prefix_reference, replace=True)
 
     # Assuming the dict is flat, i.e. all subjects are top level
     for subject, attrs in meta.items():
