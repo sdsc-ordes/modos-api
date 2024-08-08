@@ -1,0 +1,1864 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; modos-api 0.2.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="_static/documentation_options.js?v=37f418d5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/modos.png" class="logo__image only-light" alt="modos-api 0.2.1 documentation - Home"/>
+    <script>document.write(`<img src="_static/modos.png" class="logo__image only-dark" alt="modos-api 0.2.1 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="intro/background.html">
+    Background
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+            <li class="nav-item dropdown pst-header-nav-item">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class="nav-item ">
+  <a class="nav-link dropdown-item nav-internal" href="changelog-link.html">
+    Release notes
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="intro/background.html">
+    Background
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="changelog-link.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#Symbols"><strong>Symbols</strong></a>
+ | <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
+ 
+</div>
+<h2 id="Symbols">Symbols</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    --base-uri
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-publish-base-uri">modo-publish command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --config
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-update-c">modo-update command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --element
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-e">modo-add command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --endpoint
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-endpoint">modo command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --files
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-show-f">modo-show command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --force
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-remove-f">modo-remove command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --from-file
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-f">modo-add command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-create-f">modo-create command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --meta
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-create-m">modo-create command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --no-remove
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-update-n">modo-update command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --output-format
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-publish-output-format">modo-publish command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --parent
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-p">modo-add command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --region
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-stream-r">modo-stream command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --source-file
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-s">modo-add command line option</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    --version
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-version">modo command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --zarr
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-show-z">modo-show command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -c
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-update-c">modo-update command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -e
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-e">modo-add command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -f
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-f">modo-add command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-create-f">modo-create command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-remove-f">modo-remove command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-show-f">modo-show command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -m
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-create-m">modo-create command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -n
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-update-n">modo-update command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -p
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-p">modo-add command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -r
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-stream-r">modo-stream command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -s
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-s">modo-add command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -z
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-show-z">modo-show command line option</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget._HtsgetBlockIter.__iter__">__iter__() (modos.genomics.htsget._HtsgetBlockIter method)</a>
+</li>
+      <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget._HtsgetBlockIter.__next__">__next__() (modos.genomics.htsget._HtsgetBlockIter method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.__post_init__">__post_init__() (modos.api.Region method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.__post_init__">(modos.genomics.cram.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.__post_init__">(modos.genomics.formats.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.__post_init__">(modos.genomics.htsget.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.__post_init__">(modos.genomics.region.Region method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/index.html#modos.__version__">__version__ (in module modos)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO._add_any_element">_add_any_element() (modos.api.MODO method)</a>
+</li>
+      <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget._HtsgetBlockIter._consume_block">_consume_block() (modos.genomics.htsget._HtsgetBlockIter method)</a>
+</li>
+      <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget._HtsgetBlockIter">_HtsgetBlockIter (class in modos.genomics.htsget)</a>
+</li>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Path._s3_pattern">_s3_pattern (modos.storage.S3Path attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.add_data">add_data() (in module modos.storage)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.add_element">add_element() (modos.api.MODO method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.add_metadata_group">add_metadata_group() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.add_metadata_group">(in module modos.storage)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.ElementType.ASSAY">ASSAY (modos.api.ElementType attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.UserElementType.ASSAY">(modos.api.UserElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.ElementType.ASSAY">(modos.helpers.schema.ElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.UserElementType.ASSAY">(modos.helpers.schema.UserElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.ElementType.ASSAY">(modos.storage.ElementType attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.attrs_to_graph">attrs_to_graph() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/rdf/index.html#modos.rdf.attrs_to_graph">(in module modos.rdf)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.BAM">BAM (modos.api.GenomicFileSuffix attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.BAM">(modos.genomics.formats.GenomicFileSuffix attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.BAM">(modos.genomics.htsget.GenomicFileSuffix attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.BCF">BCF (modos.api.GenomicFileSuffix attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.BCF">(modos.genomics.formats.GenomicFileSuffix attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.BCF">(modos.genomics.htsget.GenomicFileSuffix attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Path.bucket">bucket (modos.storage.S3Path property)</a>
+</li>
+      <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.build_htsget_url">build_htsget_url() (in module modos.genomics.htsget)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.chrom">chrom (modos.api.Region attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.chrom">(modos.genomics.cram.Region attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.chrom">(modos.genomics.formats.Region attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.chrom">(modos.genomics.htsget.Region attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.chrom">(modos.genomics.region.Region attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.class_from_name">class_from_name() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.class_from_name">(in module modos.helpers.schema)</a>
+</li>
+        <li><a href="autoapi/modos/rdf/index.html#modos.rdf.class_from_name">(in module modos.rdf)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.connect_s3">connect_s3() (in module modos.storage)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.contains">contains() (modos.api.Region method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.contains">(modos.genomics.cram.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.contains">(modos.genomics.formats.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.contains">(modos.genomics.htsget.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.contains">(modos.genomics.region.Region method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.CRAM">CRAM (modos.api.GenomicFileSuffix attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.CRAM">(modos.genomics.formats.GenomicFileSuffix attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.CRAM">(modos.genomics.htsget.GenomicFileSuffix attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.create_sequence_id">create_sequence_id() (in module modos.genomics.cram)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.ElementType.DATA_ENTITY">DATA_ENTITY (modos.api.ElementType attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.UserElementType.DATA_ENTITY">(modos.api.UserElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.ElementType.DATA_ENTITY">(modos.helpers.schema.ElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.UserElementType.DATA_ENTITY">(modos.helpers.schema.UserElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.ElementType.DATA_ENTITY">(modos.storage.ElementType attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.dict_to_instance">dict_to_instance() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.dict_to_instance">(in module modos.helpers.schema)</a>
+</li>
+        <li><a href="autoapi/modos/io/index.html#modos.io.dict_to_instance">(in module modos.io)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    ELEMENT_ID
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-remove-arg-ELEMENT_ID">modo-remove command line option</a>
+</li>
+      </ul></li>
+      <li>
+    ELEMENT_TYPE
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-arg-ELEMENT_TYPE">modo-add command line option</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.ElementType">ElementType (class in modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.ElementType">(class in modos.helpers.schema)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.ElementType">(class in modos.storage)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.Storage.empty">empty() (modos.storage.Storage method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.end">end (modos.api.Region attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.end">(modos.genomics.cram.Region attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.end">(modos.genomics.formats.Region attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.end">(modos.genomics.htsget.Region attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.end">(modos.genomics.region.Region attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.endpoint">endpoint (modos.api.MODO attribute)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.EndpointManager">EndpointManager (class in modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/remote/index.html#modos.remote.EndpointManager">(class in modos.remote)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.enrich_metadata">enrich_metadata() (modos.api.MODO method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.LocalStorage.exists">exists() (modos.api.LocalStorage method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.S3Storage.exists">(modos.api.S3Storage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.LocalStorage.exists">(modos.storage.LocalStorage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Storage.exists">(modos.storage.S3Storage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.Storage.exists">(modos.storage.Storage method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/io/index.html#modos.io.ext2loader">ext2loader (in module modos.io)</a>
+</li>
+      <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.extract_cram_metadata">extract_cram_metadata() (in module modos.genomics.cram)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/io/index.html#modos.io.extract_cram_metadata">(in module modos.io)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.extract_metadata">extract_metadata() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/io/index.html#modos.io.extract_metadata">(in module modos.io)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.FASTA">FASTA (modos.api.GenomicFileSuffix attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.FASTA">(modos.genomics.formats.GenomicFileSuffix attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.FASTA">(modos.genomics.htsget.GenomicFileSuffix attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.FASTQ">FASTQ (modos.api.GenomicFileSuffix attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.FASTQ">(modos.genomics.formats.GenomicFileSuffix attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.FASTQ">(modos.genomics.htsget.GenomicFileSuffix attribute)</a>
+</li>
+      </ul></li>
+      <li>
+    FILE_PATH
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-stream-arg-FILE_PATH">modo-stream command line option</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.from_file">from_file() (modos.api.MODO class method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.from_htsget_query">from_htsget_query() (modos.api.Region class method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.from_htsget_query">(modos.genomics.cram.Region class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.from_htsget_query">(modos.genomics.formats.Region class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.from_htsget_query">(modos.genomics.htsget.Region class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.from_htsget_query">(modos.genomics.region.Region class method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.ElementType.from_model_name">from_model_name() (modos.api.ElementType class method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.ElementType.from_model_name">(modos.helpers.schema.ElementType class method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.ElementType.from_model_name">(modos.storage.ElementType class method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.ElementType.from_object">from_object() (modos.api.ElementType class method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.UserElementType.from_object">(modos.api.UserElementType class method)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.ElementType.from_object">(modos.helpers.schema.ElementType class method)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.UserElementType.from_object">(modos.helpers.schema.UserElementType class method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.ElementType.from_object">(modos.storage.ElementType class method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.from_path">from_path() (modos.api.GenomicFileSuffix class method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.from_path">(modos.genomics.formats.GenomicFileSuffix class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.from_path">(modos.genomics.htsget.GenomicFileSuffix class method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.from_pysam">from_pysam() (modos.api.Region class method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.from_pysam">(modos.genomics.cram.Region class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.from_pysam">(modos.genomics.formats.Region class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.from_pysam">(modos.genomics.htsget.Region class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.from_pysam">(modos.genomics.region.Region class method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.from_ucsc">from_ucsc() (modos.api.Region class method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.from_ucsc">(modos.genomics.cram.Region class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.from_ucsc">(modos.genomics.formats.Region class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.from_ucsc">(modos.genomics.htsget.Region class method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.from_ucsc">(modos.genomics.region.Region class method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection.from_url">from_url() (modos.api.HtsgetConnection class method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection.from_url">(modos.genomics.htsget.HtsgetConnection class method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix">GenomicFileSuffix (class in modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix">(class in modos.genomics.formats)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix">(class in modos.genomics.htsget)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.get_enum_values">get_enum_values() (in module modos.helpers.schema)</a>
+</li>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.get_haspart_property">get_haspart_property() (in module modos.helpers.schema)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.get_index_suffix">get_index_suffix() (modos.api.GenomicFileSuffix method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.get_index_suffix">(modos.genomics.formats.GenomicFileSuffix method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.get_index_suffix">(modos.genomics.htsget.GenomicFileSuffix method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/io/index.html#modos.io.get_loader">get_loader() (in module modos.io)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/remote/index.html#modos.remote.get_metadata_from_remote">get_metadata_from_remote() (in module modos.remote)</a>
+</li>
+      <li><a href="autoapi/modos/remote/index.html#modos.remote.get_s3_path">get_s3_path() (in module modos.remote)</a>
+</li>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.get_slot_range">get_slot_range() (in module modos.helpers.schema)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/rdf/index.html#modos.rdf.get_slot_range">(in module modos.rdf)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.get_slots">get_slots() (in module modos.helpers.schema)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.ElementType.get_target_class">get_target_class() (modos.api.ElementType method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.UserElementType.get_target_class">(modos.api.UserElementType method)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.ElementType.get_target_class">(modos.helpers.schema.ElementType method)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.UserElementType.get_target_class">(modos.helpers.schema.UserElementType method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.ElementType.get_target_class">(modos.storage.ElementType method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection.host">host (modos.api.HtsgetConnection attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection.host">(modos.genomics.htsget.HtsgetConnection attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.EndpointManager.htsget">htsget (modos.api.EndpointManager property)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/remote/index.html#modos.remote.EndpointManager.htsget">(modos.remote.EndpointManager property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection">HtsgetConnection (class in modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection">(class in modos.genomics.htsget)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetStream">HtsgetStream (class in modos.genomics.htsget)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.init_zarr">init_zarr() (in module modos.storage)</a>
+</li>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.instance_to_graph">instance_to_graph() (in module modos.helpers.schema)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/rdf/index.html#modos.rdf.instance_to_graph">(in module modos.rdf)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.is_full_id">is_full_id() (in module modos.helpers.schema)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.is_s3_path">is_s3_path() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/remote/index.html#modos.remote.is_s3_path">(in module modos.remote)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.is_uri">is_uri() (in module modos.helpers.schema)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/rdf/index.html#modos.rdf.is_uri">(in module modos.rdf)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Path.key">key (modos.storage.S3Path property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.knowledge_graph">knowledge_graph() (modos.api.MODO method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.EndpointManager.list">list() (modos.api.EndpointManager method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.LocalStorage.list">(modos.api.LocalStorage method)</a>
+</li>
+        <li><a href="autoapi/modos/api/index.html#modos.api.S3Storage.list">(modos.api.S3Storage method)</a>
+</li>
+        <li><a href="autoapi/modos/remote/index.html#modos.remote.EndpointManager.list">(modos.remote.EndpointManager method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.LocalStorage.list">(modos.storage.LocalStorage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Storage.list">(modos.storage.S3Storage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.Storage.list">(modos.storage.Storage method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.list_arrays">list_arrays() (modos.api.MODO method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.list_files">list_files() (modos.api.MODO method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/remote/index.html#modos.remote.list_remote_items">list_remote_items() (in module modos.remote)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.list_samples">list_samples() (modos.api.MODO method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.list_zarr_items">list_zarr_items() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.list_zarr_items">(in module modos.storage)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.load_prefixmap">load_prefixmap() (in module modos.helpers.schema)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/rdf/index.html#modos.rdf.load_prefixmap">(in module modos.rdf)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.load_schema">load_schema() (in module modos.helpers.schema)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/rdf/index.html#modos.rdf.load_schema">(in module modos.rdf)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.LocalStorage">LocalStorage (class in modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.LocalStorage">(class in modos.storage)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.metadata">metadata (modos.api.MODO property)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO">MODO (class in modos.api)</a>
+</li>
+      <li>
+    modo command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-endpoint">--endpoint</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-version">--version</a>
+</li>
+      </ul></li>
+      <li>
+    modo-add command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-e">--element</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-add-f">--from-file</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-add-p">--parent</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-add-s">--source-file</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-add-e">-e</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-add-f">-f</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-add-p">-p</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-add-s">-s</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-add-arg-ELEMENT_TYPE">ELEMENT_TYPE</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-add-arg-OBJECT_PATH">OBJECT_PATH</a>
+</li>
+      </ul></li>
+      <li>
+    modo-create command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-create-f">--from-file</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-create-m">--meta</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-create-f">-f</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-create-m">-m</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-create-arg-OBJECT_PATH">OBJECT_PATH</a>
+</li>
+      </ul></li>
+      <li>
+    modo-publish command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-publish-base-uri">--base-uri</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-publish-output-format">--output-format</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-publish-arg-OBJECT_PATH">OBJECT_PATH</a>
+</li>
+      </ul></li>
+      <li>
+    modo-remove command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-remove-f">--force</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-remove-f">-f</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-remove-arg-ELEMENT_ID">ELEMENT_ID</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-remove-arg-OBJECT_PATH">OBJECT_PATH</a>
+</li>
+      </ul></li>
+      <li>
+    modo-show command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-show-f">--files</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-show-z">--zarr</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-show-f">-f</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-show-z">-z</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-show-arg-OBJECT_PATH">OBJECT_PATH</a>
+</li>
+      </ul></li>
+      <li>
+    modo-stream command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-stream-r">--region</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-stream-r">-r</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-stream-arg-FILE_PATH">FILE_PATH</a>
+</li>
+      </ul></li>
+      <li>
+    modo-update command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-update-c">--config</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-update-n">--no-remove</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-update-c">-c</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-update-n">-n</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-update-arg-OBJECT_PATH">OBJECT_PATH</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    modos
+
+      <ul>
+        <li><a href="autoapi/modos/index.html#module-modos">module</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.EndpointManager.modos">modos (modos.api.EndpointManager attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/remote/index.html#modos.remote.EndpointManager.modos">(modos.remote.EndpointManager attribute)</a>
+</li>
+      </ul></li>
+      <li>
+    modos.api
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#module-modos.api">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.genomics
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/index.html#module-modos.genomics">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.genomics.cram
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#module-modos.genomics.cram">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.genomics.formats
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#module-modos.genomics.formats">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.genomics.htsget
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#module-modos.genomics.htsget">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.genomics.region
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/region/index.html#module-modos.genomics.region">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.helpers
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/index.html#module-modos.helpers">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.helpers.schema
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#module-modos.helpers.schema">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.io
+
+      <ul>
+        <li><a href="autoapi/modos/io/index.html#module-modos.io">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.rdf
+
+      <ul>
+        <li><a href="autoapi/modos/rdf/index.html#module-modos.rdf">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.remote
+
+      <ul>
+        <li><a href="autoapi/modos/remote/index.html#module-modos.remote">module</a>
+</li>
+      </ul></li>
+      <li>
+    modos.storage
+
+      <ul>
+        <li><a href="autoapi/modos/storage/index.html#module-modos.storage">module</a>
+</li>
+      </ul></li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="autoapi/modos/index.html#module-modos">modos</a>
+</li>
+        <li><a href="autoapi/modos/api/index.html#module-modos.api">modos.api</a>
+</li>
+        <li><a href="autoapi/modos/genomics/index.html#module-modos.genomics">modos.genomics</a>
+</li>
+        <li><a href="autoapi/modos/genomics/cram/index.html#module-modos.genomics.cram">modos.genomics.cram</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#module-modos.genomics.formats">modos.genomics.formats</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#module-modos.genomics.htsget">modos.genomics.htsget</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#module-modos.genomics.region">modos.genomics.region</a>
+</li>
+        <li><a href="autoapi/modos/helpers/index.html#module-modos.helpers">modos.helpers</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#module-modos.helpers.schema">modos.helpers.schema</a>
+</li>
+        <li><a href="autoapi/modos/io/index.html#module-modos.io">modos.io</a>
+</li>
+        <li><a href="autoapi/modos/rdf/index.html#module-modos.rdf">modos.rdf</a>
+</li>
+        <li><a href="autoapi/modos/remote/index.html#module-modos.remote">modos.remote</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#module-modos.storage">modos.storage</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    OBJECT_PATH
+
+      <ul>
+        <li><a href="cli.html#cmdoption-modo-add-arg-OBJECT_PATH">modo-add command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-create-arg-OBJECT_PATH">modo-create command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-publish-arg-OBJECT_PATH">modo-publish command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-remove-arg-OBJECT_PATH">modo-remove command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-show-arg-OBJECT_PATH">modo-show command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-modo-update-arg-OBJECT_PATH">modo-update command line option</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection.open">open() (modos.api.HtsgetConnection method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection.open">(modos.genomics.htsget.HtsgetConnection method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.overlaps">overlaps() (modos.api.Region method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.overlaps">(modos.genomics.cram.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.overlaps">(modos.genomics.formats.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.overlaps">(modos.genomics.htsget.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.overlaps">(modos.genomics.region.Region method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.parse_attributes">parse_attributes() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/io/index.html#modos.io.parse_attributes">(in module modos.io)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.parse_htsget_url">parse_htsget_url() (in module modos.genomics.htsget)</a>
+</li>
+      <li><a href="autoapi/modos/io/index.html#modos.io.parse_instance">parse_instance() (in module modos.io)</a>
+</li>
+      <li><a href="autoapi/modos/io/index.html#modos.io.parse_multiple_instances">parse_multiple_instances() (in module modos.io)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection.path">path (modos.api.HtsgetConnection attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.LocalStorage.path">(modos.api.LocalStorage property)</a>
+</li>
+        <li><a href="autoapi/modos/api/index.html#modos.api.MODO.path">(modos.api.MODO property)</a>
+</li>
+        <li><a href="autoapi/modos/api/index.html#modos.api.S3Storage.path">(modos.api.S3Storage property)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection.path">(modos.genomics.htsget.HtsgetConnection attribute)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.LocalStorage.path">(modos.storage.LocalStorage property)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Storage.path">(modos.storage.S3Storage property)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.Storage.path">(modos.storage.Storage property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.LocalStorage.put">put() (modos.api.LocalStorage method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.S3Storage.put">(modos.api.S3Storage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.LocalStorage.put">(modos.storage.LocalStorage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Storage.put">(modos.storage.S3Storage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.Storage.put">(modos.storage.Storage method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.query">query() (modos.api.MODO method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.read_pysam">read_pysam() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.read_pysam">(in module modos.genomics.formats)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.read_pysam">(in module modos.genomics.htsget)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetStream.readable">readable() (modos.genomics.htsget.HtsgetStream method)</a>
+</li>
+      <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetStream.readinto">readinto() (modos.genomics.htsget.HtsgetStream method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.ElementType.REFERENCE_GENOME">REFERENCE_GENOME (modos.api.ElementType attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.UserElementType.REFERENCE_GENOME">(modos.api.UserElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.ElementType.REFERENCE_GENOME">(modos.helpers.schema.ElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.UserElementType.REFERENCE_GENOME">(modos.helpers.schema.UserElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.ElementType.REFERENCE_GENOME">(modos.storage.ElementType attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.ElementType.REFERENCE_SEQUENCE">REFERENCE_SEQUENCE (modos.api.ElementType attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.ElementType.REFERENCE_SEQUENCE">(modos.helpers.schema.ElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.ElementType.REFERENCE_SEQUENCE">(modos.storage.ElementType attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region">Region (class in modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region">(class in modos.genomics.cram)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region">(class in modos.genomics.formats)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region">(class in modos.genomics.htsget)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region">(class in modos.genomics.region)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection.region">region (modos.api.HtsgetConnection attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection.region">(modos.genomics.htsget.HtsgetConnection attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.LocalStorage.remove">remove() (modos.api.LocalStorage method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.S3Storage.remove">(modos.api.S3Storage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.LocalStorage.remove">(modos.storage.LocalStorage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Storage.remove">(modos.storage.S3Storage method)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.Storage.remove">(modos.storage.Storage method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.remove_element">remove_element() (modos.api.MODO method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.remove_object">remove_object() (modos.api.MODO method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.EndpointManager.s3">s3 (modos.api.EndpointManager property)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/remote/index.html#modos.remote.EndpointManager.s3">(modos.remote.EndpointManager property)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.S3_ADDRESSING_STYLE">S3_ADDRESSING_STYLE (in module modos.storage)</a>
+</li>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Path.s3_url_parts">s3_url_parts() (modos.storage.S3Path method)</a>
+</li>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Path">S3Path (class in modos.storage)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.S3Storage">S3Storage (class in modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Storage">(class in modos.storage)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.SAM">SAM (modos.api.GenomicFileSuffix attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.SAM">(modos.genomics.formats.GenomicFileSuffix attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.SAM">(modos.genomics.htsget.GenomicFileSuffix attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.ElementType.SAMPLE">SAMPLE (modos.api.ElementType attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.UserElementType.SAMPLE">(modos.api.UserElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.ElementType.SAMPLE">(modos.helpers.schema.ElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.UserElementType.SAMPLE">(modos.helpers.schema.UserElementType attribute)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.ElementType.SAMPLE">(modos.storage.ElementType attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.SCHEMA_PATH">SCHEMA_PATH (in module modos.helpers.schema)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.EndpointManager.services">services (modos.api.EndpointManager attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/remote/index.html#modos.remote.EndpointManager.services">(modos.remote.EndpointManager attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.set_data_path">set_data_path() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.set_data_path">(in module modos.helpers.schema)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.set_haspart_relationship">set_haspart_relationship() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.set_haspart_relationship">(in module modos.helpers.schema)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.show_contents">show_contents() (modos.api.MODO method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.start">start (modos.api.Region attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.start">(modos.genomics.cram.Region attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.start">(modos.genomics.formats.Region attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.start">(modos.genomics.htsget.Region attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.start">(modos.genomics.region.Region attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.Storage">Storage (class in modos.storage)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.storage">storage (modos.api.MODO attribute)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.stream_genomics">stream_genomics() (modos.api.MODO method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection.ticket">ticket() (modos.api.HtsgetConnection method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection.ticket">(modos.genomics.htsget.HtsgetConnection method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection.to_file">to_file() (modos.api.HtsgetConnection method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection.to_file">(modos.genomics.htsget.HtsgetConnection method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.to_htsget_endpoint">to_htsget_endpoint() (modos.api.GenomicFileSuffix method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.to_htsget_endpoint">(modos.genomics.formats.GenomicFileSuffix method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.to_htsget_endpoint">(modos.genomics.htsget.GenomicFileSuffix method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.to_htsget_query">to_htsget_query() (modos.api.Region method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.to_htsget_query">(modos.genomics.cram.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.to_htsget_query">(modos.genomics.formats.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.to_htsget_query">(modos.genomics.htsget.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.to_htsget_query">(modos.genomics.region.Region method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection.to_pysam">to_pysam() (modos.api.HtsgetConnection method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection.to_pysam">(modos.genomics.htsget.HtsgetConnection method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.Region.to_tuple">to_tuple() (modos.api.Region method)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.Region.to_tuple">(modos.genomics.cram.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.Region.to_tuple">(modos.genomics.formats.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.Region.to_tuple">(modos.genomics.htsget.Region method)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/region/index.html#modos.genomics.region.Region.to_tuple">(modos.genomics.region.Region method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.update_date">update_date() (modos.api.MODO method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.MODO.update_element">update_element() (modos.api.MODO method)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.update_haspart_id">update_haspart_id() (in module modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.update_haspart_id">(in module modos.helpers.schema)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.HtsgetConnection.url">url (modos.api.HtsgetConnection property)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.HtsgetConnection.url">(modos.genomics.htsget.HtsgetConnection property)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Path.url">(modos.storage.S3Path attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.UserElementType">UserElementType (class in modos.api)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/helpers/schema/index.html#modos.helpers.schema.UserElementType">(class in modos.helpers.schema)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/genomics/cram/index.html#modos.genomics.cram.validate_cram_files">validate_cram_files() (in module modos.genomics.cram)</a>
+</li>
+      <li><a href="autoapi/modos/api/index.html#modos.api.GenomicFileSuffix.VCF">VCF (modos.api.GenomicFileSuffix attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/genomics/formats/index.html#modos.genomics.formats.GenomicFileSuffix.VCF">(modos.genomics.formats.GenomicFileSuffix attribute)</a>
+</li>
+        <li><a href="autoapi/modos/genomics/htsget/index.html#modos.genomics.htsget.GenomicFileSuffix.VCF">(modos.genomics.htsget.GenomicFileSuffix attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/api/index.html#modos.api.LocalStorage.zarr">zarr (modos.api.LocalStorage property)</a>
+
+      <ul>
+        <li><a href="autoapi/modos/api/index.html#modos.api.MODO.zarr">(modos.api.MODO property)</a>
+</li>
+        <li><a href="autoapi/modos/api/index.html#modos.api.S3Storage.zarr">(modos.api.S3Storage property)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.LocalStorage.zarr">(modos.storage.LocalStorage property)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.S3Storage.zarr">(modos.storage.S3Storage property)</a>
+</li>
+        <li><a href="autoapi/modos/storage/index.html#modos.storage.Storage.zarr">(modos.storage.Storage property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/modos/storage/index.html#modos.storage.ZARR_ROOT">ZARR_ROOT (in module modos.storage)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, sdsc-ordes.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
