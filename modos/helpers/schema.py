@@ -252,11 +252,27 @@ def instance_to_graph(instance) -> Graph:
         p.prefix_prefix: URIRef(p.prefix_reference)
         for p in load_prefixmap().values()
     }
-    return rdflib_dumper.as_rdf_graph(
+    g = rdflib_dumper.as_rdf_graph(
         instance,
         prefix_map=prefixes,
         schemaview=load_schema(),
     )
+    # Patch schema -> http://schema.org (rdflib's default is https)
+    g.bind("schema", "http://schema.org/", replace=True)
+    try:
+        id_slot = (
+            load_schema().get_identifier_slot(type(instance).__name__).slot_uri
+        )
+        g.add(
+            (
+                URIRef(instance.id),
+                g.namespace_manager.expand_curie(str(id_slot)),
+                URIRef(instance.id),
+            )
+        )
+    except AttributeError:
+        pass
+    return g
 
 
 def get_slot_range(slot_name: str) -> str:
