@@ -55,7 +55,7 @@ Remotely stored `MODOs` can be intiantiated by specifiying their remote endpoint
 from modos.api import MODO
 
 # Load MODO from remote storage
-modo=MODO(path= 'modos-demo/ex', s3_endpoint = 'http://localhost/s3')
+modo=MODO(path= 's3://modos-demo/ex', endpoint = 'http://localhost')
 
 # All operations can be applied as if locally
 modo.metadata
@@ -67,7 +67,7 @@ modo.metadata
 :sync: cli
 ```{code-block} console
 # Interact with remotly stored MODO
-modos show -s3 "http://localhost/s3" modos-demo/ex
+modos --endpoint http://localhost show s3://modos-demo/ex
 # ex:
 #   '@type': MODO
 #   creation_date: '2024-02-19T00:00:00'
@@ -78,14 +78,25 @@ modos show -s3 "http://localhost/s3" modos-demo/ex
 
 ::::
 
+:::{warning}
+The __bucket name__ and the __endpoint url__ are specified separatly. The __bucket name__ is part of the `object_path` and needs to be written as s3 scheme followed by the `MODO`'s name (e.g. `s3://bucket_name/modo_name`), while the __endpoint url__ needs to be specified separately. Only paths that follow the s3 scheme will be considered as remote independent of `--endpoint` being specified or not.
+:::
+
 :::{note}
-The __bucket name__ and the __S3 endpoint url__ are specified separatly. The __bucket name__ is prepended to the `MODO`'s name in the same way as a local path, while the __S3 endpoint url__ needs to be specified specifically.
+To avoid repetition the endpoint can also be read from an ENVIRONMENT variable. The syntax then follows the same as for local objects, except that the `object_path` needs to be provided as s3 scheme:
+
+```{code-block} console
+export MODOS_ENDPOINT='http://localhost'
+modos create s3://bucket/object1
+modos show   s3://bucket/object1
+modos delete s3://bucket/object1
+```
 :::
 
 (generate_remote)=
 ## Generate and modify a MODO at a remote object store
 
-A `MODO` can be generated from scratch or from file in the same way as locally, by specifying the remote endpoint's url:
+A `MODO` can be generated from scratch or from file in the same way as locally, by specifying the remote endpoint's url or `MODOS_ENDPOINT`:
 
 ::::{tab-set}
 
@@ -99,7 +110,7 @@ from pathlib import Path
 config_ex = Path("path/to/ex.yaml")
 
 # Create a modo remotely
-modo = MODO.from_file(config_ex, "modos-demo/ex", s3_endpoint= "http://localhost/s3")
+modo = MODO.from_file(config_ex, "s3://modos-demo/ex", endpoint= "http://localhost")
 ```
 :::
 
@@ -107,12 +118,12 @@ modo = MODO.from_file(config_ex, "modos-demo/ex", s3_endpoint= "http://localhost
 :sync: cli
 ```{code-block} console
 # Create a modo from file remotely
-modos create -s3 "http://localhost/s3" ----from-file "path/to/ex.yaml" modos-demo/ex3
+modos create --endpoint "http://localhost" --from-file "path/to/ex.yaml" s3://modos-demo/ex3
 ```
 :::
 
 ::::
 
 :::{note}
-Similar to `MODO` creation, any other modifying functionality of the `modos-api`, (e.g.  `modos add`, `modos remove` or `MODO.add_element()`, `MODO.remove_element()`)can be performed on remotely stored objects by specifying the __S3 endpoint__ and __bucket name__ as path.
+Similar to `MODO` creation, any other modifying functionality of the `modos-api`, (e.g.  `modos add`, `modos remove` or `MODO.add_element()`, `MODO.remove_element()`) can be performed on remotely stored objects by specifying the __endpoint__ and object path as s3 scheme + __bucket name__ as path.
 :::

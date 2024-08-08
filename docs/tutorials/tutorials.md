@@ -6,5 +6,6 @@
 modo_provider.md
 modo_access.md
 modo_remote.md
+genomics_streaming.md
 modo_arrays.md
 :::
