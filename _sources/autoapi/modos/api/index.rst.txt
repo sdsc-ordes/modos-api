@@ -1,0 +1,692 @@
+modos.api
+=========
+
+.. py:module:: modos.api
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.api.LocalStorage
+   modos.api.S3Storage
+   modos.api.ElementType
+   modos.api.UserElementType
+   modos.api.GenomicFileSuffix
+   modos.api.HtsgetConnection
+   modos.api.Region
+   modos.api.EndpointManager
+   modos.api.MODO
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.api.attrs_to_graph
+   modos.api.add_metadata_group
+   modos.api.list_zarr_items
+   modos.api.class_from_name
+   modos.api.dict_to_instance
+   modos.api.set_data_path
+   modos.api.set_haspart_relationship
+   modos.api.update_haspart_id
+   modos.api.read_pysam
+   modos.api.extract_metadata
+   modos.api.parse_attributes
+   modos.api.is_s3_path
+
+
+Module Contents
+---------------
+
+.. py:function:: attrs_to_graph(meta, uri_prefix)
+
+   Convert a attribute dictionary to an RDF graph of metadata.
+
+
+.. py:function:: add_metadata_group(parent_group, metadata)
+
+   Add input metadata dictionary to an existing zarr group.
+
+
+.. py:function:: list_zarr_items(group)
+
+   Recursively list all zarr groups and arrays
+
+
+.. py:class:: LocalStorage(path)
+
+   Bases: :py:obj:`Storage`
+
+
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+   .. py:property:: zarr
+      :type: zarr.hierarchy.Group
+
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+
+
+   .. py:method:: exists(target)
+
+
+   .. py:method:: list(target = None)
+
+
+   .. py:method:: remove(target)
+
+
+   .. py:method:: put(source, target)
+
+
+.. py:class:: S3Storage(path, s3_endpoint, s3_kwargs = None)
+
+   Bases: :py:obj:`Storage`
+
+
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+
+
+   .. py:property:: zarr
+      :type: zarr.hierarchy.Group
+
+
+
+   .. py:method:: exists(target = ZARR_ROOT)
+
+
+   .. py:method:: list(target = None)
+
+
+   .. py:method:: remove(target)
+
+
+   .. py:method:: put(source, target)
+
+
+.. py:function:: class_from_name(name)
+
+.. py:function:: dict_to_instance(element)
+
+.. py:class:: ElementType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Enumeration of all element types.
+
+
+   .. py:attribute:: SAMPLE
+      :value: 'sample'
+
+
+
+   .. py:attribute:: ASSAY
+      :value: 'assay'
+
+
+
+   .. py:attribute:: DATA_ENTITY
+      :value: 'data'
+
+
+
+   .. py:attribute:: REFERENCE_GENOME
+      :value: 'reference'
+
+
+
+   .. py:attribute:: REFERENCE_SEQUENCE
+      :value: 'sequence'
+
+
+
+   .. py:method:: get_target_class()
+
+      Return the target class for the element type.
+
+
+
+   .. py:method:: from_object(obj)
+      :classmethod:
+
+
+      Return the element type from an object.
+
+
+
+   .. py:method:: from_model_name(name)
+      :classmethod:
+
+
+      Return the element type from an object name.
+
+
+
+.. py:function:: set_data_path(element, source_file = None)
+
+   Set the data_path attribute, if it is not specified to the modo root.
+
+
+.. py:function:: set_haspart_relationship(child_class, child_path, parent_group)
+
+   Add element to the hasPart attribute of a parent zarr group
+
+
+.. py:class:: UserElementType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Enumeration of element types exposed to the user.
+
+
+   .. py:attribute:: SAMPLE
+      :value: 'sample'
+
+
+
+   .. py:attribute:: ASSAY
+      :value: 'assay'
+
+
+
+   .. py:attribute:: DATA_ENTITY
+      :value: 'data'
+
+
+
+   .. py:attribute:: REFERENCE_GENOME
+      :value: 'reference'
+
+
+
+   .. py:method:: get_target_class()
+
+      Return the target class for the element type.
+
+
+
+   .. py:method:: from_object(obj)
+      :classmethod:
+
+
+      Return the element type from an object.
+
+
+
+.. py:function:: update_haspart_id(element)
+
+   update the id of the has_part property of an element to use the full id including its type
+
+
+.. py:class:: GenomicFileSuffix
+
+   Bases: :py:obj:`tuple`, :py:obj:`enum.Enum`
+
+
+   Enumeration of all supported genomic file suffixes.
+
+
+   .. py:attribute:: CRAM
+      :value: ('.cram',)
+
+
+
+   .. py:attribute:: BAM
+      :value: ('.bam',)
+
+
+
+   .. py:attribute:: SAM
+      :value: ('.sam',)
+
+
+
+   .. py:attribute:: VCF
+      :value: ('.vcf', '.vcf.gz')
+
+
+
+   .. py:attribute:: BCF
+      :value: ('.bcf',)
+
+
+
+   .. py:attribute:: FASTA
+      :value: ('.fasta', '.fa')
+
+
+
+   .. py:attribute:: FASTQ
+      :value: ('.fastq', '.fq')
+
+
+
+   .. py:method:: from_path(path)
+      :classmethod:
+
+
+
+   .. py:method:: get_index_suffix()
+
+      Return the supported index suffix related to a genomic filetype
+
+
+
+   .. py:method:: to_htsget_endpoint()
+
+      Return the htsget endpoint for a genomic file type
+
+
+
+.. py:function:: read_pysam(path, region = None, **kwargs)
+
+   Automatically instantiate a pysam file object from input path and passes any additional kwarg to it.
+
+
+.. py:class:: HtsgetConnection
+
+   Connection to an htsget resource.
+   It allows to open a stream to the resource and lazily fetch data from it.
+
+
+   .. py:attribute:: host
+      :type:  pydantic.HttpUrl
+
+
+   .. py:attribute:: path
+      :type:  pathlib.Path
+
+
+   .. py:attribute:: region
+      :type:  Optional[modos.genomics.region.Region]
+
+
+   .. py:property:: url
+      :type: str
+
+      URL to fetch the ticket.
+
+
+   .. py:method:: ticket()
+
+      Ticket containing the URLs to fetch the data.
+
+
+
+   .. py:method:: open()
+
+      Open a connection to the stream data.
+
+
+
+   .. py:method:: to_file(path)
+
+      Save all data from the stream to a file.
+
+
+
+   .. py:method:: from_url(url)
+      :classmethod:
+
+
+      Open connection directly from an htsget URL.
+
+
+
+   .. py:method:: to_pysam(reference_filename = None)
+
+      Convert the stream to a pysam object.
+
+
+
+.. py:class:: Region
+
+   Genomic region consisting of a chromosome (aka reference) name
+   and a 0-indexed half-open coordinate interval.
+   Note that the end may not be specified, in which it will be set to math.inf.
+
+
+   .. py:attribute:: chrom
+      :type:  str
+
+
+   .. py:attribute:: start
+      :type:  int
+
+
+   .. py:attribute:: end
+      :type:  int | float
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: to_htsget_query()
+
+      Serializes the region into an htsget URL query.
+
+      .. rubric:: Example
+
+      >>> Region(chrom='chr1', start=0, end=100).to_htsget_query()
+      'referenceName=chr1&start=0&end=100'
+
+
+
+   .. py:method:: to_tuple()
+
+      Return the region as a simple tuple.
+
+
+
+   .. py:method:: from_htsget_query(url)
+      :classmethod:
+
+
+      Instantiate from an htsget URL query
+
+      .. rubric:: Example
+
+      >>> Region.from_htsget_query(
+      ...   "http://localhost/htsget/reads/ex/demo1?format=CRAM&referenceName=chr1&start=0"
+      ... )
+      Region(chrom='chr1', start=0, end=inf)
+
+
+
+   .. py:method:: from_ucsc(ucsc)
+      :classmethod:
+
+
+      Instantiate from a UCSC-formatted region string.
+
+      .. rubric:: Example
+
+      >>> Region.from_ucsc('chr-1ba:10-320')
+      Region(chrom='chr-1ba', start=10, end=320)
+      >>> Region.from_ucsc('chr1:-320')
+      Region(chrom='chr1', start=0, end=320)
+      >>> Region.from_ucsc('chr1:10-')
+      Region(chrom='chr1', start=10, end=inf)
+      >>> Region.from_ucsc('chr1:10')
+      Region(chrom='chr1', start=10, end=inf)
+
+      .. note::
+
+         For more information about the UCSC coordinate system,
+         see: http://genomewiki.ucsc.edu/index.php/Coordinate_Transforms
+
+
+
+   .. py:method:: from_pysam(record)
+      :classmethod:
+
+
+
+   .. py:method:: overlaps(other)
+
+      Checks if other in self.
+      This check if any portion of other overlaps with self.
+
+
+
+   .. py:method:: contains(other)
+
+      Checks if other is fully contained in self.
+
+
+
+.. py:function:: extract_metadata(instance, base_path)
+
+   Extract metadata from files associated to a model instance
+
+
+.. py:function:: parse_attributes(path)
+
+   Load model specification from file into a list of dictionaries. Model types must be specified as @type
+
+
+.. py:class:: EndpointManager
+
+   Handle modos server endpoints.
+   If a modos server url is provided, it is used to detect
+   available service urls. Alternatively, service urls can
+   be provided explicitely if no modos server is available.
+
+   :param modos: URL to the modos server.
+   :param services: Mapping of services to their urls.
+
+   .. rubric:: Examples
+
+   >>> ex = EndpointManager(modos="http://modos.example.org") # doctest: +SKIP
+   >>> ex.list() # doctest: +SKIP
+   {
+     's3: Url('http://s3.example.org/'),
+     'htsget': Url('http://htsget.example.org/')
+   }
+   >>> ex.htsget # doctest: +SKIP
+   Url('http://htsget.example.org/')
+   >>> ex = EndpointManager(services={"s3": "http://s3.example.org"})
+   >>> ex.s3
+   Url('http://s3.example.org/')
+
+
+   .. py:attribute:: modos
+      :type:  Optional[pydantic.HttpUrl]
+      :value: None
+
+
+
+   .. py:attribute:: services
+      :type:  dict[str, pydantic.HttpUrl]
+
+
+   .. py:method:: list()
+
+      List available endpoints.
+
+
+
+   .. py:property:: s3
+      :type: Optional[pydantic.HttpUrl]
+
+
+
+   .. py:property:: htsget
+      :type: Optional[pydantic.HttpUrl]
+
+
+
+.. py:function:: is_s3_path(path)
+
+   Check if a path is an S3 path
+
+
+.. py:class:: MODO(path, id = None, name = None, description = None, creation_date = date.today(), last_update_date = date.today(), has_assay = [], source_uri = None, endpoint = None, s3_kwargs = None, services = None)
+
+   Multi-Omics Digital Object
+   A digital archive containing several multi-omics data and records
+   connected by zarr-backed metadata.
+
+   :param path: Path to the archive directory.
+   :param id: MODO identifier.
+              Defaults to the directory name.
+   :param name: Human-readable name.
+   :param description: Human readable description.
+   :param creation_date: When the MODO was created.
+   :param last_update_date: When the MODO was last updated.
+   :param has_assay: Existing assay identifiers to attach to MODO.
+   :param source_uri: URI of the source data.
+   :param endpoint: URL to the modos server.
+   :param s3_kwargs: Keyword arguments for the S3 storage.
+   :param services: Optional dictionary of service endpoints.
+
+   .. attribute:: storage
+
+      Storage backend for the archive.
+
+      :type: Storage
+
+   .. attribute:: endpoint
+
+      Server endpoint manager.
+
+      :type: EndpointManager
+
+   .. rubric:: Examples
+
+   >>> demo = MODO("data/ex")
+
+   # List identifiers of samples in the archive
+   >>> demo.list_samples()
+   ['sample/sample1']
+
+   # List files in the archive
+   >>> files = sorted(demo.list_files())
+   >>> assert Path('data/ex/demo1.cram') in files
+   >>> assert Path('data/ex/reference1.fa') in files
+
+
+   .. py:property:: zarr
+      :type: zarr.hierarchy.Group
+
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+
+
+   .. py:property:: metadata
+      :type: dict
+
+
+
+   .. py:method:: knowledge_graph(uri_prefix = None)
+
+      Return an RDF graph of the metadata. All identifiers
+      are converted to valid URIs if needed.
+
+
+
+   .. py:method:: show_contents(element = None)
+
+      Produces a YAML document of the object's contents.
+
+      :param element: Element, or group of elements (e.g. data or data/element_id) to show.
+                      If not provided, shows the metadata of the entire MODO.
+
+
+
+   .. py:method:: list_files()
+
+      Lists files in the archive recursively (except for the zarr file).
+
+
+
+   .. py:method:: list_arrays(element = None)
+
+      Views arrays in the archive recursively.
+
+      :param element: Element, or group of elements (e.g. data or data/element_id) to show.
+                      If not provided, shows the metadata of the entire MODO.
+
+
+
+   .. py:method:: query(query)
+
+      Use SPARQL to query the metadata graph
+
+
+
+   .. py:method:: list_samples()
+
+      Lists samples in the archive.
+
+
+
+   .. py:method:: update_date(date = date.today())
+
+      update last_update_date attribute
+
+
+
+   .. py:method:: remove_element(element_id)
+
+      Remove an element from the archive, along with any files
+      directly attached to it and links from other elements to it.
+
+
+
+   .. py:method:: remove_object()
+
+      Remove the complete modo object
+
+
+
+   .. py:method:: add_element(element, source_file = None, part_of = None)
+
+      Add an element to the archive.
+      If a data file is provided, it will be added to the archive.
+      If the element is part of another element, the parent metadata
+      will be updated.
+
+      :param element: Element to add to the archive.
+      :param source_file: File to associate with the element.
+      :param part_of: Id of the parent element. It must be scoped to the type.
+                      For example "sample/foo".
+
+
+
+   .. py:method:: _add_any_element(element, source_file = None, part_of = None)
+
+      Add an element of any type to the storage.
+
+
+
+   .. py:method:: update_element(element_id, new)
+
+      Update element metadata in place by adding new values from model object.
+
+      :param element_id: Full id path in the zarr store.
+      :param new: Element containing the enriched metadata.
+
+
+
+   .. py:method:: enrich_metadata()
+
+      Enrich MODO metadata in place using content from associated data files.
+
+
+
+   .. py:method:: stream_genomics(file_path, region = None, reference_filename = None)
+
+      Slices both local and remote CRAM, VCF (.vcf.gz), and BCF
+      files returning an iterator over records.
+
+
+
+   .. py:method:: from_file(config_path, object_path, endpoint = None, s3_kwargs = None, services = None, no_remove = False)
+      :classmethod:
+
+
+      build a modo from a yaml or json file
+
+
+

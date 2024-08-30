@@ -1,0 +1,52 @@
+modos.rdf
+=========
+
+.. py:module:: modos.rdf
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.rdf.get_slot_range
+   modos.rdf.instance_to_graph
+   modos.rdf.load_prefixmap
+   modos.rdf.load_schema
+   modos.rdf.is_uri
+   modos.rdf.class_from_name
+   modos.rdf.attrs_to_graph
+
+
+Module Contents
+---------------
+
+.. py:function:: get_slot_range(slot_name)
+
+   Return the class-independent range of a slot.
+
+
+.. py:function:: instance_to_graph(instance)
+
+.. py:function:: load_prefixmap()
+
+   Load the prefixmap.
+
+
+.. py:function:: load_schema()
+
+   Return a view over the schema structure.
+
+
+.. py:function:: is_uri(text)
+
+   Checks if input is a valid URI.
+
+
+.. py:function:: class_from_name(name)
+
+.. py:function:: attrs_to_graph(meta, uri_prefix)
+
+   Convert a attribute dictionary to an RDF graph of metadata.
+
+

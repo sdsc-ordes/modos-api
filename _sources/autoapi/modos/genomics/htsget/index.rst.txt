@@ -1,0 +1,370 @@
+modos.genomics.htsget
+=====================
+
+.. py:module:: modos.genomics.htsget
+
+.. autoapi-nested-parse::
+
+   htsget client implementation
+
+   The htsget protocol [1]_ allows to stream slices of genomic data from a remote server.
+   The client is implemented as a file-like interface that lazily streams chunks from the server.
+
+   In practice, the client sends a request for a file with a specific format and genomic region.
+   The htsget server finds the byte ranges on the data server (e.g. S3) corresponding to the requests
+   and responds with a "ticket".
+
+   The ticket is a json document containing a list of blocks; each having headers and a URL pointing to_file
+   the corresponding byte ranges on the data server.
+
+   The client then streams data from these URLs, effectively concatenating the blocks into a single stream.
+
+
+   .. figure:: http://samtools.github.io/hts-specs/pub/htsget-ticket.png
+      :width: 66%
+      :alt: htsget mechanism diagram
+
+      Illustration of the mechanism through which the htsget server allows streaming and random-access on genomic files. See [1]_ for more details.
+
+
+   .. rubric:: Notes
+
+   This implementation differs from the reference GA4GH implementation [2]_ in that it allows lazily consuming chunks from a file-like interface without saving to a file. A downside of this approach is that the client cannot seek.
+
+   Additionally, this implementation does not support asynchronous fetching of blocks, which means that blocks are fetched sequentially.
+
+   .. rubric:: References
+
+   .. [1] http://samtools.github.io/hts-specs/htsget.html
+   .. [2] https://github.com/ga4gh/htsget
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.genomics.htsget.Region
+   modos.genomics.htsget.GenomicFileSuffix
+   modos.genomics.htsget._HtsgetBlockIter
+   modos.genomics.htsget.HtsgetStream
+   modos.genomics.htsget.HtsgetConnection
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.genomics.htsget.read_pysam
+   modos.genomics.htsget.build_htsget_url
+   modos.genomics.htsget.parse_htsget_url
+
+
+Module Contents
+---------------
+
+.. py:class:: Region
+
+   Genomic region consisting of a chromosome (aka reference) name
+   and a 0-indexed half-open coordinate interval.
+   Note that the end may not be specified, in which it will be set to math.inf.
+
+
+   .. py:attribute:: chrom
+      :type:  str
+
+
+   .. py:attribute:: start
+      :type:  int
+
+
+   .. py:attribute:: end
+      :type:  int | float
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: to_htsget_query()
+
+      Serializes the region into an htsget URL query.
+
+      .. rubric:: Example
+
+      >>> Region(chrom='chr1', start=0, end=100).to_htsget_query()
+      'referenceName=chr1&start=0&end=100'
+
+
+
+   .. py:method:: to_tuple()
+
+      Return the region as a simple tuple.
+
+
+
+   .. py:method:: from_htsget_query(url)
+      :classmethod:
+
+
+      Instantiate from an htsget URL query
+
+      .. rubric:: Example
+
+      >>> Region.from_htsget_query(
+      ...   "http://localhost/htsget/reads/ex/demo1?format=CRAM&referenceName=chr1&start=0"
+      ... )
+      Region(chrom='chr1', start=0, end=inf)
+
+
+
+   .. py:method:: from_ucsc(ucsc)
+      :classmethod:
+
+
+      Instantiate from a UCSC-formatted region string.
+
+      .. rubric:: Example
+
+      >>> Region.from_ucsc('chr-1ba:10-320')
+      Region(chrom='chr-1ba', start=10, end=320)
+      >>> Region.from_ucsc('chr1:-320')
+      Region(chrom='chr1', start=0, end=320)
+      >>> Region.from_ucsc('chr1:10-')
+      Region(chrom='chr1', start=10, end=inf)
+      >>> Region.from_ucsc('chr1:10')
+      Region(chrom='chr1', start=10, end=inf)
+
+      .. note::
+
+         For more information about the UCSC coordinate system,
+         see: http://genomewiki.ucsc.edu/index.php/Coordinate_Transforms
+
+
+
+   .. py:method:: from_pysam(record)
+      :classmethod:
+
+
+
+   .. py:method:: overlaps(other)
+
+      Checks if other in self.
+      This check if any portion of other overlaps with self.
+
+
+
+   .. py:method:: contains(other)
+
+      Checks if other is fully contained in self.
+
+
+
+.. py:class:: GenomicFileSuffix
+
+   Bases: :py:obj:`tuple`, :py:obj:`enum.Enum`
+
+
+   Enumeration of all supported genomic file suffixes.
+
+
+   .. py:attribute:: CRAM
+      :value: ('.cram',)
+
+
+
+   .. py:attribute:: BAM
+      :value: ('.bam',)
+
+
+
+   .. py:attribute:: SAM
+      :value: ('.sam',)
+
+
+
+   .. py:attribute:: VCF
+      :value: ('.vcf', '.vcf.gz')
+
+
+
+   .. py:attribute:: BCF
+      :value: ('.bcf',)
+
+
+
+   .. py:attribute:: FASTA
+      :value: ('.fasta', '.fa')
+
+
+
+   .. py:attribute:: FASTQ
+      :value: ('.fastq', '.fq')
+
+
+
+   .. py:method:: from_path(path)
+      :classmethod:
+
+
+
+   .. py:method:: get_index_suffix()
+
+      Return the supported index suffix related to a genomic filetype
+
+
+
+   .. py:method:: to_htsget_endpoint()
+
+      Return the htsget endpoint for a genomic file type
+
+
+
+.. py:function:: read_pysam(path, region = None, **kwargs)
+
+   Automatically instantiate a pysam file object from input path and passes any additional kwarg to it.
+
+
+.. py:function:: build_htsget_url(host, path, region)
+
+   Build an htsget URL from a host, path, and region.
+
+   .. rubric:: Examples
+
+   >>> build_htsget_url(
+   ...   "http://localhost:8000",
+   ...   Path("file.bam"),
+   ...   Region("chr1", 0, 1000)
+   ... )
+   'http://localhost:8000/reads/file?format=BAM&referenceName=chr1&start=0&end=1000'
+
+
+.. py:function:: parse_htsget_url(url)
+
+   Given a URL to an htsget resource, extract the host, path, and region.
+
+
+.. py:class:: _HtsgetBlockIter(blocks, chunk_size=65536, timeout=60)
+
+   Transparent iterator over blocks of an htsget stream.
+
+   This is used internally by HtsgetStream to lazily fetch and concatenate blocks.
+
+   .. rubric:: Examples
+
+   >>> next(_HtsgetBlockIter([
+   ...     {"url": "data:;base64,MTIzNDU2Nzg5"},
+   ...     {"url": "data:;base64,MTIzNDU2Nzg5"},
+   ... ]))
+   b'123456789'
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: _consume_block()
+
+      Get streaming iterator over current block.
+
+
+
+   .. py:method:: __next__()
+
+      Stream next chunk of current block, or first
+      chunk of next block.
+
+
+
+.. py:class:: HtsgetStream(blocks)
+
+   Bases: :py:obj:`io.RawIOBase`
+
+
+   A file-like handle to a read-only, buffered htsget stream.
+
+   .. rubric:: Examples
+
+   >>> stream = HtsgetStream([
+   ...   {"url": "data:;base64,MTIzNDU2Nzg5Cg=="},
+   ...   {"url": "data:;base64,MTIzNDU2Nzg5Cg=="},
+   ... ])
+   >>> stream.read(4)
+   b'1234'
+
+
+   .. py:method:: readable()
+
+      Return whether object was opened for reading.
+
+      If False, read() will raise OSError.
+
+
+
+   .. py:method:: readinto(b)
+
+      Read up to len(b) bytes into a writable buffer bytes
+      and return the number of bytes read.
+
+      .. rubric:: Notes
+
+      See https://docs.python.org/3/library/io.html#io.RawIOBase.readinto
+
+
+
+.. py:class:: HtsgetConnection
+
+   Connection to an htsget resource.
+   It allows to open a stream to the resource and lazily fetch data from it.
+
+
+   .. py:attribute:: host
+      :type:  pydantic.HttpUrl
+
+
+   .. py:attribute:: path
+      :type:  pathlib.Path
+
+
+   .. py:attribute:: region
+      :type:  Optional[modos.genomics.region.Region]
+
+
+   .. py:property:: url
+      :type: str
+
+      URL to fetch the ticket.
+
+
+   .. py:method:: ticket()
+
+      Ticket containing the URLs to fetch the data.
+
+
+
+   .. py:method:: open()
+
+      Open a connection to the stream data.
+
+
+
+   .. py:method:: to_file(path)
+
+      Save all data from the stream to a file.
+
+
+
+   .. py:method:: from_url(url)
+      :classmethod:
+
+
+      Open connection directly from an htsget URL.
+
+
+
+   .. py:method:: to_pysam(reference_filename = None)
+
+      Convert the stream to a pysam object.
+
+
+
