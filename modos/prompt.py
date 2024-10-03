@@ -1,0 +1,130 @@
+from datetime import date
+import re
+from typing import Any, List, Mapping, Optional
+
+import click
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import Completer, Completion
+import typer
+
+from .codes import CodeMatcher, get_slot_matchers
+from .helpers.schema import (
+    get_enum_values,
+    get_slots,
+    get_slot_range,
+    load_schema,
+)
+from .remote import EndpointManager
+
+
+class SlotCodeCompleter(Completer):
+    """Auto-suggestions for terminology codes."""
+
+    def __init__(self, matcher: CodeMatcher):
+        self.matcher = matcher
+
+    def get_completions(self, document, complete_event):
+        self.matcher.find_codes(document.text)
+
+        for rec in self.matcher.find_codes(document.text):
+            yield Completion(
+                f"{rec.label} {rec.uri}",
+                start_position=-document.cursor_position,
+            )
+
+
+def fuzzy_complete(prompt_txt: str, matcher: CodeMatcher):
+    """Given a pre-configured matcher, prompt the user with live auto-suggestions."""
+    result = prompt(
+        f"{prompt_txt}: ",
+        completer=SlotCodeCompleter(matcher),
+        complete_while_typing=True,
+    )
+
+    # If the user selected a suggestion with a URI, return that URI.
+    if match := re.match(r".* <(http[^>]*)>$", result):
+        uri = match.groups()[0]
+        return uri
+    return result
+
+
+class SlotPrompter:
+    """Introspects the schema to prompt the user for values based on input class/slot."""
+
+    def __init__(
+        self, endpoint: Optional[EndpointManager] = None, suggest=True
+    ):
+        if suggest:
+            self.slot_matchers = get_slot_matchers(endpoint.fuzon)
+        else:
+            self.slot_matchers = {}
+
+    def prompt_for_slot(self, slot_name: str, optional: bool = False):
+        slot_range = get_slot_range(slot_name)
+        choices, default = None, None
+        if slot_range == "datetime":
+            default = date.today()
+        elif load_schema().get_enum(slot_range):
+            choices = click.Choice(get_enum_values(slot_range))
+        elif optional:
+            default = ""
+
+        prefix = "(optional) " if optional else "(required) "
+        prompt = f"{prefix}Enter a value for {slot_name}"
+        if slot_name in self.slot_matchers:
+            output = fuzzy_complete(prompt, self.slot_matchers[slot_name])
+        else:
+            output = typer.prompt(
+                prompt,
+                default=default,
+                type=choices,
+            )
+
+        if output == "":
+            output = None
+
+        return output
+
+    def prompt_for_slots(
+        self, target_class: type, exclude: Optional[Mapping[str, List]] = None
+    ) -> dict[str, Any]:
+        """Prompt the user to provide values for the slots of input class.
+        values of required fields can be excluded to repeat the prompt.
+
+        Parameters
+            ----------
+            target_class
+                Class to build
+            exclude
+                Mapping with the name of a slot as key  and list of invalid entries as values.
+        """
+
+        entries = {}
+        required_slots = set(get_slots(target_class, required_only=True))
+        optional_slots = (
+            set(get_slots(target_class, required_only=False)) - required_slots
+        )
+
+        # Always require identifiers if possible
+        if "id" in optional_slots:
+            optional_slots.remove("id")
+            required_slots.add("id")
+
+        for slot_name in required_slots:
+            entries[slot_name] = self.prompt_for_slot(slot_name)
+            if entries[slot_name] is None:
+                raise ValueError(f"Missing required slot: {slot_name}")
+            if exclude and entries.get(slot_name) in exclude.get(
+                slot_name, []
+            ):
+                print(
+                    f"Invalid value: {slot_name} must differ from {exclude[slot_name]}."
+                )
+                entries[slot_name] = self.prompt_for_slot(slot_name)
+
+        if optional_slots:
+            for slot_name in optional_slots:
+                entries[slot_name] = self.prompt_for_slot(
+                    slot_name, optional=True
+                )
+        return entries

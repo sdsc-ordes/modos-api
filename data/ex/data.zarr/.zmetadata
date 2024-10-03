@@ -61,10 +61,10 @@
             "data_path": "demo1.cram",
             "description": "Dummy data for tests",
             "has_reference": [
-                "reference1"
+                "reference/reference1"
             ],
             "has_sample": [
-                "sample1"
+                "sample/sample1"
             ],
             "name": "Demo 1"
         },
@@ -88,11 +88,11 @@
         },
         "sample/sample1/.zattrs": {
             "@type": "Sample",
-            "cell_type": "astrocyte",
+            "cell_type": "http://purl.obolibrary.org/obo/CL_0002627",
             "description": "Dummy sample for tests",
             "name": "Sample 1",
             "sex": "Male",
-            "source_material": "brain tissue"
+            "source_material": "http://purl.obolibrary.org/obo/UBERON_0002316"
         },
         "sample/sample1/.zgroup": {
             "zarr_format": 2

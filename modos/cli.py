@@ -2,35 +2,28 @@
 
 # Use typer for CLI
 
-from datetime import date
 from enum import Enum
 import os
 from pathlib import Path
 from typing import Any, List, Mapping, Optional
 from typing_extensions import Annotated
 
-import click
 from linkml_runtime.loaders import json_loader
 import modos_schema.datamodel as model
-from pydantic import validate_call, HttpUrl
+from pydantic import HttpUrl
 import sys
 import typer
 from types import SimpleNamespace
 import zarr
 
 from .api import MODO
-from .helpers.schema import (
-    UserElementType,
-    get_enum_values,
-    get_slots,
-    get_slot_range,
-    load_schema,
-)
+from .helpers.schema import UserElementType
 
 from . import __version__
 from .genomics.htsget import HtsgetConnection
 from .genomics.region import Region
 from .io import parse_instance
+from .prompt import SlotPrompter
 from .remote import EndpointManager
 from .storage import connect_s3
 
@@ -52,75 +45,6 @@ OBJECT_PATH_ARG = Annotated[
         help="Path to the digital object. Remote paths should have format s3://bucket/path",
     ),
 ]
-
-
-def prompt_for_slot(slot_name: str, prefix: str = "", optional: bool = False):
-    """Prompt for a slot value."""
-    slot_range = get_slot_range(slot_name)
-    choices, default = None, None
-    if slot_range == "datetime":
-        default = date.today()
-    elif load_schema().get_enum(slot_range):
-        choices = click.Choice(get_enum_values(slot_range))
-    elif optional:
-        default = ""
-
-    output = typer.prompt(
-        f"{prefix}Enter a value for {slot_name}", default=default, type=choices
-    )
-    if output == "":
-        output = None
-
-    return output
-
-
-def prompt_for_slots(
-    target_class: type,
-    exclude: Optional[Mapping[str, List]] = None,
-    # add dict with exclude
-) -> dict[str, Any]:
-    """Prompt the user to provide values for the slots of input class.
-    values of required fields can be excluded to repeat the prompt.
-
-    Parameters
-        ----------
-        target_class
-            Class to build
-        exclude
-            Mapping with the name of a slot as key  and list of invalid entries as values.
-    """
-
-    entries = {}
-    required_slots = set(get_slots(target_class, required_only=True))
-    optional_slots = (
-        set(get_slots(target_class, required_only=False)) - required_slots
-    )
-
-    # Always require identifiers if possible
-    if "id" in optional_slots:
-        optional_slots.remove("id")
-        required_slots.add("id")
-
-    for slot_name in required_slots:
-        entries[slot_name] = prompt_for_slot(slot_name, prefix="(required) ")
-        if entries[slot_name] is None:
-            raise ValueError(f"Missing required slot: {slot_name}")
-        if exclude and entries.get(slot_name) in exclude.get(slot_name, []):
-            print(
-                f"Invalid value: {slot_name} must differ from {exclude[slot_name]}."
-            )
-            entries[slot_name] = prompt_for_slot(
-                slot_name, prefix="(required) "
-            )
-
-    if optional_slots:
-        for slot_name in optional_slots:
-            entries[slot_name] = prompt_for_slot(
-                slot_name,
-                prefix="(optional) ",
-                optional=True,
-            )
-    return entries
 
 
 # Create command
@@ -148,11 +72,11 @@ def create(
     """Create a modo interactively or from a file."""
     typer.echo("Creating a digital object.", err=True)
 
-    endpoint = ctx.obj.endpoint
+    endpoint = EndpointManager(ctx.obj.endpoint)
+
     # Initialize object's directory
-    if endpoint:
-        s3 = EndpointManager(endpoint).s3
-        fs = connect_s3(s3, {"anon": True})  # type: ignore
+    if endpoint.s3:
+        fs = connect_s3(endpoint.s3, {"anon": True})  # type: ignore
         if fs.exists(object_path):
             raise ValueError(f"Remote directory already exists: {object_path}")
     elif Path(object_path).exists():
@@ -162,17 +86,19 @@ def create(
     if from_file and meta:
         raise ValueError("Only one of --from-file or --data can be used.")
     elif from_file:
-        _ = MODO.from_file(from_file, object_path, endpoint=endpoint)
+        _ = MODO.from_file(from_file, object_path, endpoint=endpoint.modos)
         return
     elif meta:
         obj = json_loader.loads(meta, target_class=model.MODO)
     else:
-        filled = prompt_for_slots(model.MODO)
+        filled = SlotPrompter(endpoint, suggest=False).prompt_for_slots(
+            model.MODO
+        )
         obj = model.MODO(**filled)
 
     attrs = obj.__dict__
     # Dump object to zarr metadata
-    MODO(path=object_path, endpoint=endpoint, **attrs)
+    MODO(path=object_path, endpoint=endpoint.modos, **attrs)
 
 
 @cli.command()
@@ -265,6 +191,7 @@ def add(
     typer.echo(f"Updating {object_path}.", err=True)
     modo = MODO(object_path, endpoint=ctx.obj.endpoint)
     target_class = element_type.get_target_class()
+    endpoint = EndpointManager(ctx.obj.endpoint)
 
     if from_file and element:
         raise ValueError("Only one of --from-file or --element can be used.")
@@ -274,7 +201,7 @@ def add(
         obj = json_loader.loads(element, target_class=target_class)
     else:
         exclude = {"id": [Path(id).name for id in modo.metadata.keys()]}
-        filled = prompt_for_slots(target_class, exclude)
+        filled = SlotPrompter(endpoint).prompt_for_slots(target_class, exclude)
         obj = target_class(**filled)
 
     modo.add_element(obj, source_file=source_file, part_of=parent)
@@ -366,16 +293,15 @@ def stream(
 
     # NOTE: bucket is not included in htsget paths
     source = Path(*Path(file_path.removeprefix("s3://")).parts[1:])
-    endpoint = ctx.obj.endpoint
+    endpoint = EndpointManager(ctx.obj.endpoint)
 
     if not endpoint:
         raise ValueError("Streaming requires a remote endpoint.")
 
-    htsget_endpoint = EndpointManager(endpoint).htsget  # type: ignore
-    if not htsget_endpoint:
+    if not endpoint.htsget:
         raise ValueError("No htsget service found.")
 
-    con = HtsgetConnection(htsget_endpoint, source, _region)
+    con = HtsgetConnection(endpoint.htsget, source, _region)
     with con.open() as f:
         for chunk in f:
             sys.stdout.buffer.write(chunk)
