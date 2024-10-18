@@ -1,23 +1,19 @@
 """Utilities to interact with genomic intervals in CRAM files."""
 
 from pathlib import Path
-from typing import Iterator, List, Optional
 
-from pysam import (
-    AlignedSegment,
-    AlignmentFile,
-    VariantRecord,
-)
+import pysam
 import modos_schema.datamodel as model
 
-from .region import Region
 
-
-def extract_cram_metadata(cram: AlignmentFile) -> List:
+def extract_cram_metadata(
+    instance: model.AlignmentSet, base_path: Path
+) -> list:
     """Extract metadata from the CRAM file header and
     convert specific attributes according to the modo schema."""
+    cram = pysam.AlignmentFile(str(base_path / instance.data_path), mode="rc")
     cram_head = cram.header
-    ref_list: List = []
+    ref_list: list = []
     for refseq in cram_head.get("SQ"):
         refseq_mod = model.ReferenceSequence(
             id=create_sequence_id(refseq.get("SN"), refseq.get("M5")),

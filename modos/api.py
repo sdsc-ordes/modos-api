@@ -372,8 +372,9 @@ class MODO:
             source_path = Path(source_file)
             target_path = Path(element._get("data_path"))
             self.storage.put(source_path, target_path)
+
+            # Genomic files have an associated index file
             try:
-                # Genomic files have an associated index file
                 ft = GenomicFileSuffix.from_path(source_path)
                 source_ix = source_path.with_suffix(
                     source_path.suffix + ft.get_index_suffix()

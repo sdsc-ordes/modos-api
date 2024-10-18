@@ -1,0 +1,6 @@
+{
+    "@type": "ReferenceSequence",
+    "name": "BA000007.3",
+    "sequence_md5": "bd75228f94e634734bc6038e15bac220",
+    "source_uri": "/data/genomic/ecoli/ecoli_subset.fa"
+}

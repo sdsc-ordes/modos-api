@@ -12,6 +12,7 @@ import modos_schema.datamodel as model
 import pysam
 
 from .genomics.cram import extract_cram_metadata
+from .metabolomics.mztab import extract_mztab_metadata
 from .helpers.schema import dict_to_instance
 
 ext2loader = {
@@ -63,13 +64,13 @@ def extract_metadata(instance, base_path: Path) -> List:
     """Extract metadata from files associated to a model instance"""
     if not isinstance(instance, model.DataEntity):
         raise ValueError(f"{instance} is not a DataEntity, cannot extract")
+
     match str(instance.data_format):
+        case "mzTab":
+            return extract_mztab_metadata(instance, base_path)
         case "CRAM":
-            cramfile = pysam.AlignmentFile(
-                str(base_path / instance.data_path), mode="rc"
-            )
-            return extract_cram_metadata(cramfile)
+            return extract_cram_metadata(instance, base_path)
         case _:
             raise NotImplementedError(
-                f"Metadata extraction not impolemented for this format: {instance.data_format}"
+                f"Metadata extraction not implemented for this format: {instance.data_format}"
             )

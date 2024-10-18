@@ -1,10 +1,6 @@
 {
     "@type": "Assay",
-    "description": "Dummy assay for tests.",
-    "has_data": [
-        "data/demo1",
-        "data/calls1"
-    ],
+    "description": "Example assay for tests",
     "has_sample": [
         "sample/sample1"
     ],

@@ -6,7 +6,7 @@ VERSION :=$(shell grep -E '^version += +' pyproject.toml | sed -E 's/.*= +//')
 .PHONY: install
 install: ## Install with the poetry and add pre-commit hooks
 	@echo "🚀 Installing packages with poetry"
-	@poetry install
+	@poetry install --all-extras --no-cache
 	@poetry run pre-commit install
 
 .PHONY: check
@@ -20,7 +20,7 @@ check: ## Run code quality tools.
 doc: ## Build sphinx documentation website locally
 	@echo "📖 Building documentation"
 	@cd docs
-	@poetry install --with docs
+	@poetry install --with docs --all-extras
 	@poetry run sphinx-build docs/ docs/_build
 
 .PHONY: docker-build
@@ -36,10 +36,10 @@ test: ## Test the code with pytest
 	@poetry run pytest
 
 .PHONY: deploy
-deploy:
+deploy: ## Deploy services using docker compose
 	@echo "$(LOCAL_IP)";exit 0
 	@echo "🐋 Deploying server with docker compose"
-	cd deploy; S3_PUBLC_URL="http://$(LOCAL_IP):9000" docker compose up --build --force-recreate
+	cd deploy; S3_PUBLIC_URL="http://$(LOCAL_IP):9000" docker compose up --build --force-recreate
 
 
 .PHONY: help
