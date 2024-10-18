@@ -55,6 +55,10 @@ class EndpointManager:
         return self.list().get("s3")
 
     @property
+    def fuzon(self) -> Optional[HttpUrl]:
+        return self.list().get("fuzon")
+
+    @property
     def htsget(self) -> Optional[HttpUrl]:
         return self.list().get("htsget")
 

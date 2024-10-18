@@ -15,11 +15,13 @@ services:
     volumes:
       - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
     environment:
-      - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3/}
-      - S3_LOCAL_URL=${S3_lOCAL_URL:-http://minio:9000}
+      - FUZON_PUBLIC_URL=${FUZON_PUBLIC_URL:-http://localhost/fuzon}
       - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
+      - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3/}
+      - FUZON_LOCAL_URL=${FUZON_LOCAL_URL:-http://fuzon:8080}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - MODOS_LOCAL_URL=${MODOS_LOCAL_URL:-http://modos-server:8000}
+      - S3_LOCAL_URL=${S3_LOCAL_URL:-http://minio:9000}
     ports:
       - "80:80"
     networks:
@@ -62,6 +64,16 @@ services:
       - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-miniosecret}
       - AWS_REGION=us-east-1
       - RUST_LOG=debug
+
+
+  fuzon:
+    build: ./fuzon
+    volumes:
+      - ./fuzon/config.json.template:/fuzon/config.json.template:ro
+    expose:
+      - "8080"
+    networks:
+      - modos-network
 
 
   modos-server:
