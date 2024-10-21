@@ -9,6 +9,8 @@ import pysam
 
 from modos.api import MODO
 
+REF_PATH = "data/ex/reference.fa"
+
 ## Initialize modo
 
 
@@ -112,7 +114,7 @@ def test_stream_genomics_no_region(test_modo):
     modo_files = [str(fi) for fi in test_modo.list_files()]
     file_path = list(filter(lambda x: re.search(r"cram$", x), modo_files))
     seq = test_modo.stream_genomics(
-        file_path=file_path[0], reference_filename="data/ex/reference1.fa"
+        file_path=file_path[0], reference_filename=REF_PATH
     )
     assert isinstance(seq, Iterator)
     assert isinstance(next(seq), pysam.AlignedSegment)
@@ -124,7 +126,7 @@ def test_stream_genomics_region(test_modo):
     seq = test_modo.stream_genomics(
         file_path=file_path[0],
         region="BA000007.3",
-        reference_filename="data/ex/reference1.fa",
+        reference_filename=REF_PATH,
     )
     assert isinstance(seq, Iterator)
     assert isinstance(next(seq), pysam.AlignedSegment)

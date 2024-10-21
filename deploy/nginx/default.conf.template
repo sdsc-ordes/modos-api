@@ -14,7 +14,8 @@ server {
       {
         "status": "success",
         "s3": "${S3_PUBLIC_URL}",
-        "htsget": "${HTSGET_PUBLIC_URL}"
+        "htsget": "${HTSGET_PUBLIC_URL}",
+        "fuzon": "${FUZON_PUBLIC_URL}"
       }' ;
   }
   # S3 bucket service
@@ -40,5 +41,10 @@ server {
   # All other paths forwarded to modos server
   location / {
     proxy_pass ${MODOS_LOCAL_URL} ;
+  }
+  # terminology code matching server
+  location /fuzon {
+    rewrite ^/fuzon/(.*) /$1 break ;
+    proxy_pass ${FUZON_LOCAL_URL} ;
   }
 }

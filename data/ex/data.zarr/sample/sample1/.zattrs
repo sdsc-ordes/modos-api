@@ -1,8 +1,9 @@
 {
     "@type": "Sample",
-    "cell_type": "astrocyte",
-    "description": "Dummy sample for tests",
+    "collector": [
+        "Foo university"
+    ],
+    "description": "A dummy sample for tests.",
     "name": "Sample 1",
-    "sex": "Male",
-    "source_material": "brain tissue"
+    "sex": "Male"
 }

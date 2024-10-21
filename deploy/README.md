@@ -45,15 +45,14 @@ end
 ## Setup
 
 > [!IMPORTANT]
-> The instructions below are meant for local testing.
+> The instructions below are meant for development.
 > Production use would require changing the default
 > credentials and use authentication.
 
 1. Start the server
 
 ```sh
-cd deploy
-docker compose up --build
+make deploy
 ```
 
 2. Upload MODO(s) to the default bucket from the minio console (default is http://localhost:9001)
@@ -80,14 +79,17 @@ docker compose up --build
 # docker compose automatically reads the .env file
 ```
 
+In the `.env` file, each service has a `<service>_PUBLIC_URL` and a `<service>_LOCAL_URL` variable. The public URL is the address used by external clients, whereas LOCAL_URL is the address used by other services. For services deployed as part of the compose setup, the local address is `http://<service-name>:<service-port>` and the public address is the endpoint exposed by the nginx reverse proxy, typically `http://<server-host>/<service-name>`. If a service is deployed outside the compose, e.g. an external s3 bucket, the public and local address will both be pointing to the external address.
+
 ### Streaming with minio
 
 There are two options to use htsget streaming with the minio embedded in the compose setup:
 
-1. Either manually create a host mapping from the minio service to localhost:
+1. Set `S3_PUBLIC_URL=http://<LOCAL-IP>:9000` where `<LOCAL-IP>` is your local IP address (find it using hostname -I). **This is done automatically when starting the server with `make deploy`**.
+
+2. Manually create a host mapping from the minio service to localhost on the machine:
 > `echo "127.0.0.1 minio" >> /etc/hosts`
 
-2. Or set `S3_PUBLIC_URL=http://<LOCAL-IP>:9000` where `<LOCAL-IP>` is your local IP address (find it using hostname -I).
 
 These steps are not needed when using an external S3 server, in which case `S3_PUBLIC_URL` can just be set to the external S3 endpoint.
 

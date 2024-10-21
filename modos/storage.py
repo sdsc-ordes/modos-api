@@ -12,7 +12,7 @@ import zarr
 import zarr.hierarchy as zh
 
 
-from .helpers.schema import ElementType
+from modos.helpers.schema import ElementType
 
 ZARR_ROOT = Path("data.zarr")
 S3_ADDRESSING_STYLE = os.getenv("S3_ADDRESSING_STYLE", "auto")

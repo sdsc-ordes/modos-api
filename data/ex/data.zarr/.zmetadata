@@ -2,15 +2,11 @@
     "metadata": {
         ".zattrs": {
             "@type": "MODO",
-            "creation_date": "2024-02-19T00:00:00",
-            "description": "Dummy modo for tests.",
-            "has_assay": [
-                "assay/assay1"
-            ],
+            "creation_date": "2024-01-17T00:00:00",
+            "description": "Example modo for tests",
+            "has_assay": "assay1",
             "id": "ex",
-            "last_update_date": "2024-02-19T00:00:00",
-            "name": "Example MODO",
-            "source_uri": "http://example.org/ex"
+            "last_update_date": "2024-10-15"
         },
         ".zgroup": {
             "zarr_format": 2
@@ -20,11 +16,7 @@
         },
         "assay/assay1/.zattrs": {
             "@type": "Assay",
-            "description": "Dummy assay for tests.",
-            "has_data": [
-                "data/demo1",
-                "data/calls1"
-            ],
+            "description": "Example assay for tests",
             "has_sample": [
                 "sample/sample1"
             ],
@@ -39,32 +31,13 @@
         "data/.zgroup": {
             "zarr_format": 2
         },
-        "data/calls1/.zattrs": {
-            "@type": "DataEntity",
-            "data_format": "BCF",
-            "data_path": "calls1.bcf",
-            "description": "variant calls for tests",
-            "has_reference": [
-                "reference/reference1"
-            ],
-            "has_sample": [
-                "sample/sample1"
-            ],
-            "name": "Calls 1"
-        },
-        "data/calls1/.zgroup": {
-            "zarr_format": 2
-        },
         "data/demo1/.zattrs": {
             "@type": "DataEntity",
             "data_format": "CRAM",
             "data_path": "demo1.cram",
-            "description": "Dummy data for tests",
+            "description": "Demo CRAM file for tests.",
             "has_reference": [
-                "reference1"
-            ],
-            "has_sample": [
-                "sample1"
+                "reference/reference1"
             ],
             "name": "Demo 1"
         },
@@ -76,8 +49,7 @@
         },
         "reference/reference1/.zattrs": {
             "@type": "ReferenceGenome",
-            "data_path": "reference1.fa",
-            "description": "Dummy reference for tests",
+            "data_path": "reference.fa",
             "name": "Reference 1"
         },
         "reference/reference1/.zgroup": {
@@ -88,13 +60,26 @@
         },
         "sample/sample1/.zattrs": {
             "@type": "Sample",
-            "cell_type": "astrocyte",
-            "description": "Dummy sample for tests",
+            "collector": [
+                "Foo university"
+            ],
+            "description": "A dummy sample for tests.",
             "name": "Sample 1",
-            "sex": "Male",
-            "source_material": "brain tissue"
+            "sex": "Male"
         },
         "sample/sample1/.zgroup": {
+            "zarr_format": 2
+        },
+        "sequence/.zgroup": {
+            "zarr_format": 2
+        },
+        "sequence/BA000007.3_bd7522/.zattrs": {
+            "@type": "ReferenceSequence",
+            "name": "BA000007.3",
+            "sequence_md5": "bd75228f94e634734bc6038e15bac220",
+            "source_uri": "/data/genomic/ecoli/ecoli_subset.fa"
+        },
+        "sequence/BA000007.3_bd7522/.zgroup": {
             "zarr_format": 2
         }
     },

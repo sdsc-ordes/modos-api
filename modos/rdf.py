@@ -6,7 +6,7 @@ from .helpers.schema import (
     load_prefixmap,
     load_schema,
 )
-from .helpers.schema import (
+from modos.helpers.schema import (
     is_uri,
     class_from_name,
 )

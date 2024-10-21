@@ -1,12 +1,8 @@
 {
     "@type": "MODO",
-    "creation_date": "2024-02-19T00:00:00",
-    "description": "Dummy modo for tests.",
-    "has_assay": [
-        "assay/assay1"
-    ],
+    "creation_date": "2024-01-17T00:00:00",
+    "description": "Example modo for tests",
+    "has_assay": "assay1",
     "id": "ex",
-    "last_update_date": "2024-02-19T00:00:00",
-    "name": "Example MODO",
-    "source_uri": "http://example.org/ex"
+    "last_update_date": "2024-10-15"
 }

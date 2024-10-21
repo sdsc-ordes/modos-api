@@ -5,7 +5,7 @@ from typing import Iterator, Optional
 
 import pysam
 
-from .region import Region
+from modos.genomics.region import Region
 
 
 class GenomicFileSuffix(tuple, Enum):

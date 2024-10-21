@@ -49,8 +49,8 @@ from pydantic.dataclasses import dataclass
 import pysam
 import requests
 
-from .region import Region
-from .formats import GenomicFileSuffix, read_pysam
+from modos.genomics.region import Region
+from modos.genomics.formats import GenomicFileSuffix, read_pysam
 
 
 @validate_call

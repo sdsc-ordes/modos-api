@@ -24,7 +24,7 @@
     data_format: CRAM
     has_reference: reference1
   args:
-    source_file: data/ex/demo1.cram
+    source_file: data/demo1.cram
 
 - element:
     id: reference1
@@ -32,7 +32,7 @@
     name: Reference 1
     data_path: reference.fa
   args:
-    source_file: data/ex/reference1.fa
+    source_file: data/reference1.fa
 
 - element:
     id: sample1
