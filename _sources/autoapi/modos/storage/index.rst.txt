@@ -1,0 +1,229 @@
+modos.storage
+=============
+
+.. py:module:: modos.storage
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   modos.storage.ZARR_ROOT
+   modos.storage.S3_ADDRESSING_STYLE
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.storage.Storage
+   modos.storage.LocalStorage
+   modos.storage.S3Path
+   modos.storage.S3Storage
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.storage.init_zarr
+   modos.storage.connect_s3
+   modos.storage.add_metadata_group
+   modos.storage.add_data
+   modos.storage.list_zarr_items
+
+
+Module Contents
+---------------
+
+.. py:data:: ZARR_ROOT
+
+.. py:data:: S3_ADDRESSING_STYLE
+
+.. py:class:: Storage
+
+   Bases: :py:obj:`abc.ABC`
+
+
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+      :abstractmethod:
+
+
+
+   .. py:property:: zarr
+      :type: zarr.hierarchy.Group
+
+      :abstractmethod:
+
+
+
+   .. py:method:: exists(target)
+      :abstractmethod:
+
+
+
+   .. py:method:: put(source, target)
+      :abstractmethod:
+
+
+
+   .. py:method:: remove(target)
+      :abstractmethod:
+
+
+
+   .. py:method:: list(target)
+      :abstractmethod:
+
+
+
+   .. py:method:: empty()
+
+
+.. py:class:: LocalStorage(path)
+
+   Bases: :py:obj:`Storage`
+
+
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+   .. py:attribute:: _path
+
+
+   .. py:property:: zarr
+      :type: zarr.hierarchy.Group
+
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+
+
+   .. py:method:: exists(target)
+
+
+   .. py:method:: list(target = None)
+
+
+   .. py:method:: remove(target)
+
+
+   .. py:method:: put(source, target)
+
+
+.. py:class:: S3Path
+
+   Pydantic Model for S3 URLs. Performs validation against amazon's official naming rules [1]_ [2]_
+
+   .. [1] https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html
+   .. [2] https://gist.github.com/rajivnarayan/c38f01b89de852b3e7d459cfde067f3f
+
+
+   .. rubric:: Examples
+
+   >>> S3Path(url="s3://test/ex")
+   S3Path(url='s3://test/ex')
+   >>> S3Path(url='s3://?invalid-bucket-name!/def') # doctest: +IGNORE_EXCEPTION_DETAIL
+   Traceback (most recent call last):
+     ...
+   pydantic_core._pydantic_core.ValidationError: 1 validation error for S3Path
+
+
+   .. py:attribute:: _s3_pattern
+      :type:  ClassVar[re.Pattern[str]]
+
+
+   .. py:attribute:: url
+      :type:  str
+
+
+   .. py:method:: s3_url_parts()
+
+
+   .. py:property:: bucket
+      :type: str
+
+
+
+   .. py:property:: key
+      :type: str
+
+
+
+.. py:class:: S3Storage(path, s3_endpoint, s3_kwargs = None)
+
+   Bases: :py:obj:`Storage`
+
+
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+   .. py:attribute:: _path
+
+
+   .. py:attribute:: endpoint
+
+
+   .. py:attribute:: s3_opts
+
+
+   .. py:attribute:: fs
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+
+
+   .. py:property:: zarr
+      :type: zarr.hierarchy.Group
+
+
+
+   .. py:method:: exists(target = ZARR_ROOT)
+
+
+   .. py:method:: list(target = None)
+
+
+   .. py:method:: remove(target)
+
+
+   .. py:method:: put(source, target)
+
+
+.. py:function:: init_zarr(zarr_store)
+
+   Initialize object's directory and metadata structure.
+
+
+.. py:function:: connect_s3(endpoint, s3_kwargs)
+
+.. py:function:: add_metadata_group(parent_group, metadata)
+
+   Add input metadata dictionary to an existing zarr group.
+
+
+.. py:function:: add_data(group, data)
+
+   Add a numpy array to an existing zarr group.
+
+
+.. py:function:: list_zarr_items(group)
+
+   Recursively list all zarr groups and arrays
+
+
