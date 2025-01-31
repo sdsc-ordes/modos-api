@@ -5,6 +5,7 @@ and for converting instances to different representations.
 """
 from enum import Enum
 from functools import lru_cache, reduce
+from hashlib import file_digest
 from pathlib import Path
 from typing import Any, Mapping, Optional, Union
 from urllib.parse import urlparse
@@ -102,12 +103,19 @@ def update_haspart_id(
 
 
 def set_data_path(
-    element: dict, source_file: Optional[Union[Path, str]] = None
-) -> dict:
+    element: model.DataEntity, source_file: Optional[Union[Path, str]] = None
+) -> model.DataEntity:
     """Set the data_path attribute, if it is not specified to the modo root."""
     if source_file and not element.get("data_path"):
         element["data_path"] = Path(source_file).name
     return element
+
+
+def generate_data_checksum(file_obj: Union[Path, str]) -> str:
+    """Generate the BLAKE2b checksum of the file_obj digest."""
+    with open(Path(file_obj), "rb") as f:
+        digest = file_digest(f, "blake2b")
+    return digest.hexdigest()
 
 
 class UserElementType(str, Enum):

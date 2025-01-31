@@ -51,8 +51,7 @@ class Storage(ABC):
         ...
 
     @abstractmethod
-    def update(self, source: Path, target: Path):
-        """Updates target file based on source file. If source is inside modo it will be deleted afterwards."""
+    def move(self, source: Path, target: Path):
         ...
 
     def empty(self) -> bool:
@@ -104,9 +103,8 @@ class LocalStorage(Storage):
     def put(self, source: Path, target: Path):
         shutil.copy(source, self.path / target)
 
-    def update(self, source: Path, target: Path):
-        self.put(source, target)
-        self.remove(self.path / target)
+    def move(self, source: Path, target: Path):
+        shutil.move(self.path / source, self.path / target)
 
 
 @dataclass
@@ -225,11 +223,8 @@ class S3Storage(Storage):
     def put(self, source: Path, target: Path):
         self.zarr.store.fs.put_file(source, self.path / Path(target))
 
-    def update(self, source: Path, target: Path):
-        if self.exists(source):
-            self.zarr.store.fs.mv(source, self.path / Path(target))
-        else:
-            self.put(source, target)
+    def move(self, source: Path, target: Path):
+        self.zarr.store.fs.mv(str(self.path / source), str(self.path / target))
 
 
 # Initialize object's directory given the metadata graph

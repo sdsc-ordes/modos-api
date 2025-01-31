@@ -32,6 +32,7 @@ from modos.helpers.schema import (
     set_haspart_relationship,
     UserElementType,
     update_haspart_id,
+    generate_data_checksum,
 )
 from modos.genomics.formats import GenomicFileSuffix, read_pysam
 from modos.genomics.htsget import HtsgetConnection
@@ -328,11 +329,19 @@ class MODO:
                 f"Please specify a unique ID. Element with ID {element.id} already exist."
             )
 
-        # Copy data file to storage and update data_path in metadata
+        # Copy data file to storage
         if source_file:
             source_path = Path(source_file)
             target_path = Path(element._get("data_path"))
             self.storage.put(source_path, target_path)
+
+            # Add data_checksum attribute
+            if isinstance(element, model.DataEntity):
+                setattr(
+                    element,
+                    "data_checksum",
+                    generate_data_checksum(source_file),
+                )
 
             # Genomic files have an associated index file
             try:
@@ -347,7 +356,7 @@ class MODO:
             except ValueError:
                 pass
 
-        # Inferred from type inferred from type
+        # Infer type
         type_name = allowed_elements.from_object(element).value
         type_group = self.zarr[type_name]
         element_path = f"{type_name}/{element.id}"
@@ -371,6 +380,7 @@ class MODO:
         self,
         element_id: str,
         new: model.DataEntity | model.Sample | model.Assay | model.MODO,
+        source_file: Optional[Path] = None,
     ):
         """Update element metadata in place by adding new values from model object.
 
@@ -387,6 +397,18 @@ class MODO:
             raise ValueError(
                 f"Class {attr_dict['@type']} of {element_id} does not match {new.class_name}."
             )
+
+        if isinstance(new, model.DataEntity):
+            new_path = Path(new._get("data_path"))
+            old_path = Path(attr_dict.get("data_path"))
+
+            if new_path != old_path:
+                self.storage.move(old_path, new_path)
+            if source_file:
+                source_checksum = generate_data_checksum(source_file)
+                if source_checksum != attr_dict.get("data_checksum"):
+                    self.storage.put(source_file, new_path)
+                    new["data_checksum"] = source_checksum
 
         new = update_haspart_id(new)
         new = json.loads(json_dumper.dumps(new))
@@ -405,6 +427,10 @@ class MODO:
             return
         attrs.update(**new_items)
         self.update_date()
+
+        if source_file:
+
+            pass
 
     def enrich_metadata(self):
         """Enrich MODO metadata in place using content from associated data files."""
@@ -533,7 +559,7 @@ class MODO:
         modo_ids = {Path(id).name: id for id in modo.metadata.keys()}
         for inst, args in instance_list:
             if inst.id in modo_ids.keys():
-                modo.update_element(modo_ids[inst.id], inst)
+                modo.update_element(modo_ids[inst.id], inst, **args)
             else:
                 modo.add_element(inst, **args)
         if no_remove:
