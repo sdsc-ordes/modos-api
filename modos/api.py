@@ -429,7 +429,6 @@ class MODO:
         self.update_date()
 
         if source_file:
-
             pass
 
     def enrich_metadata(self):
