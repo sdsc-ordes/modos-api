@@ -381,6 +381,8 @@ class MODO:
         element_id: str,
         new: model.DataEntity | model.Sample | model.Assay | model.MODO,
         source_file: Optional[Path] = None,
+        part_of: Optional[str] = None,
+        allowed_elements: type = ElementType,
     ):
         """Update element metadata in place by adding new values from model object.
 
@@ -409,6 +411,15 @@ class MODO:
                 if source_checksum != attr_dict.get("data_checksum"):
                     self.storage.put(source_file, new_path)
                     new["data_checksum"] = source_checksum
+
+        type_name = allowed_elements.from_object(new).value
+        element_path = f"{type_name}/{new.id}"
+
+        if part_of is not None:
+            partof_group = self.zarr[part_of]
+            set_haspart_relationship(
+                new.__class__.__name__, element_path, partof_group
+            )
 
         new = update_haspart_id(new)
         new = json.loads(json_dumper.dumps(new))
