@@ -84,3 +84,43 @@ def test_update_element(sample, remote_modo):
         remote_modo.metadata["sample/test_sample"].get("description")
         == "A fake sample for test purposes"
     )
+
+
+@pytest.mark.slow
+def test_update_data_path_move(remote_modo, data_entity):
+    data1 = model.DataEntity(
+        id="data/test_data", data_format="CRAM", data_path="demo2.cram"
+    )
+    assert not remote_modo.storage.exists("demo2.cram")
+    remote_modo.update_element("data/test_data", data1)
+    assert remote_modo.storage.exists("demo2.cram")
+    assert not remote_modo.storage.exists("demo1.cram")
+
+
+@pytest.mark.slow
+def test_update_source_file(remote_modo):
+    data1 = model.DataEntity(
+        id="data/test_data", data_format="CRAM", data_path="demo2.cram"
+    )
+    old_checksum = remote_modo.metadata.get("data/test_data").get(
+        "data_checksum"
+    )
+    remote_modo.update_element(
+        "data/test_data", data1, source_file="data/ex/demo1.cram.crai"
+    )
+    new_checksum = remote_modo.metadata.get("data/test_data").get(
+        "data_checksum"
+    )
+    assert new_checksum != old_checksum
+
+
+@pytest.mark.slow
+def test_update_source_file_and_data_path(remote_modo):
+    data2 = model.DataEntity(
+        id="data/test_data", data_format="CRAM", data_path="demo1.cram"
+    )
+    remote_modo.update_element(
+        "data/test_data", data2, source_file="data/ex/demo1.cram"
+    )
+    assert remote_modo.storage.exists("demo1.cram")
+    assert not remote_modo.storage.exists("demo2.cram")
