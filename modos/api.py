@@ -34,7 +34,7 @@ from modos.helpers.schema import (
     update_haspart_id,
     generate_data_checksum,
 )
-from modos.genomics.formats import GenomicFileSuffix, read_pysam
+from modos.genomics.formats import get_index, read_pysam
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import extract_metadata, parse_attributes
@@ -344,17 +344,10 @@ class MODO:
                 )
 
             # Genomic files have an associated index file
-            try:
-                ft = GenomicFileSuffix.from_path(source_path)
-                source_ix = source_path.with_suffix(
-                    source_path.suffix + ft.get_index_suffix()
-                )
-                target_ix = target_path.with_suffix(
-                    source_path.suffix + ft.get_index_suffix()
-                )
+            source_ix = get_index(source_path)
+            target_ix = get_index(target_path)
+            if source_ix:
                 self.storage.put(source_ix, target_ix)
-            except ValueError:
-                pass
 
         # Infer type
         type_name = allowed_elements.from_object(element).value
@@ -402,15 +395,22 @@ class MODO:
 
         if isinstance(new, model.DataEntity):
             new_path = Path(new._get("data_path"))
+            new_idx = get_index(new_path)
             old_path = Path(attr_dict.get("data_path"))
+            old_idx = get_index(old_path)
 
             if new_path != old_path:
                 self.storage.move(old_path, new_path)
+                if old_idx:
+                    self.storage.move(old_idx, new_idx)
             if source_file:
                 source_checksum = generate_data_checksum(source_file)
                 if source_checksum != attr_dict.get("data_checksum"):
+                    source_idx = get_index(Path(source_file))
                     self.storage.put(source_file, new_path)
                     new["data_checksum"] = source_checksum
+                    if source_idx:
+                        self.storage.put(source_idx, new_idx)
 
         type_name = allowed_elements.from_object(new).value
         element_path = f"{type_name}/{new.id}"
