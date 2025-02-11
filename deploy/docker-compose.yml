@@ -28,7 +28,7 @@ services:
       - modos-network
 
   minio:
-    image: docker.io/bitnami/minio:2024
+    image: docker.io/bitnami/minio:2025.2.3
     ports:
       - "9000:9000" # api
       - "9001:9001" # console
@@ -43,6 +43,7 @@ services:
       - MINIO_SERVER_SECRET_KEY=${MINIO_SERVER_SECRET_KEY:-pass}
       - MINIO_DEFAULT_BUCKETS=${MINIO_DEFAULT_BUCKET:-modos-demo:public}
       - MINIO_REGION=us-east-1
+      - AWS_REQUEST_CHECKSUM_CALCULATION='WHEN_REQUIRED'
 
 
   htsget:
