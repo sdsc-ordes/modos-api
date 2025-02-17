@@ -1,0 +1,4 @@
+source.base_url=${ENDPOINT}/${BUCKET}
+source.sequence_path=/sequence/{seqid}
+source.metadata_path=/metadata/json/{seqid}.json
+server.port=8080
