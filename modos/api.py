@@ -439,7 +439,6 @@ class MODO:
         attrs.update(**new_items)
         self.update_date()
 
-
     def enrich_metadata(self):
         """Enrich MODO metadata in place using content from associated data files."""
 
