@@ -51,7 +51,16 @@ class Storage(ABC):
         ...
 
     @abstractmethod
-    def move(self, source: Path, target: Path):
+    def move(self, rel_source: Path, target: Path):
+        """Move a file within storage.
+
+        Parameters
+        -----------------
+        rel_source:
+            source path to the file to move relative to storage.path
+        target:
+            target path within storage
+        """
         ...
 
     def empty(self) -> bool:
@@ -103,8 +112,8 @@ class LocalStorage(Storage):
     def put(self, source: Path, target: Path):
         shutil.copy(source, self.path / target)
 
-    def move(self, source: Path, target: Path):
-        shutil.move(self.path / source, self.path / target)
+    def move(self, rel_source: Path, target: Path):
+        shutil.move(self.path / rel_source, self.path / target)
 
 
 @dataclass
@@ -223,8 +232,10 @@ class S3Storage(Storage):
     def put(self, source: Path, target: Path):
         self.zarr.store.fs.put_file(source, self.path / Path(target))
 
-    def move(self, source: Path, target: Path):
-        self.zarr.store.fs.mv(str(self.path / source), str(self.path / target))
+    def move(self, rel_source: Path, target: Path):
+        self.zarr.store.fs.mv(
+            str(self.path / rel_source), str(self.path / target)
+        )
 
 
 # Initialize object's directory given the metadata graph
