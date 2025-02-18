@@ -375,7 +375,7 @@ class MODO:
         new: model.DataEntity | model.Sample | model.Assay | model.MODO,
         source_file: Optional[Path] = None,
         part_of: Optional[str] = None,
-        allowed_elements: type = ElementType,
+        allowed_elements: type = UserElementType,
     ):
         """Update element metadata in place by adding new values from model object.
 
