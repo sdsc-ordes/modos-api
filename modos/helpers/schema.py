@@ -19,6 +19,7 @@ from rdflib.term import URIRef
 import modos_schema.datamodel as model
 import modos_schema.schema as schema
 
+from modos.genomics.formats import get_index
 
 SCHEMA_PATH = Path(schema.__path__[0]) / "modos_schema.yaml"
 
@@ -109,6 +110,33 @@ def set_data_path(
     if source_file and not element.get("data_path"):
         element["data_path"] = Path(source_file).name
     return element
+
+
+class DataElement:
+    """Facade class to wrap model.DataEntity and include index logic for genomic files"""
+
+    def __init__(self, model: model.DataEntity):
+        self.model = model
+
+    def _set_checksum(self, source_checksum):
+        if source_checksum != self.model._get("data_checksum"):
+            self.model["data_checksum"] = source_checksum
+
+    def process_and_store(self, storage, source_path: Path):
+        source_idx = get_index(source_path)
+        target_path = Path(self.model._get("data_path"))
+        target_idx = get_index(target_path)
+        if storage.exists(source_path) and source_path != target_path:
+            storage.move(source_path, target_path)
+            if source_idx:
+                storage.move(source_idx, target_idx)
+        else:
+            source_checksum = generate_data_checksum(source_path)
+            if source_checksum != self.model._get("data_checksum"):
+                storage.put(source_path, target_path)
+                self._set_checksum(source_checksum)
+            if source_idx:
+                storage.put(source_idx, target_idx)
 
 
 def generate_data_checksum(file_obj: Union[Path, str]) -> str:
