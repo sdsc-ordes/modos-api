@@ -389,6 +389,7 @@ class MODO:
         if isinstance(new, model.DataEntity):
             new_data = DataElement(new)
             old_path = attr_dict.get("data_path")
+            # path changed in metadata -> move file inside modos
             if new_data.model._get("data_path") != old_path:
                 new_data.process_and_store(self.storage, Path(old_path))
             if source_file:
