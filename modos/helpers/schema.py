@@ -6,6 +6,7 @@ and for converting instances to different representations.
 from enum import Enum
 from functools import lru_cache, reduce
 from hashlib import file_digest
+from io import RawIOBase
 from pathlib import Path
 from typing import Any, Mapping, Optional, Union
 from urllib.parse import urlparse
@@ -131,7 +132,7 @@ class DataElement:
             if source_idx:
                 storage.move(source_idx, target_idx)
         else:
-            source_checksum = generate_data_checksum(source_path)
+            source_checksum = compute_checksum(open(source_path, "rb"))
             if source_checksum != self.model._get("data_checksum"):
                 storage.put(source_path, target_path)
                 self._set_checksum(source_checksum)
@@ -139,10 +140,9 @@ class DataElement:
                 storage.put(source_idx, target_idx)
 
 
-def generate_data_checksum(file_obj: Union[Path, str]) -> str:
+def compute_checksum(file_obj: RawIOBase) -> str:
     """Generate the BLAKE2b checksum of the file_obj digest."""
-    with open(Path(file_obj), "rb") as f:
-        digest = file_digest(f, "blake2b")
+    digest = file_digest(file_obj, "blake2b")
     return digest.hexdigest()
 
 
