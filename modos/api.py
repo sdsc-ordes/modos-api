@@ -392,6 +392,7 @@ class MODO:
             # path changed in metadata -> move file inside modos
             if new_data.model._get("data_path") != old_path:
                 new_data.process_and_store(self.storage, Path(old_path))
+            # new input file provided -> replace file content
             if source_file:
                 new_data.process_and_store(self.storage, Path(source_file))
 
