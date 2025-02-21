@@ -1,0 +1,112 @@
+modos.remote
+============
+
+.. py:module:: modos.remote
+
+.. autoapi-nested-parse::
+
+   Functions related to server storage handling
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.remote.EndpointManager
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.remote.list_remote_items
+   modos.remote.get_metadata_from_remote
+   modos.remote.is_s3_path
+   modos.remote.get_s3_path
+
+
+Module Contents
+---------------
+
+.. py:class:: EndpointManager
+
+   Handle modos server endpoints.
+   If a modos server url is provided, it is used to detect
+   available service urls. Alternatively, service urls can
+   be provided explicitely if no modos server is available.
+
+   :param modos: URL to the modos server.
+   :param services: Mapping of services to their urls.
+
+   .. rubric:: Examples
+
+   >>> ex = EndpointManager(modos="http://modos.example.org") # doctest: +SKIP
+   >>> ex.list() # doctest: +SKIP
+   {
+     's3: Url('http://s3.example.org/'),
+     'htsget': Url('http://htsget.example.org/')
+   }
+   >>> ex.htsget # doctest: +SKIP
+   HttpUrl('http://htsget.example.org/')
+   >>> ex = EndpointManager(services={"s3": "http://s3.example.org"})
+   >>> ex.s3
+   HttpUrl('http://s3.example.org/')
+
+
+   .. py:attribute:: modos
+      :type:  Optional[pydantic.HttpUrl]
+      :value: None
+
+
+
+   .. py:attribute:: services
+      :type:  dict[str, pydantic.HttpUrl]
+
+
+   .. py:method:: list()
+
+      List available endpoints.
+
+
+
+   .. py:property:: s3
+      :type: Optional[pydantic.HttpUrl]
+
+
+
+   .. py:property:: fuzon
+      :type: Optional[pydantic.HttpUrl]
+
+
+
+   .. py:property:: htsget
+      :type: Optional[pydantic.HttpUrl]
+
+
+
+.. py:function:: list_remote_items(url)
+
+.. py:function:: get_metadata_from_remote(url, modo_id = None)
+
+   Function to access metadata from one specific or all modos on a remote server
+
+   :param server_url: Url to the remote modo server
+   :param id: id of the modo to retrieve metadata from. Will return all if not specified (default).
+
+
+.. py:function:: is_s3_path(path)
+
+   Check if a path is an S3 path
+
+
+.. py:function:: get_s3_path(url, query, exact_match = False)
+
+   Request public S3 path of a specific modo or all modos matching the query string
+   :param remote_url: Url to the remote modo server
+   :param query: query string to specify the modo of interest
+   :param exact_match: if True only modos with exactly that id will be returned, otherwise (default) all matching modos
+
+
