@@ -99,6 +99,42 @@ def test_update_element_existing_attribute(test_modo):
     assert test_modo.metadata["sample/sample1"].get("sex") == "Female"
 
 
+# NOTE: test_update_* tests modify test_modo and need to be run together
+
+
+def test_update_data_path_move(test_modo):
+    data1 = model.DataEntity(
+        id="data/demo1", data_format="CRAM", data_path="demo2.cram"
+    )
+    assert not test_modo.storage.exists("demo2.cram")
+    test_modo.update_element("data/demo1", data1)
+    assert test_modo.storage.exists("demo2.cram")
+    assert not test_modo.storage.exists("demo1.cram")
+
+
+def test_update_source_file(test_modo):
+    data1 = model.DataEntity(
+        id="data/demo1", data_format="CRAM", data_path="demo2.cram"
+    )
+    old_checksum = test_modo.metadata.get("data/demo1").get("data_checksum")
+    test_modo.update_element(
+        "data/demo1", data1, source_file="data/demo1.cram.crai"
+    )
+    new_checksum = test_modo.metadata.get("data/demo1").get("data_checksum")
+    assert new_checksum != old_checksum
+
+
+def test_update_source_file_and_data_path(test_modo):
+    data2 = model.DataEntity(
+        id="data/demo1", data_format="CRAM", data_path="demo1.cram"
+    )
+    test_modo.update_element(
+        "data/demo1", data2, source_file="data/demo1.cram"
+    )
+    assert test_modo.storage.exists("demo1.cram")
+    assert not test_modo.storage.exists("demo2.cram")
+
+
 ## Enrich metadata
 
 

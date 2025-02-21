@@ -5,6 +5,8 @@ and for converting instances to different representations.
 """
 from enum import Enum
 from functools import lru_cache, reduce
+from hashlib import file_digest
+from io import RawIOBase
 from pathlib import Path
 from typing import Any, Mapping, Optional, Union
 from urllib.parse import urlparse
@@ -18,6 +20,7 @@ from rdflib.term import URIRef
 import modos_schema.datamodel as model
 import modos_schema.schema as schema
 
+from modos.genomics.formats import get_index
 
 SCHEMA_PATH = Path(schema.__path__[0]) / "modos_schema.yaml"
 
@@ -102,12 +105,45 @@ def update_haspart_id(
 
 
 def set_data_path(
-    element: dict, source_file: Optional[Union[Path, str]] = None
-) -> dict:
+    element: model.DataEntity, source_file: Optional[Union[Path, str]] = None
+) -> model.DataEntity:
     """Set the data_path attribute, if it is not specified to the modo root."""
     if source_file and not element.get("data_path"):
         element["data_path"] = Path(source_file).name
     return element
+
+
+class DataElement:
+    """Facade class to wrap model.DataEntity and include index logic for genomic files"""
+
+    def __init__(self, model: model.DataEntity):
+        self.model = model
+
+    def _set_checksum(self, source_checksum):
+        if source_checksum != self.model._get("data_checksum"):
+            self.model["data_checksum"] = source_checksum
+
+    def process_and_store(self, storage, source_path: Path):
+        source_idx = get_index(source_path)
+        target_path = Path(self.model._get("data_path"))
+        target_idx = get_index(target_path)
+        if storage.exists(source_path) and source_path != target_path:
+            storage.move(source_path, target_path)
+            if source_idx:
+                storage.move(source_idx, target_idx)
+        else:
+            source_checksum = compute_checksum(open(source_path, "rb"))
+            if source_checksum != self.model._get("data_checksum"):
+                storage.put(source_path, target_path)
+                self._set_checksum(source_checksum)
+            if source_idx:
+                storage.put(source_idx, target_idx)
+
+
+def compute_checksum(file_obj: RawIOBase) -> str:
+    """Generate the BLAKE2b checksum of the file_obj digest."""
+    digest = file_digest(file_obj, "blake2b")
+    return digest.hexdigest()
 
 
 class UserElementType(str, Enum):

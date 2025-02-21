@@ -32,8 +32,9 @@ from modos.helpers.schema import (
     set_haspart_relationship,
     UserElementType,
     update_haspart_id,
+    DataElement,
 )
-from modos.genomics.formats import GenomicFileSuffix, read_pysam
+from modos.genomics.formats import get_index, read_pysam
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import extract_metadata, parse_attributes
@@ -328,26 +329,20 @@ class MODO:
                 f"Please specify a unique ID. Element with ID {element.id} already exist."
             )
 
-        # Copy data file to storage and update data_path in metadata
+        # Copy data file to storage
         if source_file:
-            source_path = Path(source_file)
-            target_path = Path(element._get("data_path"))
-            self.storage.put(source_path, target_path)
+            # NOTE: Keep this for compatibility until ReferenceGenomes are handeled by refget
+            if isinstance(element, model.ReferenceGenome):
+                source_path = Path(source_file)
+                target_path = Path(element._get("data_path"))
+                self.storage.put(source_path, target_path)
 
-            # Genomic files have an associated index file
-            try:
-                ft = GenomicFileSuffix.from_path(source_path)
-                source_ix = source_path.with_suffix(
-                    source_path.suffix + ft.get_index_suffix()
-                )
-                target_ix = target_path.with_suffix(
-                    source_path.suffix + ft.get_index_suffix()
-                )
-                self.storage.put(source_ix, target_ix)
-            except ValueError:
-                pass
+            # Add data_checksum attribute
+            if isinstance(element, model.DataEntity):
+                new_data = DataElement(element)
+                new_data.process_and_store(self.storage, Path(source_file))
 
-        # Inferred from type inferred from type
+        # Infer type
         type_name = allowed_elements.from_object(element).value
         type_group = self.zarr[type_name]
         element_path = f"{type_name}/{element.id}"
@@ -371,6 +366,9 @@ class MODO:
         self,
         element_id: str,
         new: model.DataEntity | model.Sample | model.Assay | model.MODO,
+        source_file: Optional[Path] = None,
+        part_of: Optional[str] = None,
+        allowed_elements: type = UserElementType,
     ):
         """Update element metadata in place by adding new values from model object.
 
@@ -386,6 +384,25 @@ class MODO:
         if not isinstance(new, class_from_name(attr_dict.get("@type"))):
             raise ValueError(
                 f"Class {attr_dict['@type']} of {element_id} does not match {new.class_name}."
+            )
+
+        if isinstance(new, model.DataEntity):
+            new_data = DataElement(new)
+            old_path = attr_dict.get("data_path")
+            # path changed in metadata -> move file inside modos
+            if new_data.model._get("data_path") != old_path:
+                new_data.process_and_store(self.storage, Path(old_path))
+            # new input file provided -> replace file content
+            if source_file:
+                new_data.process_and_store(self.storage, Path(source_file))
+
+        type_name = allowed_elements.from_object(new).value
+        element_path = f"{type_name}/{new.id}"
+
+        if part_of is not None:
+            partof_group = self.zarr[part_of]
+            set_haspart_relationship(
+                new.__class__.__name__, element_path, partof_group
             )
 
         new = update_haspart_id(new)
@@ -533,7 +550,7 @@ class MODO:
         modo_ids = {Path(id).name: id for id in modo.metadata.keys()}
         for inst, args in instance_list:
             if inst.id in modo_ids.keys():
-                modo.update_element(modo_ids[inst.id], inst)
+                modo.update_element(modo_ids[inst.id], inst, **args)
             else:
                 modo.add_element(inst, **args)
         if no_remove:

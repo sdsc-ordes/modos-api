@@ -77,3 +77,11 @@ def read_pysam(
         stream = pysam_handle.fetch(*region.to_tuple())
 
     return stream
+
+
+def get_index(file_path: Path) -> Optional[Path]:
+    try:
+        ft = GenomicFileSuffix.from_path(Path(file_path))
+        return file_path.with_suffix(file_path.suffix + ft.get_index_suffix())
+    except ValueError:
+        return None
