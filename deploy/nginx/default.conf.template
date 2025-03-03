@@ -16,7 +16,7 @@ server {
         "s3": "${S3_PUBLIC_URL}",
         "htsget": "${HTSGET_PUBLIC_URL}",
         "fuzon": "${FUZON_PUBLIC_URL}",
-        "refget": ${REFGET_PUBLIC_URL}
+        "refget": "${REFGET_PUBLIC_URL}"
       }' ;
   }
   # S3 bucket service
