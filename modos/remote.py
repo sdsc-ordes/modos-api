@@ -62,6 +62,10 @@ class EndpointManager:
     def htsget(self) -> Optional[HttpUrl]:
         return self.list().get("htsget")
 
+    @property
+    def refget(self) -> Optional[HttpUrl]:
+        return self.list().get("refget")
+
 
 @validate_call
 def list_remote_items(url: HttpUrl) -> list[HttpUrl]:
