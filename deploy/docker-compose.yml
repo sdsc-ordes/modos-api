@@ -18,7 +18,7 @@ services:
       - REFGET_PUBLIC_URL=${REFGET_PUBLIC_URL:-http://localhost/refget}
       - FUZON_PUBLIC_URL=${FUZON_PUBLIC_URL:-http://localhost/fuzon}
       - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
-      - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3/}
+      - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3}
       - FUZON_LOCAL_URL=${FUZON_LOCAL_URL:-http://fuzon:8080}
       - REFGET_LOCAL_URL=${REFGET_LOCAL_URL:-http://refget:8080}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
@@ -60,7 +60,7 @@ services:
     networks:
       - modos-network
     environment:
-      - ENDPOINT=${S3_PUBLIC_URL:-http://minio:9000}
+      - ENDPOINT=${S3_PUBLIC_URL:-http://localhost/s3}
       - BUCKET=${S3_BUCKET:-modos-demo}
       - S3_ADDRESSING_STYLE=${S3_ADDRESSING_STYLE:-auto}
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minio}
@@ -90,8 +90,8 @@ services:
     networks:
       - modos-network
     environment:
-      - ENDPOINT=${S3_PUBLIC_URL:-http://minio:9000}
-      - BUCKET=${S3_BUCKET:-genome-references}
+      - ENDPOINT=${S3_PUBLIC_URL:-http://localhost/s3}
+      - BUCKET=${REFERENCE_BUCKET:-genome-references}
 
   modos-server:
     build: ./modos-server
