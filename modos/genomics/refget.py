@@ -49,14 +49,16 @@ class RefgetStorage:
             bucket=self.bucket,
             key=primary_path,
             data=seq,
-            headers={"Content-Type": "text/plain"},
+            headers={"Content-Type": "text/vnd.ga4gh.refget.v1.0.0+plain"},
         )
         upload_to_s3(
             fs=self.fs,
             bucket=self.bucket,
             key=primary_meta_path,
             data=json.dumps(meta),
-            headers={"Content-Type": "text/plain"},
+            headers={
+                "Content-Type": "application/vnd.ga4gh.refget.v1.0.0+json"
+            },
         )
 
         # upload secondary checksums

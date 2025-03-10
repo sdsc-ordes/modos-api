@@ -52,5 +52,7 @@ server {
   location /refget {
     rewrite ^/refget/(.*) /$1 break ;
     proxy_pass ${REFGET_LOCAL_URL} ;
+    # Ensure Nginx does not override Content-Type
+    default_type off ;
   }
 }
