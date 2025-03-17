@@ -89,7 +89,7 @@ In the `.env` file, each service has a `<service>_PUBLIC_URL` and a `<service>_L
 
 ### Streaming and requesting reference sequences with minio
 
-There are two options to use htsget streaming or request a reference sequence with the minio embedded in the compose setup:
+There are two options to let the htsget and refget servers talk to the minio embedded in the compose setup:
 
 1. Set `S3_PUBLIC_URL=http://<LOCAL-IP>:9000` where `<LOCAL-IP>` is your local IP address (find it using hostname -I). **This is done automatically when starting the server with `make deploy`**.
 
