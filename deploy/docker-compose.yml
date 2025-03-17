@@ -91,7 +91,7 @@ services:
       - modos-network
     environment:
       - ENDPOINT=${S3_PUBLIC_URL:-http://localhost/s3}
-      - BUCKET=${REFERENCE_BUCKET:-genome-references}
+      - BUCKET=${REFERENCE_BUCKET:-reference-genomes}
 
   modos-server:
     build: ./modos-server
