@@ -15,10 +15,12 @@ services:
     volumes:
       - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
     environment:
+      - REFGET_PUBLIC_URL=${REFGET_PUBLIC_URL:-http://localhost/refget}
       - FUZON_PUBLIC_URL=${FUZON_PUBLIC_URL:-http://localhost/fuzon}
       - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
-      - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3/}
+      - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3}
       - FUZON_LOCAL_URL=${FUZON_LOCAL_URL:-http://fuzon:8080}
+      - REFGET_LOCAL_URL=${REFGET_LOCAL_URL:-http://refget:8080}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - MODOS_LOCAL_URL=${MODOS_LOCAL_URL:-http://modos-server:8000}
       - S3_LOCAL_URL=${S3_LOCAL_URL:-http://minio:9000}
@@ -41,7 +43,7 @@ services:
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-miniosecret}
       - MINIO_SERVER_ACCESS_KEY=${MINIO_SERVER_ACCESS_KEY:-user}
       - MINIO_SERVER_SECRET_KEY=${MINIO_SERVER_SECRET_KEY:-pass}
-      - MINIO_DEFAULT_BUCKETS=${MINIO_DEFAULT_BUCKET:-modos-demo:public}
+      - MINIO_DEFAULT_BUCKETS=${MINIO_DEFAULT_BUCKET:-modos-demo:public,genome-references:public}
       - MINIO_REGION=us-east-1
       - AWS_REQUEST_CHECKSUM_CALCULATION='WHEN_REQUIRED'
 
@@ -58,7 +60,7 @@ services:
     networks:
       - modos-network
     environment:
-      - ENDPOINT=${S3_PUBLIC_URL:-http://minio:9000}
+      - ENDPOINT=${S3_PUBLIC_URL:-http://localhost/s3}
       - BUCKET=${S3_BUCKET:-modos-demo}
       - S3_ADDRESSING_STYLE=${S3_ADDRESSING_STYLE:-auto}
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minio}
@@ -76,6 +78,20 @@ services:
     networks:
       - modos-network
 
+
+  refget:
+    build: ./refget
+    depends_on:
+        - minio
+    volumes:
+      - ./refget/config.properties.template:/refget/config.properties.template:ro
+    expose:
+      - "8080"
+    networks:
+      - modos-network
+    environment:
+      - ENDPOINT=${S3_PUBLIC_URL:-http://localhost/s3}
+      - BUCKET=${REFERENCE_BUCKET:-reference-genomes}
 
   modos-server:
     build: ./modos-server
