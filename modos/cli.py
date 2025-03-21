@@ -22,7 +22,7 @@ from modos.codes import get_slot_matcher, SLOT_TERMINOLOGIES
 from modos.helpers.schema import UserElementType
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
-from modos.io import parse_instance
+from modos.io import parse_instance, parse_attributes
 from modos.prompt import SlotPrompter
 from modos.remote import EndpointManager
 from modos.prompt import SlotPrompter, fuzzy_complete
@@ -389,12 +389,12 @@ def update(
             help="File defining the updated modo. The file must be in json or yaml format.",
         ),
     ],
-    no_remove: Annotated[
+    force: Annotated[
         bool,
         typer.Option(
-            "--no-remove",
-            "-n",
-            help="Do not remove elements that are missing in the config_file.",
+            "--force",
+            "-f",
+            help="Force deletion of elements that are missing in the config_file.",
         ),
     ] = False,
 ):
@@ -402,12 +402,37 @@ def update(
 
     typer.echo(f"Updating {object_path}.", err=True)
     endpoint = ctx.obj.endpoint
-    _ = MODO.from_file(
-        config_path=config_file,
-        object_path=object_path,
-        endpoint=endpoint,
-        no_remove=no_remove,
-    )
+    if force:
+        _ = MODO.from_file(
+            config_path=config_file,
+            object_path=object_path,
+            endpoint=endpoint,
+            no_remove=False,
+        )
+    else:
+        element_list = parse_attributes(Path(config_file))
+        new_ids = [ele["element"].get("id") for ele in element_list]
+        _ = MODO.from_file(
+            config_path=config_file,
+            object_path=object_path,
+            endpoint=endpoint,
+            no_remove=True,
+        )
+        modo_id = _.zarr["/"].attrs["id"]
+        meta_ids = {Path(id).name: id for id in _.metadata.keys()}
+        old_ids = [
+            id for id in meta_ids.keys() if id not in new_ids and id != modo_id
+        ]
+        for old_id in old_ids:
+            delete = typer.confirm(
+                f"Could not find element '{old_id}' in config_file.\n Shall {old_id} be deleted?"
+            )
+            if not delete:
+                print(
+                    f"Keep {old_id} as part of {modo_id}. Consider updating your config_file."
+                )
+                continue
+            _.remove_element(meta_ids[old_id])
 
 
 def version_callback(value: bool):
