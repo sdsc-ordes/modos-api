@@ -425,7 +425,7 @@ def update(
         ]
         for old_id in old_ids:
             delete = typer.confirm(
-                f"Could not find element '{old_id}' in config_file.\n Shall {old_id} be deleted?"
+                f"Object contains element '{old_id}' which was not in config_file.\n Delete {old_id} ?"
             )
             if not delete:
                 print(
