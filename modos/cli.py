@@ -411,7 +411,7 @@ def update(
         )
     else:
         element_list = parse_attributes(Path(config_file))
-        new_ids = [ele["element"].get("id") for ele in element_list]
+        config_ids = [ele["element"].get("id") for ele in element_list]
         _ = MODO.from_file(
             config_path=config_file,
             object_path=object_path,
@@ -421,7 +421,9 @@ def update(
         modo_id = _.zarr["/"].attrs["id"]
         meta_ids = {Path(id).name: id for id in _.metadata.keys()}
         old_ids = [
-            id for id in meta_ids.keys() if id not in new_ids and id != modo_id
+            id
+            for id in meta_ids.keys()
+            if id not in config_ids and id != modo_id
         ]
         for old_id in old_ids:
             delete = typer.confirm(
@@ -429,7 +431,7 @@ def update(
             )
             if not delete:
                 print(
-                    f"Keeping {old_id} in of {modo_id}. Consider updating your config_file."
+                    f"Keeping {old_id} in {modo_id}. Consider updating your config_file."
                 )
                 continue
             _.remove_element(meta_ids[old_id])
