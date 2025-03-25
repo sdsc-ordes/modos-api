@@ -555,7 +555,7 @@ class MODO:
                 modo.add_element(inst, **args)
         if no_remove:
             return modo
-        modo_id = modo_id = modo.zarr["/"].attrs["id"]
+        modo_id = modo.zarr["/"].attrs["id"]
         old_ids = [
             id for id in modo_ids.keys() if id not in ids and id != modo_id
         ]
