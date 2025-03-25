@@ -429,7 +429,7 @@ def update(
             )
             if not delete:
                 print(
-                    f"Keep {old_id} as part of {modo_id}. Consider updating your config_file."
+                    f"Keeping {old_id} in of {modo_id}. Consider updating your config_file."
                 )
                 continue
             _.remove_element(meta_ids[old_id])
