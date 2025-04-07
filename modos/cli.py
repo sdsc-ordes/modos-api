@@ -40,7 +40,9 @@ class RdfFormat(str, Enum):
 
 cli = typer.Typer(add_completion=False)
 c4gh = typer.Typer(add_completion=False)
-cli.add_typer(c4gh, name="c4gh")
+cli.add_typer(c4gh, name="c4gh", short_help="Manage encryption via crypt4gh.")
+remote = typer.Typer(add_completion=False)
+cli.add_typer(remote, name="remote", short_help="Remote-only operations.")
 
 OBJECT_PATH_ARG = Annotated[
     str,
@@ -225,20 +227,41 @@ def enrich(
     zarr.consolidate_metadata(modo.zarr.store)
 
 
-@cli.command()
+@remote.command()
 def download(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     target_path: Annotated[
-        Optional[str],
+        Path,
         typer.Option(
             "--target",
             "-t",
             help="Path where to download the digital object.",
+            exists=False,
+            dir_okay=True,
         ),
     ],
 ):
     """Download a modo from a remote endpoint."""
+    modo = MODO(object_path, endpoint=ctx.obj.endpoint)
+    modo.download(target_dir=Path(target_path))
+
+
+@remote.command()
+def upload(
+    ctx: typer.Context,
+    object_path: OBJECT_PATH_ARG,
+    target_path: Annotated[
+        Path,
+        typer.Option(
+            "--target",
+            "-t",
+            help="Path where to upload the digital object.",
+            exists=False,
+            dir_okay=True,
+        ),
+    ],
+):
     ...
 
 

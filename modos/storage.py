@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 import io
 import os
@@ -39,7 +40,9 @@ class Storage(ABC):
         ...
 
     @abstractmethod
-    def list(self, target: Optional[Path]) -> Generator[Path, None, None]:
+    def list(
+        self, target: Optional[Path] = None
+    ) -> Generator[Path, None, None]:
         ...
 
     @abstractmethod
@@ -60,12 +63,21 @@ class Storage(ABC):
         ...
 
     @abstractmethod
-    def put(self, source: Path, target: Path):
+    def put(self, source: io.BytesIO, target: Path):
         ...
 
     @abstractmethod
     def remove(self, target: Path):
         ...
+
+    def transfer(self, other: Storage):
+        for path in self.list():
+            item = path.relative_to(self.path)
+            with (
+                self.open(item) as src,
+                open(other.path / item, "wb") as dst,
+            ):
+                other.put(src, dst)
 
     def empty(self) -> bool:
         return len(self.zarr.attrs.keys()) == 0
@@ -114,8 +126,11 @@ class LocalStorage(Storage):
     def open(self, target: Path) -> io.BufferedReader:
         return open(self.path / target, "rb")
 
-    def put(self, source: Path, target: Path):
-        shutil.copy(source, self.path / target)
+    def put(self, source: io.BytesIO, target: Path):
+        with open(self.path / target, "wb") as f:
+            while source:
+                chunk = source.read(8192)
+                f.write(chunk)
 
     def remove(self, target: Path):
         if target.exists():
@@ -213,8 +228,9 @@ class S3Storage(Storage):
         return fs.exists(str(self.path / target))
 
     def download(self, target: Path) -> None:
-        target.mkdir(exist_ok=True)
-        for item in self.list():
+        target.mkdir(exist_ok=False)
+        for path in self.list():
+            item = path.relative_to(self.path)
             with (
                 self.open(item) as src,
                 open(target / item, "wb") as dst,
@@ -245,8 +261,11 @@ class S3Storage(Storage):
                 f"INFO: Permanently deleted {target} from remote filesystem."
             )
 
-    def put(self, source: Path, target: Path):
-        self.zarr.store.fs.put_file(source, self.path / Path(target))
+    def put(self, source: io.BytesIO, target: Path):
+        out_file = s3fs.S3File(self.zarr.store.fs, self.path / Path(target))
+        while source:
+            chunk = source.read(8192)
+            out_file.flush(chunk)
 
     def move(self, rel_source: Path, target: Path):
         self.zarr.store.fs.mv(
