@@ -126,8 +126,7 @@ class LocalStorage(Storage):
 
     def put(self, source: io.BufferedReader, target: Path):
         with open(self.path / target, "wb") as f:
-            while source:
-                chunk = source.read(8192)
+            while chunk := source.read(8192):
                 f.write(chunk)
 
     def remove(self, target: Path):
@@ -261,8 +260,7 @@ class S3Storage(Storage):
 
     def put(self, source: io.BufferedReader, target: Path):
         out_file = s3fs.S3File(self.zarr.store.fs, self.path / Path(target))
-        while source:
-            chunk = source.read(8192)
+        while chunk := source.read(8192):
             out_file.flush(chunk)
 
     def move(self, rel_source: Path, target: Path):

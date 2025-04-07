@@ -49,7 +49,7 @@
           just # Command runner.
           direnv # Auto apply stuff on entering directory `cd`.
 
-          python310
+          python311
           pyright
           poetry
         ];

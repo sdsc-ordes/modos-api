@@ -339,7 +339,8 @@ class MODO:
             if isinstance(element, model.ReferenceGenome):
                 source_path = Path(source_file)
                 target_path = Path(element._get("data_path"))
-                self.storage.put(source_path, target_path)
+                with open(source_path, "rb") as src:
+                    self.storage.put(src, target_path)
 
             # Add data_checksum attribute
             if isinstance(element, model.DataEntity):

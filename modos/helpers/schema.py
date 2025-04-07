@@ -132,12 +132,15 @@ class DataElement:
             if source_idx:
                 storage.move(source_idx, target_idx)
         else:
-            source_checksum = compute_checksum(open(source_path, "rb"))
-            if source_checksum != self.model._get("data_checksum"):
-                storage.put(source_path, target_path)
+            with open(source_path, "rb") as src:
+                source_checksum = compute_checksum(src)
+            with open(source_path, "rb") as src:
+                if source_checksum != self.model._get("data_checksum"):
+                    storage.put(src, target_path)
                 self._set_checksum(source_checksum)
             if source_idx:
-                storage.put(source_idx, target_idx)
+                with open(source_idx, "rb") as src:
+                    storage.put(src, target_idx)
 
 
 def compute_checksum(file_obj: RawIOBase) -> str:
