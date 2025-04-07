@@ -144,6 +144,10 @@ class MODO:
         return self.storage.zarr
 
     @property
+    def is_remote(self) -> bool:
+        return self.endpoint.s3 is not None
+
+    @property
     def path(self) -> Path:
         return self.storage.path
 
@@ -562,3 +566,9 @@ class MODO:
         for old_id in old_ids:
             modo.remove_element(modo_ids[old_id])
         return modo
+
+    def download(self, target_dir: Path):
+        """Download the MODO to a local directory.
+        This will download all files and metadata to the target directory.
+        """
+        self.storage.download(target_dir)

@@ -31,23 +31,15 @@ class Storage(ABC):
         ...
 
     @abstractmethod
+    def download(self, target: Path):
+        ...
+
+    @abstractmethod
     def exists(self, target: Path) -> bool:
         ...
 
     @abstractmethod
-    def put(self, source: Path, target: Path):
-        ...
-
-    @abstractmethod
-    def remove(self, target: Path):
-        ...
-
-    @abstractmethod
     def list(self, target: Optional[Path]) -> Generator[Path, None, None]:
-        ...
-
-    @abstractmethod
-    def open(self, target: Path) -> io.BufferedReader:
         ...
 
     @abstractmethod
@@ -61,6 +53,18 @@ class Storage(ABC):
         target:
             target path within storage
         """
+        ...
+
+    @abstractmethod
+    def open(self, target: Path) -> io.BufferedReader:
+        ...
+
+    @abstractmethod
+    def put(self, source: Path, target: Path):
+        ...
+
+    @abstractmethod
+    def remove(self, target: Path):
         ...
 
     def empty(self) -> bool:
@@ -87,6 +91,9 @@ class LocalStorage(Storage):
     def path(self) -> Path:
         return self._path
 
+    def download(self, target: Path):
+        raise ValueError("Cannot download a local storage.")
+
     def exists(self, target: Path) -> bool:
         return (self.path / target).exists()
 
@@ -101,19 +108,19 @@ class LocalStorage(Storage):
                 if file.is_file():
                     yield file
 
+    def move(self, rel_source: Path, target: Path):
+        shutil.move(self.path / rel_source, self.path / target)
+
     def open(self, target: Path) -> io.BufferedReader:
         return open(self.path / target, "rb")
+
+    def put(self, source: Path, target: Path):
+        shutil.copy(source, self.path / target)
 
     def remove(self, target: Path):
         if target.exists():
             target.unlink()
             print(f"INFO: Permanently deleted {target} from filesystem.")
-
-    def put(self, source: Path, target: Path):
-        shutil.copy(source, self.path / target)
-
-    def move(self, rel_source: Path, target: Path):
-        shutil.move(self.path / rel_source, self.path / target)
 
 
 @dataclass
@@ -204,6 +211,15 @@ class S3Storage(Storage):
     def exists(self, target: Path = ZARR_ROOT) -> bool:
         fs = self.zarr.store.fs
         return fs.exists(str(self.path / target))
+
+    def download(self, target: Path) -> None:
+        target.mkdir(exist_ok=True)
+        for item in self.list():
+            with (
+                self.open(item) as src,
+                open(target / item, "wb") as dst,
+            ):
+                shutil.copyfileobj(src, dst)
 
     def list(
         self, target: Optional[Path] = None
