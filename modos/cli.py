@@ -40,9 +40,26 @@ class RdfFormat(str, Enum):
 
 cli = typer.Typer(add_completion=False)
 c4gh = typer.Typer(add_completion=False)
-cli.add_typer(c4gh, name="c4gh", short_help="Manage encryption via crypt4gh.")
+cli.add_typer(
+    c4gh,
+    name="c4gh",
+    short_help="Local encryption via crypt4gh.",
+    rich_help_panel="Command groups",
+)
 remote = typer.Typer(add_completion=False)
-cli.add_typer(remote, name="remote", short_help="Remote-only operations.")
+cli.add_typer(
+    remote,
+    name="remote",
+    short_help="Remote object management.",
+    rich_help_panel="Command groups",
+)
+codes = typer.Typer(add_completion=False)
+cli.add_typer(
+    codes,
+    name="codes",
+    short_help="Terminology codes utilities.",
+    rich_help_panel="Command groups",
+)
 
 OBJECT_PATH_ARG = Annotated[
     str,
@@ -54,7 +71,7 @@ OBJECT_PATH_ARG = Annotated[
 
 
 # Create command
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def create(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -107,7 +124,7 @@ def create(
     MODO(path=object_path, endpoint=endpoint.modos, **attrs)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def remove(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -150,7 +167,7 @@ def remove(
         modo.remove_element(element_id)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def add(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -213,7 +230,7 @@ def add(
     modo.add_element(obj, source_file=source_file, part_of=parent)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def enrich(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -262,6 +279,7 @@ def upload(
         ),
     ],
 ):
+    """Upload a local modo to a remote endpoint."""
     ...
 
 
@@ -303,7 +321,7 @@ def encrypt(
     ...
 
 
-@cli.command()
+@cli.command(rich_help_panel="Read")
 def show(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -349,7 +367,7 @@ def show(
     print(out)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Read")
 def publish(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -365,7 +383,7 @@ def publish(
     )
 
 
-@cli.command()
+@remote.command()
 def list(
     ctx: typer.Context,
 ):
@@ -377,8 +395,8 @@ def list(
         print(item)
 
 
-@cli.command()
-def search_codes(
+@codes.command()
+def search(
     ctx: typer.Context,
     slot: Annotated[
         str,
@@ -419,7 +437,7 @@ def search_codes(
     print(out)
 
 
-@cli.command()
+@remote.command()
 def stream(
     ctx: typer.Context,
     file_path: Annotated[
@@ -457,7 +475,7 @@ def stream(
             sys.stdout.buffer.write(chunk)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def update(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
