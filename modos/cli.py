@@ -39,6 +39,8 @@ class RdfFormat(str, Enum):
 
 
 cli = typer.Typer(add_completion=False)
+c4gh = typer.Typer(add_completion=False)
+cli.add_typer(c4gh, name="c4gh")
 
 OBJECT_PATH_ARG = Annotated[
     str,
@@ -221,6 +223,61 @@ def enrich(
     # Attempt to extract metadata from files
     modo.enrich_metadata()
     zarr.consolidate_metadata(modo.zarr.store)
+
+
+@cli.command()
+def download(
+    ctx: typer.Context,
+    object_path: OBJECT_PATH_ARG,
+    target_path: Annotated[
+        Optional[str],
+        typer.Option(
+            "--target",
+            "-t",
+            help="Path where to download the digital object.",
+        ),
+    ],
+):
+    """Download a modo from a remote endpoint."""
+    ...
+
+
+# Make a c4gh command group such that users type `modos c4gh {encrypt,decrypt}`
+# to encrypt/decrypt a file
+
+
+@c4gh.command()
+def decrypt(
+    ctx: typer.Context,
+    object_path: OBJECT_PATH_ARG,
+    secret_key: Annotated[
+        Optional[str],
+        typer.Option(
+            "--secret-key",
+            "-s",
+            help="Secret key of the recipient to decrypt files in the MODO.",
+        ),
+    ],
+):
+    """Decrypt a local MODO."""
+    ...
+
+
+@c4gh.command()
+def encrypt(
+    ctx: typer.Context,
+    object_path: OBJECT_PATH_ARG,
+    public_key: Annotated[
+        Optional[str],
+        typer.Option(
+            "--public-key",
+            "-p",
+            help="Public key of the recipent to encrypt files in the MODO.",
+        ),
+    ],
+):
+    """Encrypt a local MODO."""
+    ...
 
 
 @cli.command()
