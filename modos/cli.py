@@ -536,7 +536,7 @@ def update(
 
 
 def version_callback(value: bool):
-    """Prints version and exits"""
+    """Prints version and exits."""
     if value:
         print(f"modos {__version__}")
         # Exits successfully
@@ -561,7 +561,7 @@ def callback(
         None,
         "--version",
         callback=version_callback,
-        help="Print version of modos client",
+        help="Print version of modos client.",
     ),
 ):
     """Multi-Omics Digital Objects command line interface."""
