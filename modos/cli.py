@@ -27,7 +27,7 @@ from modos.prompt import SlotPrompter
 from modos.remote import EndpointManager
 from modos.prompt import SlotPrompter, fuzzy_complete
 from modos.remote import EndpointManager, list_remote_items
-from modos.storage import connect_s3
+from modos.storage import connect_s3, LocalStorage, S3Storage
 
 
 class RdfFormat(str, Enum):
@@ -261,7 +261,7 @@ def download(
 ):
     """Download a modo from a remote endpoint."""
     modo = MODO(object_path, endpoint=ctx.obj.endpoint)
-    modo.download(target_dir=Path(target_path))
+    modo.storage.transfer(LocalStorage(target_path))
 
 
 @remote.command()
@@ -269,18 +269,17 @@ def upload(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     target_path: Annotated[
-        Path,
+        str,
         typer.Option(
             "--target",
             "-t",
-            help="Path where to upload the digital object.",
-            exists=False,
-            dir_okay=True,
+            help="S3 path where to upload the digital object (format: s3://bucket/name).",
         ),
     ],
 ):
     """Upload a local modo to a remote endpoint."""
-    ...
+    modo = MODO(object_path)
+    modo.storage.transfer(S3Storage(target_path, s3_endpoint=ctx.obj.endpoint))
 
 
 # Make a c4gh command group such that users type `modos c4gh {encrypt,decrypt}`

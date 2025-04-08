@@ -32,10 +32,6 @@ class Storage(ABC):
         ...
 
     @abstractmethod
-    def download(self, target: Path):
-        ...
-
-    @abstractmethod
     def exists(self, target: Path) -> bool:
         ...
 
@@ -75,7 +71,7 @@ class Storage(ABC):
         for path in self.list():
             item = path.relative_to(self.path)
             with (self.open(item) as src):
-                other.put(src, other.path / item)
+                other.put(src, item)
 
     def empty(self) -> bool:
         return len(self.zarr.attrs.keys()) == 0
@@ -101,9 +97,6 @@ class LocalStorage(Storage):
     def path(self) -> Path:
         return self._path
 
-    def download(self, target: Path):
-        raise ValueError("Cannot download a local storage.")
-
     def exists(self, target: Path) -> bool:
         return (self.path / target).exists()
 
@@ -125,6 +118,9 @@ class LocalStorage(Storage):
         return open(self.path / target, "rb")
 
     def put(self, source: io.BufferedReader, target: Path):
+
+        os.makedirs(self.path / target.parent, exist_ok=True)
+
         with open(self.path / target, "wb") as f:
             while chunk := source.read(8192):
                 f.write(chunk)
@@ -224,29 +220,17 @@ class S3Storage(Storage):
         fs = self.zarr.store.fs
         return fs.exists(str(self.path / target))
 
-    def download(self, target: Path) -> None:
-        target.mkdir(exist_ok=False)
-        for path in self.list():
-            item = path.relative_to(self.path)
-            with (
-                self.open(item) as src,
-                open(target / item, "wb") as dst,
-            ):
-                shutil.copyfileobj(src, dst)
-
     def list(
         self, target: Optional[Path] = None
     ) -> Generator[Path, None, None]:
         fs = self.zarr.store.fs
         path = self.path / (target or "")
         for node in fs.glob(f"{path}/*"):
-            if Path(node).name.endswith(".zarr"):
-                continue
-            elif fs.isfile(node):
-                yield Path(node)
-            elif fs.isdir(node):
+            if fs.isdir(node):
                 for file in fs.find(node):
                     yield Path(file)
+            else:
+                yield Path(node)
 
     def open(self, target: Path) -> io.BufferedReader:
         return self.zarr.store.fs.open(str(self.path / target))
