@@ -70,7 +70,7 @@ class Storage(ABC):
         """Transfer all contents of one storage to another one."""
         for path in self.list():
             item = path.relative_to(self.path)
-            with (self.open(item) as src):
+            with self.open(item) as src:
                 other.put(src, item)
 
     def empty(self) -> bool:
@@ -118,7 +118,6 @@ class LocalStorage(Storage):
         return open(self.path / target, "rb")
 
     def put(self, source: io.BufferedReader, target: Path):
-
         os.makedirs(self.path / target.parent, exist_ok=True)
 
         with open(self.path / target, "wb") as f:
@@ -243,9 +242,11 @@ class S3Storage(Storage):
             )
 
     def put(self, source: io.BufferedReader, target: Path):
-        out_file = s3fs.S3File(self.zarr.store.fs, self.path / Path(target))
-        while chunk := source.read(8192):
-            out_file.flush(chunk)
+        out_file = f"{self.path}/{target.as_posix()}"
+        with self.zarr.store.fs.open(out_file, "wb") as f:
+            while chunk := source.read(8192):
+                f.write(chunk)
+                f.flush()
 
     def move(self, rel_source: Path, target: Path):
         self.zarr.store.fs.mv(

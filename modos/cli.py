@@ -23,8 +23,6 @@ from modos.helpers.schema import UserElementType
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import parse_instance, parse_attributes
-from modos.prompt import SlotPrompter
-from modos.remote import EndpointManager
 from modos.prompt import SlotPrompter, fuzzy_complete
 from modos.remote import EndpointManager, list_remote_items
 from modos.storage import connect_s3, LocalStorage, S3Storage
@@ -279,7 +277,8 @@ def upload(
 ):
     """Upload a local modo to a remote endpoint."""
     modo = MODO(object_path)
-    modo.storage.transfer(S3Storage(target_path, s3_endpoint=ctx.obj.endpoint))
+    endpoint = EndpointManager(ctx.obj.endpoint)
+    modo.storage.transfer(S3Storage(target_path, s3_endpoint=endpoint.s3))
 
 
 # Make a c4gh command group such that users type `modos c4gh {encrypt,decrypt}`
