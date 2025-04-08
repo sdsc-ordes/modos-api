@@ -35,7 +35,7 @@
           curl
           findutils
           git
-          just
+          just # Command runner.
           pyright
           uv
           zsh
