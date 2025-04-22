@@ -9,6 +9,7 @@ packages = [{ include = "modos" }]
 
 [tool.poetry.dependencies]
 calamus = "^0.4.2"
+crypt4gh = "^1.7"
 gtars = "^0.2.2"
 modos_schema = "^0.3"
 pysam = "^0.22.0"
