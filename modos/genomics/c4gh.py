@@ -22,7 +22,6 @@ from getpass import getpass
 
 def get_secret_key(
     seckey_path: os.PathLike,
-    prompt: bool = False,
     passphrase: Optional[str] = None,
 ) -> bytes:
     # get user secretkey
@@ -31,17 +30,19 @@ def get_secret_key(
         raise ValueError("Secret key not found")
 
     # in case it is passphrase protected
-    if prompt:
-        cb = partial(getpass, prompt=f"Passphrase for {seckey_path}: ")
-    elif passphrase:
+    if passphrase:
         cb = lambda: passphrase
+    else:
+        cb = partial(getpass, prompt=f"Passphrase for {seckey_path}: ")
 
     return get_private_key(seckey_path, cb)
 
 
 def get_keys(
-    recipient_pubkeys: List[os.PathLike], seckey: bytes
+    recipient_pubkeys: List[os.PathLike] | os.PathLike, seckey: bytes
 ) -> Set[Tuple[int, bytes, bytes]]:
+    if not isinstance(recipient_pubkeys, List):
+        recipient_pubkeys = [recipient_pubkeys]
     # get recepient public key(s) and generate "key tuple":
     # keys = (method, privkey, recipient_pubkey=None)
     recipient_list = []
@@ -56,13 +57,12 @@ def get_keys(
 
 def encrypt_stream(
     seckey_path: os.PathLike,
-    recipient_pubkeys: List[os.PathLike],
+    recipient_pubkeys: List[os.PathLike] | os.PathLike,
     infile: io.BufferedReader,
-    outfile: io.BufferedReader,
-    prompt: bool = False,
+    outfile: io.BufferedWriter,
     passphrase: Optional[str] = None,
 ):
-    seckey = get_secret_key(seckey_path, prompt=prompt, passphrase=passphrase)
+    seckey = get_secret_key(seckey_path, passphrase=passphrase)
     keys = get_keys(recipient_pubkeys, seckey)
     encrypt(keys=keys, infile=infile, outfile=outfile)
 
@@ -71,11 +71,10 @@ def decrypt_stream(
     seckey_path: os.PathLike,
     sender_pubkey: Optional[os.PathLike],
     infile: io.BufferedReader,
-    outfile: io.BufferedReader,
-    prompt: bool = False,
+    outfile: io.BufferedWriter,
     passphrase: Optional[str] = None,
 ):
-    seckey = get_secret_key(seckey_path, prompt=prompt, passphrase=passphrase)
+    seckey = get_secret_key(seckey_path, passphrase=passphrase)
     keys = [
         (0, seckey, None)
     ]  # keys = list of (method, privkey, recipient_pubkey=None)
