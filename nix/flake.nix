@@ -39,6 +39,12 @@
           pyright
           uv
           zsh
+
+          #bzip2
+          #lzma
+          #perl
+          #xz
+          #zlib
         ];
 
         # Things needed at runtime.
