@@ -5,6 +5,7 @@ authors = [
   { name = "Swiss Data Science Center", email = "contact@datascience.ch" },
 ]
 license = { text = "Apache-2.0" }
+license-files = ["LICEN[CS]E*"]
 readme = "README.md"
 requires-python = ">=3.11"
 dynamic = ["version"]
@@ -12,16 +13,16 @@ dependencies = [
     "calamus>=0.4.2,<0.5.0",
     "gtars>=0.2.2,<0.3.0",
     "modos_schema>=0.3,<0.4",
+    "pandas>=2.2.3,<3.0.0",
+    "prompt-toolkit>=3.0.48,<4.0.0",
+    "pydantic>=2.8.2,<3.0.0",
     "pysam>=0.22.0,<0.23.0",
+    "pyteomics>=4.7.4,<5.0.0",
     "pyyaml>=6.0.1,<7.0.0",
     "rdflib>=6.3,<7.0",
     "s3fs>=2024.3.1,<2025.0.0",
     "typer>=0.9.0,<0.10.0",
     "zarr>=2.16.1,<3.0.0",
-    "pydantic>=2.8.2,<3.0.0",
-    "prompt-toolkit>=3.0.48,<4.0.0",
-    "pyteomics>=4.7.4,<5.0.0",
-    "pandas>=2.2.3,<3.0.0",
 ]
 
 [project.optional-dependencies]
@@ -54,7 +55,7 @@ Issues = "https://github.com/sdsc-ordes/modos-api/issues"
 
 [tool.black]
 line-length = 79
-target-version = ["py310"]
+target-version = ["py312"]
 
 [tool.pytest.ini_options]
 addopts = ["--doctest-modules"]
@@ -65,5 +66,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
-path = "modos/__init__.py"
+path = "src/modos/__init__.py"
 pattern = '__version__ = "(?P<version>[^"]+)"'
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/modos"]
