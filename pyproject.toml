@@ -27,6 +27,8 @@ dependencies = [
 
 [project.optional-dependencies]
 pyfuzon = ["pyfuzon>=0.2,<0.3"]
+
+[dependency-groups]
 test = [
   "pytest>=8.2.2,<9.0",
   "pytest-cov>=4.1.0,<5.0",
