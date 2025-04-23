@@ -3,20 +3,18 @@
 #  - https://packaging.python.org/en/latest/tutorials/packaging-projects/#uploading-the-distribution-archives
 # Jobs are split to prevent unneccessary priviledge elevation through write permissions during building.
 
-name: Build and publish on Pypi
+name: Build and publish on Pypi Test
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   run-tests:
-    uses: ./.github/workflows/poetry-pytest.yml
-
-  release-build:
+    uses: ./.github/workflows/uv-pytest.yml
+  test-build:
     name: Build python wheels
     needs:
       - run-tests
@@ -28,30 +26,31 @@ jobs:
       # https://github.com/actions/setup-python
         uses: actions/setup-python@v5.1.1
         with:
-          python-version: "3.12"
+          python-version: "3.11"
 
-      - name: Install Poetry
-        run: |
-          pip install poetry
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
 
       - name: Build source and wheel archives
-        run: poetry build
+        run: uv build
 
       - name: Upload distributions
       # https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v4
         with:
-          name: release-dists
+          name: test-dists
           path: dist/
 
-  pypi-publish:
-    name: Upload release to PyPI
+  pypi-test-publish:
+    name: Upload release to PyPI Test
     needs:
-      - release-build
+      - test-build
     runs-on: ubuntu-latest
     environment:
-      name: pypi
-      url: https://pypi.org/p/modos
+      name: test-pypi
+      url: https://test.pypi.org/p/modos
     permissions:
       id-token: write
       # IMPORTANT: this permission is mandatory for trusted publishing
@@ -60,8 +59,10 @@ jobs:
     # https://github.com/actions/download-artifact
       uses: actions/download-artifact@v4.1.8
       with:
-        name: release-dists
+        name: test-dists
         path: dist/
-    - name: Publish package distributions to PyPI
+    - name: Publish package distributions to TestPyPI
     # https://github.com/pypa/gh-action-pypi-publish
       uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/

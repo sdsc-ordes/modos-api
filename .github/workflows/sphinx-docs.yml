@@ -21,17 +21,14 @@ jobs:
         with:
           python-version: '3.12'
 
-      # https://github.com/snok/install-poetry
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-
-      - name: Install dependencies
-        run: |
-          poetry install --with docs
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
 
       - name: Sphinx build
         run: |
-          make docs
+          make doc
 
   docs-push:
     runs-on: ubuntu-latest
@@ -45,13 +42,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      # https://github.com/snok/install-poetry
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-
-      - name: Install dependencies
-        run: |
-          poetry install --with docs
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
 
       - name: Sphinx build
         run: |

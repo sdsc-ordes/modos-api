@@ -21,7 +21,7 @@ check: ## Run code quality tools.
 doc: ## Build sphinx documentation website locally
 	@echo "📖 Building documentation"
 	@cd docs
-	@uv sync --frozen --group docs --all-extras
+	@uv sync --frozen --group docs
 	@uv run sphinx-build docs/ docs/_build
 
 .PHONY: docker-build
