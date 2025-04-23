@@ -26,7 +26,7 @@ class GenomicFileSuffix(tuple, Enum):
                 return genome_ft
         supported = [fi_format for fi_format in cls]
         raise ValueError(
-            f'Unsupported file format: {"".join(path.suffixes)}.\n'
+            f"Unsupported file format: {''.join(path.suffixes)}.\n"
             f"Supported formats:{supported}"
         )
 
@@ -68,7 +68,7 @@ def read_pysam(
         case "VCF" | "BCF":
             pysam_func = pysam.VariantFile
         case _:
-            raise ValueError(f"Unsupported output file type.")
+            raise ValueError("Unsupported output file type.")
 
     pysam_handle = pysam_func(str(path), **kwargs)
     if region is None:
