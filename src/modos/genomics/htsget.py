@@ -202,7 +202,7 @@ class HtsgetStream(io.RawIOBase):
         See https://docs.python.org/3/library/io.html#io.RawIOBase.readinto
         """
         try:
-            l = len(b)  # We return at most this much
+            buflen = len(b)  # We return at most this much
             while True:
                 chunk = self._leftover or next(self._iterator)
                 # skip empty elements
@@ -210,7 +210,7 @@ class HtsgetStream(io.RawIOBase):
                     continue
 
                 # fill buffer and keep any leftover for next chunk
-                output, self._leftover = chunk[:l], chunk[l:]
+                output, self._leftover = chunk[:buflen], chunk[buflen:]
                 b[: len(output)] = output
                 return len(output)
         except StopIteration:
