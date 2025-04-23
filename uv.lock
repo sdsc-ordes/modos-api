@@ -980,7 +980,9 @@ dependencies = [
 [package.optional-dependencies]
 dev = [
     { name = "pre-commit" },
+    { name = "pytest" },
     { name = "ruff" },
+    { name = "testcontainers", extra = ["minio"] },
 ]
 docs = [
     { name = "myst-parser" },
@@ -989,13 +991,6 @@ docs = [
     { name = "sphinx-autoapi" },
     { name = "sphinx-click" },
     { name = "sphinx-design" },
-]
-pyfuzon = [
-    { name = "pyfuzon" },
-]
-test = [
-    { name = "pytest" },
-    { name = "testcontainers", extra = ["minio"] },
 ]
 
 [package.metadata]
@@ -1030,7 +1025,9 @@ provides-extras = ["pyfuzon"]
 [package.metadata.requires-dev]
 dev = [
     { name = "pre-commit" },
+    { name = "pytest" },
     { name = "ruff" },
+    { name = "testcontainers", extras = ["minio"] },
 ]
 docs = [
     { name = "myst-parser", specifier = ">=2.0.0,<3.0" },
@@ -1039,10 +1036,6 @@ docs = [
     { name = "sphinx-autoapi", specifier = ">=3.0.0,<4.0" },
     { name = "sphinx-click", specifier = ">=5.1.0,<6.0" },
     { name = "sphinx-design", specifier = ">=0.5.0,<1.0" },
-]
-test = [
-    { name = "pytest" },
-    { name = "testcontainers", extras = ["minio"] },
 ]
 
 [[package]]
