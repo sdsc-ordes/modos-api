@@ -1,3 +1,3 @@
 import importlib.metadata as metadata
 
-__version__ = metadata.version(__name__)
+__version__ = "0.2.3"
