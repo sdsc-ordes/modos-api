@@ -16,6 +16,7 @@ References
 .. [2] https://github.com/ga4gh/refget-cloud/blob/master/docs/guides/DataSourceAwsS3.md
 
 """
+
 import json
 from typing import Dict, Optional
 
