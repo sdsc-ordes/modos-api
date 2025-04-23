@@ -1,33 +1,51 @@
-FROM python:3.12-slim
 ARG VERSION_BUILD
 
-# metadata
-LABEL org.opencontainers.image.title="MODOS API"
-LABEL org.opencontainers.image.source=https://github.com/sdsc-ordes/modos-api
-LABEL org.opencontainers.image.description="Manage multi-omics digital objects"
-LABEL org.opencontainers.image.licenses=Apache-2.0
-LABEL org.opencontainers.image.version=${VERSION_BUILD}
 
-# install uv
-COPY --from=ghcr.io/astral-sh/uv:0.6.3 /uv /uvx /bin/
 
-# include source files
+##################################################
+# Poetry setup
+##################################################
+FROM python:3.12-slim AS poetry
+
 WORKDIR /app
-ADD CHANGELOG.md LICENSE README.md pyproject.toml uv.lock /app
-ADD src ./src
+# Install poetry
+ENV PYTHONUNBUFFERED=true
+ENV POETRY_HOME=/opt/poetry
+ENV POETRY_VIRTUALENVS_IN_PROJECT=true
+ENV PATH="$POETRY_HOME/bin:$PATH"
+RUN python -c 'from urllib.request import urlopen; print(urlopen("https://install.python-poetry.org").read().decode())' | python -
+
+# Copy necessary files only
+COPY ./modos/ ./modos
+COPY ./pyproject.toml ./pyproject.toml
+COPY ./README.md ./README.md
+COPY ./poetry.lock ./poetry.lock
+RUN apt-get update && \
+    apt-get install -y gcc
+
+# Poetry install
+RUN poetry install --all-extras --no-interaction --no-ansi -vvv
+
+
+##################################################
+# modos setup
+##################################################
+FROM python:3.12-slim AS runtime
+ARG VERSION_BUILD
+ENV PATH="/app/.venv/bin:$PATH"
+COPY --from=poetry /app /app
 
 # Set user
 RUN useradd -ms /bin/bash modos_user
-RUN chown -R modos_user:modos_user /app
-RUN chmod -R 755 /app
 USER modos_user
 
-# modos setup
-RUN uv venv -p 3.12
-RUN uv sync --frozen
+# metadata labels
+LABEL org.opencontainers.image.source=https://github.com/sdsc-ordes/modos-api
+LABEL org.opencontainers.image.description="Serve multi-omics digital objects"
+LABEL org.opencontainers.image.licenses=Apache-2.0
+LABEL org.opencontainers.image.version=${VERSION_BUILD}
 
 # Test run
-RUN uv run modos --help
+RUN modos --help
 
-ENTRYPOINT ["uv", "run"]
 CMD ["modos"]
