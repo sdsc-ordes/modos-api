@@ -5,7 +5,7 @@
 from enum import Enum
 import os
 from pathlib import Path
-from typing import Any, List, Mapping, Optional
+from typing import Optional
 from typing_extensions import Annotated
 
 from linkml_runtime.loaders import json_loader
@@ -25,8 +25,8 @@ from modos.genomics.region import Region
 from modos.io import parse_instance, parse_attributes
 from modos.prompt import SlotPrompter
 from modos.remote import EndpointManager
-from modos.prompt import SlotPrompter, fuzzy_complete
-from modos.remote import EndpointManager, list_remote_items
+from modos.prompt import fuzzy_complete
+from modos.remote import list_remote_items
 from modos.storage import connect_s3
 
 

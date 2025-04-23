@@ -34,7 +34,7 @@ from modos.helpers.schema import (
     update_haspart_id,
     DataElement,
 )
-from modos.genomics.formats import get_index, read_pysam
+from modos.genomics.formats import read_pysam
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import extract_metadata, parse_attributes
