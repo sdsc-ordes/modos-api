@@ -229,6 +229,30 @@ wheels = [
 ]
 
 [[package]]
+name = "black"
+version = "23.12.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "mypy-extensions" },
+    { name = "packaging" },
+    { name = "pathspec" },
+    { name = "platformdirs" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fd/f4/a57cde4b60da0e249073009f4a9087e9e0a955deae78d3c2a493208d0c5c/black-23.12.1.tar.gz", hash = "sha256:4ce3ef14ebe8d9509188014d96af1c456a910d5b5cbf434a09fef7e024b3d0d5", size = 620809 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ed/2c/d9b1a77101e6e5f294f6553d76c39322122bfea2a438aeea4eb6d4b22749/black-23.12.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:8d4df77958a622f9b5a4c96edb4b8c0034f8434032ab11077ec6c56ae9f384ba", size = 1541926 },
+    { url = "https://files.pythonhosted.org/packages/72/e2/d981a3ff05ba9abe3cfa33e70c986facb0614fd57c4f802ef435f4dd1697/black-23.12.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:602cfb1196dc692424c70b6507593a2b29aac0547c1be9a1d1365f0d964c353b", size = 1388465 },
+    { url = "https://files.pythonhosted.org/packages/eb/59/1f5c8eb7bba8a8b1bb5c87f097d16410c93a48a6655be3773db5d2783deb/black-23.12.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9c4352800f14be5b4864016882cdba10755bd50805c95f728011bcb47a4afd59", size = 1691993 },
+    { url = "https://files.pythonhosted.org/packages/37/bf/a80abc6fcdb00f0d4d3d74184b172adbf2197f6b002913fa0fb6af4dc6db/black-23.12.1-cp311-cp311-win_amd64.whl", hash = "sha256:0808494f2b2df923ffc5723ed3c7b096bd76341f6213989759287611e9837d50", size = 1340929 },
+    { url = "https://files.pythonhosted.org/packages/66/16/8726cedc83be841dfa854bbeef1288ee82272282a71048d7935292182b0b/black-23.12.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:25e57fd232a6d6ff3f4478a6fd0580838e47c93c83eaf1ccc92d4faf27112c4e", size = 1569989 },
+    { url = "https://files.pythonhosted.org/packages/d2/1e/30f5eafcc41b8378890ba39b693fa111f7dca8a2620ba5162075d95ffe46/black-23.12.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:2d9e13db441c509a3763a7a3d9a49ccc1b4e974a47be4e08ade2a228876500ec", size = 1398647 },
+    { url = "https://files.pythonhosted.org/packages/99/de/ddb45cc044256431d96d846ce03164d149d81ca606b5172224d1872e0b58/black-23.12.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6d1bd9c210f8b109b1762ec9fd36592fdd528485aadb3f5849b2740ef17e674e", size = 1720450 },
+    { url = "https://files.pythonhosted.org/packages/98/2b/54e5dbe9be5a10cbea2259517206ff7b6a452bb34e07508c7e1395950833/black-23.12.1-cp312-cp312-win_amd64.whl", hash = "sha256:ae76c22bde5cbb6bfd211ec343ded2163bba7883c7bc77f6b756a1049436fbb9", size = 1351070 },
+    { url = "https://files.pythonhosted.org/packages/7b/14/4da7b12a9abc43a601c215cb5a3d176734578da109f0dbf0a832ed78be09/black-23.12.1-py3-none-any.whl", hash = "sha256:78baad24af0f033958cad29731e27363183e140962595def56423e626f4bee3e", size = 194363 },
+]
+
+[[package]]
 name = "botocore"
 version = "1.37.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1033,16 +1057,9 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-pyfuzon = [
-    { name = "pyfuzon" },
-]
-
-[package.dev-dependencies]
 dev = [
+    { name = "black" },
     { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "ruff" },
-    { name = "testcontainers", extra = ["minio"] },
 ]
 docs = [
     { name = "myst-parser" },
@@ -1052,41 +1069,43 @@ docs = [
     { name = "sphinx-click" },
     { name = "sphinx-design" },
 ]
+pyfuzon = [
+    { name = "pyfuzon" },
+]
+test = [
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "testcontainers", extra = ["minio"] },
+]
 
 [package.metadata]
 requires-dist = [
+    { name = "black", marker = "extra == 'dev'", specifier = ">=23.12.0,<24.0" },
     { name = "calamus", specifier = ">=0.4.2,<0.5.0" },
     { name = "gtars", specifier = ">=0.2.2,<0.3.0" },
     { name = "modos-schema", specifier = ">=0.3.2" },
     { name = "pandas", specifier = ">=2.2.3,<3.0.0" },
+    { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.6.0,<4.0" },
     { name = "prompt-toolkit", specifier = ">=3.0.48,<4.0.0" },
     { name = "pydantic", specifier = ">=2.8.2,<3.0.0" },
+    { name = "pydata-sphinx-theme", marker = "extra == 'docs'", specifier = ">=0.15.2,<1.0" },
     { name = "pyfuzon", marker = "extra == 'pyfuzon'", specifier = ">=0.2,<0.3" },
     { name = "pysam", specifier = ">=0.22.0,<0.24.0" },
     { name = "pyteomics", specifier = ">=4.7.4,<5.0.0" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.2.2,<9.0" },
+    { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=4.1.0,<5.0" },
     { name = "pyyaml", specifier = ">=6.0.1,<7.0.0" },
     { name = "rdflib", specifier = ">=6.3,<7.0" },
     { name = "s3fs", specifier = ">=2024.3.1,<2025.0.0" },
+    { name = "sphinx", marker = "extra == 'docs'", specifier = ">=7.2.6,<8.0" },
+    { name = "sphinx-autoapi", marker = "extra == 'docs'", specifier = ">=3.0.0,<4.0" },
+    { name = "sphinx-click", marker = "extra == 'docs'", specifier = ">=5.1.0,<6.0" },
+    { name = "sphinx-design", marker = "extra == 'docs'", specifier = ">=0.5.0,<1.0" },
+    { name = "testcontainers", extras = ["minio"], marker = "extra == 'test'", specifier = ">=4.4.1,<5.0" },
     { name = "typer", specifier = ">=0.9.0,<0.10.0" },
     { name = "zarr", specifier = ">=2.16.1,<3.0.0" },
 ]
-provides-extras = ["pyfuzon"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "ruff" },
-    { name = "testcontainers", extras = ["minio"] },
-]
-docs = [
-    { name = "myst-parser", specifier = ">=2.0.0,<3.0" },
-    { name = "pydata-sphinx-theme", specifier = ">=0.15.2,<1.0" },
-    { name = "sphinx", specifier = ">=7.2.6,<8.0" },
-    { name = "sphinx-autoapi", specifier = ">=3.0.0,<4.0" },
-    { name = "sphinx-click", specifier = ">=5.1.0,<6.0" },
-    { name = "sphinx-design", specifier = ">=0.5.0,<1.0" },
-]
+provides-extras = ["dev", "docs", "pyfuzon", "test"]
 
 [[package]]
 name = "modos-schema"
@@ -1175,6 +1194,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/b9/3b/1599631f59024b75c4d6e3069f4502409970a336647502aaf6b62fb7ac98/multidict-6.4.3-cp313-cp313t-win32.whl", hash = "sha256:0ecdc12ea44bab2807d6b4a7e5eef25109ab1c82a8240d86d3c1fc9f3b72efd5", size = 41775 },
     { url = "https://files.pythonhosted.org/packages/e8/4e/09301668d675d02ca8e8e1a3e6be046619e30403f5ada2ed5b080ae28d02/multidict-6.4.3-cp313-cp313t-win_amd64.whl", hash = "sha256:7146a8742ea71b5d7d955bffcef58a9e6e04efba704b52a460134fefd10a8208", size = 45946 },
     { url = "https://files.pythonhosted.org/packages/96/10/7d526c8974f017f1e7ca584c71ee62a638e9334d8d33f27d7cdfc9ae79e4/multidict-6.4.3-py3-none-any.whl", hash = "sha256:59fe01ee8e2a1e8ceb3f6dbb216b09c8d9f4ef1c22c4fc825d045a147fa2ebc9", size = 10400 },
+]
+
+[[package]]
+name = "mypy-extensions"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a2/6e/371856a3fb9d31ca8dac321cda606860fa4548858c0cc45d9d1d4ca2628b/mypy_extensions-1.1.0.tar.gz", hash = "sha256:52e68efc3284861e772bbcd66823fde5ae21fd2fdb51c62a211403730b916558", size = 6343 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/79/7b/2c79738432f5c924bef5071f933bcc9efd0473bac3b4aa584a6f7c1c8df8/mypy_extensions-1.1.0-py3-none-any.whl", hash = "sha256:1be4cccdb0f2482337c4743e60421de3a356cd97508abadd57d47403e94f5505", size = 4963 },
 ]
 
 [[package]]
