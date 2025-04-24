@@ -18,7 +18,7 @@ check: ## Run code quality tools.
 	@uv run pre-commit run -a
 
 .PHONY: docs
-doc: ## Build sphinx documentation website locally
+docs: ## Build sphinx documentation website locally
 	@echo "📖 Building documentation"
 	@cd docs
 	@uv sync --frozen --group docs
@@ -28,6 +28,7 @@ doc: ## Build sphinx documentation website locally
 docker-build: ## Build the modos-api client Docker image
 	@echo "🐋 Building docker image"
 	@docker build \
+		-f ./tools/image/Dockerfile \
 		--build-arg="VERSION_BUILD=$(VERSION)" \
 		-t $(REGISTRY)/$(IMAGE_NAME):$(VERSION) .
 
