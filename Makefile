@@ -17,8 +17,8 @@ check: ## Run code quality tools.
 	@echo "🚀 Linting code: Running pre-commit"
 	@uv run pre-commit run -a
 
-.PHONY: doc
-doc: ## Build sphinx documentation website locally
+.PHONY: docs
+docs: ## Build sphinx documentation website locally
 	@echo "📖 Building documentation"
 	@cd docs
 	@uv sync --frozen --group docs
