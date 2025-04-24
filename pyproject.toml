@@ -7,7 +7,7 @@ authors = [
 license = { text = "Apache-2.0" }
 license-files = ["LICEN[CS]E*"]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.13"
 dynamic = ["version"]
 dependencies = [
     "calamus>=0.4.2,<0.5.0",
