@@ -34,7 +34,8 @@ from modos.helpers.schema import (
     update_haspart_id,
     DataElement,
 )
-from modos.genomics.formats import get_index, read_pysam
+from modos.genomics.c4gh import encrypt_stream, decrypt_stream
+from modos.genomics.formats import get_index, is_genomic, read_pysam
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import extract_metadata, parse_attributes
@@ -575,3 +576,53 @@ class MODO:
         This will download all files and metadata to the target directory.
         """
         self.storage.download(target_dir)
+
+    def encrypt(
+        self,
+        seckey_path: os.PathLike,
+        recipient_pubkeys: List[os.PathLike] | os.PathLike,
+        passphrase: Optional[str] = None,
+    ):
+        """Encrypt all genomics files in a modo using crypt4gh"""
+        genomic_files = [fi for fi in self.list_files() if is_genomic(fi)]
+        idx_files = [get_index(fi) for fi in genomic_files]
+        all_genomics = [
+            fi for fi in (genomic_files + idx_files) if fi is not None
+        ]
+        for file_path in all_genomics:
+            out_path = file_path.with_suffix(file_path.suffix + ".c4gh")
+            with open(file_path, "rb") as infile, open(
+                out_path, "wb"
+            ) as outfile:
+                encrypt_stream(
+                    seckey_path=seckey_path,
+                    recipient_pubkeys=recipient_pubkeys,
+                    infile=infile,
+                    outfile=outfile,
+                    passphrase=passphrase,
+                )
+            self.storage.remove(file_path)
+
+    def decrypt(
+        self,
+        seckey_path: os.PathLike,
+        sender_pubkey: os.PathLike,
+        passphrase: Optional[str] = None,
+    ):
+        """Decrypt all c4gh encrypted files in modo"""
+        encrypted_files = [
+            fi for fi in self.list_files() if fi.name.endswith(".c4gh")
+        ]
+        for file_path in encrypted_files:
+            out_path = file_path.with_name(file_path.stem)
+            with open(file_path, "rb") as infile, open(
+                out_path, "wb"
+            ) as outfile:
+                decrypt_stream(
+                    seckey_path=seckey_path,
+                    sender_pubkey=sender_pubkey,
+                    infile=infile,
+                    outfile=outfile,
+                    passphrase=passphrase,
+                )
+            self.storage.remove(file_path)

@@ -5,7 +5,7 @@
 from enum import Enum
 import os
 from pathlib import Path
-from typing import Any, List, Mapping, Optional
+from typing import List, Mapping, Optional, Union
 from typing_extensions import Annotated
 
 from linkml_runtime.loaders import json_loader
@@ -281,42 +281,56 @@ def upload(
     modo.storage.transfer(S3Storage(target_path, s3_endpoint=endpoint.s3))
 
 
-# Make a c4gh command group such that users type `modos c4gh {encrypt,decrypt}`
-# to encrypt/decrypt a file
-
-
 @c4gh.command()
 def decrypt(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     secret_key: Annotated[
-        Optional[str],
+        str,
         typer.Option(
             "--secret-key",
             "-s",
             help="Secret key of the recipient to decrypt files in the MODO.",
         ),
     ],
+    public_key: Annotated[
+        str,
+        typer.Option(
+            "--public-key",
+            "-p",
+            help="Public key of the sender that encrypted files in the MODO.",
+        ),
+    ],
 ):
     """Decrypt a local MODO."""
-    ...
+    modo = MODO(object_path)
+    modo.decrypt(secret_key, public_key)
 
 
 @c4gh.command()
 def encrypt(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
+    secret_key: Annotated[
+        str,
+        typer.Option(
+            "--secret-key",
+            "-s",
+            help="Secret key of the sender to encrypt files in the MODO.",
+        ),
+    ],
     public_key: Annotated[
-        Optional[str],
+        str,
         typer.Option(
             "--public-key",
             "-p",
-            help="Public key of the recipent to encrypt files in the MODO.",
+            help="Public key(s) of the recipent(s) to decrypt files in the MODO.",
         ),
     ],
 ):
     """Encrypt a local MODO."""
-    ...
+    modo = MODO(object_path)
+    modo.encrypt(secret_key, public_key)
 
 
 @cli.command(rich_help_panel="Read")
