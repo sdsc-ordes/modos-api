@@ -19,6 +19,10 @@ class GenomicFileSuffix(tuple, Enum):
     FASTA = (".fasta", ".fa")
     FASTQ = (".fastq", ".fq")
 
+    @property
+    def formats(self):
+        return [fmt.name for fmt in self]
+
     @classmethod
     def from_path(cls, path: Path) -> GenomicFileSuffix:
         for genome_ft in cls:
@@ -85,10 +89,3 @@ def get_index(file_path: Path) -> Optional[Path]:
         return file_path.with_suffix(file_path.suffix + ft.get_index_suffix())
     except ValueError:
         return None
-
-
-def is_genomic(file_path: Path | str) -> bool:
-    genomic_suffixes = tuple(
-        suffix for member in GenomicFileSuffix for suffix in member.value
-    )
-    return Path(file_path).name.endswith(genomic_suffixes)

@@ -13,18 +13,26 @@ References
 import io
 from typing import List, Optional, Set, Tuple
 import os
+from pathlib import Path
 
 from crypt4gh.keys import get_public_key, get_private_key
 from crypt4gh.lib import decrypt, encrypt
 from functools import partial
 from getpass import getpass
+from nacl.public import PrivateKey
 
 
 def get_secret_key(
-    seckey_path: os.PathLike,
+    seckey_path: Optional[os.PathLike] = None,
+    generate: bool = True,
     passphrase: Optional[str] = None,
 ) -> bytes:
-    # get user secretkey
+    # auto generate a secret key
+    if generate and seckey_path is None:
+        sk = PrivateKey.generate()
+        return bytes(sk)
+
+    # get user secre tkey
     seckey_path = os.path.expanduser(seckey_path)
     if not os.path.exists(seckey_path):
         raise ValueError("Secret key not found")
@@ -55,34 +63,37 @@ def get_keys(
     return set(recipient_list)
 
 
-def encrypt_stream(
-    seckey_path: os.PathLike,
+def encrypt_file(
     recipient_pubkeys: List[os.PathLike] | os.PathLike,
-    infile: io.BufferedReader,
-    outfile: io.BufferedWriter,
+    infile: Path | str,
+    outfile: Path | str,
+    seckey_path: Optional[os.PathLike] = None,
     passphrase: Optional[str] = None,
 ):
     seckey = get_secret_key(seckey_path, passphrase=passphrase)
     keys = get_keys(recipient_pubkeys, seckey)
-    encrypt(keys=keys, infile=infile, outfile=outfile)
+    with open(infile, "rb") as input, open(outfile, "wb") as output:
+        encrypt(keys=keys, infile=input, outfile=output)
 
 
-def decrypt_stream(
+def decrypt_file(
     seckey_path: os.PathLike,
-    sender_pubkey: Optional[os.PathLike],
-    infile: io.BufferedReader,
-    outfile: io.BufferedWriter,
+    infile: Path | str,
+    outfile: Path | str,
+    sender_pubkey: Optional[os.PathLike] = None,
     passphrase: Optional[str] = None,
 ):
-    seckey = get_secret_key(seckey_path, passphrase=passphrase)
+    seckey = get_secret_key(seckey_path, generate=False, passphrase=passphrase)
     keys = [
         (0, seckey, None)
     ]  # keys = list of (method, privkey, recipient_pubkey=None)
-    sender_pubkey = (
-        get_public_key(os.path.expanduser(sender_pubkey))
-        if sender_pubkey
-        else None
-    )
-    decrypt(
-        keys=keys, infile=infile, outfile=outfile, sender_pubkey=sender_pubkey
-    )
+    if sender_pubkey:
+        sender_pubkey = os.path.expanduser(sender_pubkey)
+
+    with open(infile, "rb") as input, open(outfile, "wb") as output:
+        decrypt(
+            keys=keys,
+            infile=input,
+            outfile=output,
+            sender_pubkey=sender_pubkey,
+        )

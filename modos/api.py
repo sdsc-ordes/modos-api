@@ -31,11 +31,12 @@ from modos.helpers.schema import (
     set_data_path,
     set_haspart_relationship,
     UserElementType,
+    update_data_path,
     update_haspart_id,
     DataElement,
 )
-from modos.genomics.c4gh import encrypt_stream, decrypt_stream
-from modos.genomics.formats import get_index, is_genomic, read_pysam
+from modos.genomics.c4gh import encrypt_file, decrypt_file
+from modos.genomics.formats import GenomicFileSuffix, get_index, read_pysam
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import extract_metadata, parse_attributes
@@ -579,50 +580,60 @@ class MODO:
 
     def encrypt(
         self,
-        seckey_path: os.PathLike,
         recipient_pubkeys: List[os.PathLike] | os.PathLike,
+        seckey_path: Optional[os.PathLike] = None,
         passphrase: Optional[str] = None,
     ):
-        """Encrypt all genomics files in a modo using crypt4gh"""
-        genomic_files = [fi for fi in self.list_files() if is_genomic(fi)]
-        idx_files = [get_index(fi) for fi in genomic_files]
-        all_genomics = [
-            fi for fi in (genomic_files + idx_files) if fi is not None
-        ]
-        for file_path in all_genomics:
-            out_path = file_path.with_suffix(file_path.suffix + ".c4gh")
-            with open(file_path, "rb") as infile, open(
-                out_path, "wb"
-            ) as outfile:
-                encrypt_stream(
-                    seckey_path=seckey_path,
-                    recipient_pubkeys=recipient_pubkeys,
-                    infile=infile,
-                    outfile=outfile,
-                    passphrase=passphrase,
+        """Encrypt genomic data files including index files in a modo using crypt4gh"""
+        for group in self.zarr.data.values():
+            meta = group.attrs
+            if meta["data_format"] in GenomicFileSuffix.formats:
+                data_path = Path(meta["data_path"])
+                encrypted_path = data_path.with_suffix(
+                    file_path.suffix + ".c4gh"
                 )
-            self.storage.remove(file_path)
+                idx_path = get_index(data_path)
+                for file_path in (data_path, idx_path):
+                    if file_path and self.storage.exists(file_path):
+                        out_path = file_path.with_suffix(
+                            file_path.suffix + ".c4gh"
+                        )
+                        encrypt_file(
+                            recipient_pubkeys=recipient_pubkeys,
+                            infile=file_path,
+                            outfile=out_path,
+                            seckey_path=seckey_path,
+                            passphrase=passphrase,
+                        )
+                        self.storage.remove(file_path)
+                if self.storage.exists(encrypted_path):
+                    update_data_path(meta, encrypted_path)
 
     def decrypt(
         self,
         seckey_path: os.PathLike,
-        sender_pubkey: os.PathLike,
+        sender_pubkey: Optional[os.PathLike] = None,
         passphrase: Optional[str] = None,
     ):
-        """Decrypt all c4gh encrypted files in modo"""
-        encrypted_files = [
-            fi for fi in self.list_files() if fi.name.endswith(".c4gh")
-        ]
-        for file_path in encrypted_files:
-            out_path = file_path.with_name(file_path.stem)
-            with open(file_path, "rb") as infile, open(
-                out_path, "wb"
-            ) as outfile:
-                decrypt_stream(
-                    seckey_path=seckey_path,
-                    sender_pubkey=sender_pubkey,
-                    infile=infile,
-                    outfile=outfile,
-                    passphrase=passphrase,
-                )
-            self.storage.remove(file_path)
+        """Decrypt all c4gh encrypted data files in modo"""
+        for group in self.zarr.data.values():
+            meta = group.attrs
+            data_path = Path(meta["data_path"])
+            if data_path.name.endswith(".c4gh"):
+                decrypted_path = data_path.with_name(data_path.stem)
+                idx_path = get_index(decrypted_path)
+                if idx_path:
+                    idx_path = idx_path.with_suffix(idx_path.suffix + ".c4gh")
+                for file_path in (data_path, idx_path):
+                    if file_path and self.storage.exists(file_path):
+                        out_path = file_path.with_name(data_path.stem)
+                        decrypt_file(
+                            seckey_path=seckey_path,
+                            infile=file_path,
+                            outfile=out_path,
+                            sender_pubkey=sender_pubkey,
+                            passphrase=passphrase,
+                        )
+                        self.storage.remove(file_path)
+                if self.storage.exists(decrypted_path):
+                    update_data_path(meta, decrypted_path)

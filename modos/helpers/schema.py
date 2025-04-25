@@ -7,6 +7,7 @@ from enum import Enum
 from functools import lru_cache, reduce
 from hashlib import file_digest
 from io import RawIOBase
+from os import PathLike
 from pathlib import Path
 from typing import Any, Mapping, Optional, Union
 from urllib.parse import urlparse
@@ -111,6 +112,14 @@ def set_data_path(
     if source_file and not element.get("data_path"):
         element["data_path"] = Path(source_file).name
     return element
+
+
+def update_data_path(
+    metadata: zarr.attrs.Attributes, new_path=Path
+) -> zarr.attrs.Attributes:
+    with open(new_path, "rb") as src:
+        source_checksum = compute_checksum(src)
+    metadata.update(data_path=new_path, data_checksum=source_checksum)
 
 
 class DataElement:

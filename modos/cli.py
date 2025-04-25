@@ -293,32 +293,16 @@ def decrypt(
             help="Secret key of the recipient to decrypt files in the MODO.",
         ),
     ],
-    public_key: Annotated[
-        str,
-        typer.Option(
-            "--public-key",
-            "-p",
-            help="Public key of the sender that encrypted files in the MODO.",
-        ),
-    ],
 ):
     """Decrypt a local MODO."""
     modo = MODO(object_path)
-    modo.decrypt(secret_key, public_key)
+    modo.decrypt(secret_key)
 
 
 @c4gh.command()
 def encrypt(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
-    secret_key: Annotated[
-        str,
-        typer.Option(
-            "--secret-key",
-            "-s",
-            help="Secret key of the sender to encrypt files in the MODO.",
-        ),
-    ],
     public_key: Annotated[
         str,
         typer.Option(
@@ -327,10 +311,18 @@ def encrypt(
             help="Public key(s) of the recipent(s) to decrypt files in the MODO.",
         ),
     ],
+    secret_key: Annotated[
+        Optional[str],
+        typer.Option(
+            "--secret-key",
+            "-s",
+            help="Secret key of the sender to encrypt files in the MODO.",
+        ),
+    ] = None,
 ):
     """Encrypt a local MODO."""
     modo = MODO(object_path)
-    modo.encrypt(secret_key, public_key)
+    modo.encrypt(public_key, secret_key)
 
 
 @cli.command(rich_help_panel="Read")
