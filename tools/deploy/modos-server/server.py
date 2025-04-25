@@ -68,9 +68,9 @@ def get_s3_path(query: str, exact_match: bool = False):
         res = [p[0] for p in pairs]
     return [
         {
-            f"{S3_PUBLIC_URL}/{modo}": {
+            f"{modo}": {
                 "s3_endpoint": S3_PUBLIC_URL,
-                "modo_path": modo,
+                "modo_path": f"s3://{modo}",
             }
         }
         for modo in res
