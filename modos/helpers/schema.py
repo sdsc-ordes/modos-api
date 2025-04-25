@@ -115,11 +115,11 @@ def set_data_path(
 
 
 def update_data_path(
-    metadata: zarr.attrs.Attributes, new_path=Path
+    metadata: zarr.attrs.Attributes, new_path: Path, root: Path
 ) -> zarr.attrs.Attributes:
-    with open(new_path, "rb") as src:
+    with open(root / new_path, "rb") as src:
         source_checksum = compute_checksum(src)
-    metadata.update(data_path=new_path, data_checksum=source_checksum)
+    metadata.update(data_path=str(new_path), data_checksum=source_checksum)
 
 
 class DataElement:

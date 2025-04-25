@@ -19,9 +19,10 @@ class GenomicFileSuffix(tuple, Enum):
     FASTA = (".fasta", ".fa")
     FASTQ = (".fastq", ".fq")
 
+    @classmethod
     @property
-    def formats(self):
-        return [fmt.name for fmt in self]
+    def formats(cls):
+        return [fmt.name for fmt in cls]
 
     @classmethod
     def from_path(cls, path: Path) -> GenomicFileSuffix:

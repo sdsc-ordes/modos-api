@@ -590,7 +590,7 @@ class MODO:
             if meta["data_format"] in GenomicFileSuffix.formats:
                 data_path = Path(meta["data_path"])
                 encrypted_path = data_path.with_suffix(
-                    file_path.suffix + ".c4gh"
+                    data_path.suffix + ".c4gh"
                 )
                 idx_path = get_index(data_path)
                 for file_path in (data_path, idx_path):
@@ -600,14 +600,14 @@ class MODO:
                         )
                         encrypt_file(
                             recipient_pubkeys=recipient_pubkeys,
-                            infile=file_path,
-                            outfile=out_path,
+                            infile=self.path / file_path,
+                            outfile=self.path / out_path,
                             seckey_path=seckey_path,
                             passphrase=passphrase,
                         )
-                        self.storage.remove(file_path)
+                        self.storage.remove(self.path / file_path)
                 if self.storage.exists(encrypted_path):
-                    update_data_path(meta, encrypted_path)
+                    update_data_path(meta, encrypted_path, self.path)
 
     def decrypt(
         self,
@@ -626,14 +626,14 @@ class MODO:
                     idx_path = idx_path.with_suffix(idx_path.suffix + ".c4gh")
                 for file_path in (data_path, idx_path):
                     if file_path and self.storage.exists(file_path):
-                        out_path = file_path.with_name(data_path.stem)
+                        out_path = file_path.with_name(file_path.stem)
                         decrypt_file(
                             seckey_path=seckey_path,
-                            infile=file_path,
-                            outfile=out_path,
+                            infile=self.path / file_path,
+                            outfile=self.path / out_path,
                             sender_pubkey=sender_pubkey,
                             passphrase=passphrase,
                         )
-                        self.storage.remove(file_path)
+                        self.storage.remove(self.path / file_path)
                 if self.storage.exists(decrypted_path):
-                    update_data_path(meta, decrypted_path)
+                    update_data_path(meta, decrypted_path, self.path)
