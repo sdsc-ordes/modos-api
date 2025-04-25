@@ -304,7 +304,7 @@ def encrypt(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     public_key: Annotated[
-        str,
+        list[str],
         typer.Option(
             "--public-key",
             "-p",
