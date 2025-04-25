@@ -41,7 +41,7 @@ test: ## Test the code with pytest
 deploy: ## Deploy services using docker compose
 	@echo "$(LOCAL_IP)";exit 0
 	@echo "🐋 Deploying server with docker compose"
-	cd deploy; S3_PUBLIC_URL="http://$(LOCAL_IP):9000" docker compose up --build --force-recreate
+	cd tools/deploy; S3_PUBLIC_URL="http://$(LOCAL_IP):9000" docker compose up --build --force-recreate
 
 
 .PHONY: help
