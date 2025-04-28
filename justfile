@@ -53,8 +53,7 @@ test *args: setup
 docs: setup
   @echo "📖 Building documentation"
   uv sync --frozen --group docs
-  cd docs && \
-     uv run sphinx-build docs/ docs/_build
+  uv run sphinx-build docs/ docs/_build
 
 # Start server-side services
 deploy:
