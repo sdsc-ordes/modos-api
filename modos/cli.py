@@ -5,7 +5,7 @@
 from enum import Enum
 import os
 from pathlib import Path
-from typing import List, Mapping, Optional, Union
+from typing import Mapping, Optional
 from typing_extensions import Annotated
 
 from linkml_runtime.loaders import json_loader
