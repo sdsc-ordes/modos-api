@@ -31,12 +31,11 @@ from modos.helpers.schema import (
     set_data_path,
     set_haspart_relationship,
     UserElementType,
-    update_data_path,
     update_haspart_id,
     DataElement,
 )
-from modos.genomics.c4gh import encrypt_file, decrypt_file
-from modos.genomics.formats import GenomicFileSuffix, get_index, read_pysam
+from modos.genomics.c4gh import decrypt_file
+from modos.genomics.formats import get_index, read_pysam
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import extract_metadata, parse_attributes
@@ -583,31 +582,23 @@ class MODO:
         recipient_pubkeys: List[os.PathLike] | os.PathLike,
         seckey_path: Optional[os.PathLike] = None,
         passphrase: Optional[str] = None,
+        delete: bool = True,
     ):
         """Encrypt genomic data files including index files in a modo using crypt4gh"""
-        for group in self.zarr.data.values():
-            meta = group.attrs
-            if meta["data_format"] in GenomicFileSuffix.formats:
-                data_path = Path(meta["data_path"])
-                encrypted_path = data_path.with_suffix(
-                    data_path.suffix + ".c4gh"
-                )
-                idx_path = get_index(data_path)
-                for file_path in (data_path, idx_path):
-                    if file_path and self.storage.exists(file_path):
-                        out_path = file_path.with_suffix(
-                            file_path.suffix + ".c4gh"
-                        )
-                        encrypt_file(
-                            recipient_pubkeys=recipient_pubkeys,
-                            infile=self.path / file_path,
-                            outfile=self.path / out_path,
-                            seckey_path=seckey_path,
-                            passphrase=passphrase,
-                        )
-                        self.storage.remove(self.path / file_path)
-                if self.storage.exists(encrypted_path):
-                    update_data_path(meta, encrypted_path, self.path)
+        for id, group in self.zarr.data.items():
+            meta = group.attrs.asdict()
+            meta["id"] = id
+            data = DataElement(dict_to_instance(meta))
+            data.encrypt(
+                self.storage,
+                recipient_pubkeys,
+                seckey_path,
+                passphrase,
+                delete,
+            )
+            new_attrs = json.loads(json_dumper.dumps(data.model))
+            group.attrs.update(**new_attrs)
+        self.update_date()
 
     def decrypt(
         self,
@@ -616,24 +607,11 @@ class MODO:
         passphrase: Optional[str] = None,
     ):
         """Decrypt all c4gh encrypted data files in modo"""
-        for group in self.zarr.data.values():
-            meta = group.attrs
-            data_path = Path(meta["data_path"])
-            if data_path.name.endswith(".c4gh"):
-                decrypted_path = data_path.with_name(data_path.stem)
-                idx_path = get_index(decrypted_path)
-                if idx_path:
-                    idx_path = idx_path.with_suffix(idx_path.suffix + ".c4gh")
-                for file_path in (data_path, idx_path):
-                    if file_path and self.storage.exists(file_path):
-                        out_path = file_path.with_name(file_path.stem)
-                        decrypt_file(
-                            seckey_path=seckey_path,
-                            infile=self.path / file_path,
-                            outfile=self.path / out_path,
-                            sender_pubkey=sender_pubkey,
-                            passphrase=passphrase,
-                        )
-                        self.storage.remove(self.path / file_path)
-                if self.storage.exists(decrypted_path):
-                    update_data_path(meta, decrypted_path, self.path)
+        for id, group in self.zarr.data.items():
+            meta = group.attrs.asdict()
+            meta["id"] = id
+            data = DataElement(dict_to_instance(meta))
+            data.decrypt(self.storage, seckey_path, sender_pubkey, passphrase)
+            new_attrs = json.loads(json_dumper.dumps(data.model))
+            group.attrs.update(**new_attrs)
+        self.update_date()

@@ -7,7 +7,7 @@ from enum import Enum
 from functools import lru_cache, reduce
 from hashlib import file_digest
 from io import RawIOBase
-from os import PathLike
+import os
 from pathlib import Path
 from typing import Any, Mapping, Optional, Union
 from urllib.parse import urlparse
@@ -21,7 +21,8 @@ from rdflib.term import URIRef
 import modos_schema.datamodel as model
 import modos_schema.schema as schema
 
-from modos.genomics.formats import get_index
+from modos.genomics.formats import get_index, GenomicFileSuffix
+from modos.genomics.c4gh import encrypt_file, decrypt_file
 
 SCHEMA_PATH = Path(schema.__path__[0]) / "modos_schema.yaml"
 
@@ -114,27 +115,31 @@ def set_data_path(
     return element
 
 
-def update_data_path(
-    metadata: zarr.attrs.Attributes, new_path: Path, root: Path
-) -> zarr.attrs.Attributes:
-    with open(root / new_path, "rb") as src:
-        source_checksum = compute_checksum(src)
-    metadata.update(data_path=str(new_path), data_checksum=source_checksum)
-
-
 class DataElement:
-    """Facade class to wrap model.DataEntity and include index logic for genomic files"""
+    """Facade class to wrap model. DataEntity and include index logic for genomic files"""
 
     def __init__(self, model: model.DataEntity):
         self.model = model
+
+    def _set_metadata(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self.model, key, value)
 
     def _set_checksum(self, source_checksum):
         if source_checksum != self.model._get("data_checksum"):
             self.model["data_checksum"] = source_checksum
 
+    @property
+    def is_genomic(self) -> bool:
+        """Check if the data element is genomic."""
+        return (
+            self.model.data_format.code.text
+            in GenomicFileSuffix.list_formats()
+        )
+
     def process_and_store(self, storage, source_path: Path):
         source_idx = get_index(source_path)
-        target_path = Path(self.model._get("data_path"))
+        target_path = Path(self.model.data_path)
         target_idx = get_index(target_path)
         if storage.exists(source_path) and source_path != target_path:
             storage.move(source_path, target_path)
@@ -150,6 +155,76 @@ class DataElement:
             if source_idx:
                 with open(source_idx, "rb") as src:
                     storage.put(src, target_idx)
+
+    def encrypt(
+        self,
+        storage,
+        recipient_pubkeys: list[os.PathLike] | os.PathLike,
+        seckey_path: Optional[os.PathLike] = None,
+        passphrase: Optional[str] = None,
+        delete: bool = True,
+    ):
+        """
+        Encrypt data path linked to the DataElement.
+        Works for genomic files and their index files.
+        """
+        if self.is_genomic:
+            data_path = Path(self.model.data_path)
+            encrypted_path = data_path.with_suffix(data_path.suffix + ".c4gh")
+            idx_path = get_index(data_path)
+            for file_path in (data_path, idx_path):
+                if file_path:
+                    out_path = file_path.with_suffix(
+                        file_path.suffix + ".c4gh"
+                    )
+                    encrypt_file(
+                        recipient_pubkeys=recipient_pubkeys,
+                        infile=storage.path / file_path,
+                        outfile=storage.path / out_path,
+                        seckey_path=seckey_path,
+                        passphrase=passphrase,
+                    )
+                    if delete:
+                        storage.remove(storage.path / file_path)
+            with open(storage.path / encrypted_path, "rb") as src:
+                source_checksum = compute_checksum(src)
+            self._set_metadata(
+                data_path=str(encrypted_path), data_checksum=source_checksum
+            )
+
+    def decrypt(
+        self,
+        storage,
+        seckey_path: os.PathLike,
+        sender_pubkey: Optional[os.PathLike] = None,
+        passphrase: Optional[str] = None,
+    ):
+        """
+        Decrypt data path linked to the DataElement.
+        Works for genomic files and their index files.
+        """
+        data_path = Path(self.model.data_path)
+        if data_path.name.endswith(".c4gh"):
+            decrypted_path = data_path.with_name(data_path.stem)
+            idx_path = get_index(decrypted_path)
+            if idx_path:
+                idx_path = idx_path.with_suffix(idx_path.suffix + ".c4gh")
+            for file_path in (data_path, idx_path):
+                if file_path:
+                    out_path = file_path.with_name(file_path.stem)
+                    decrypt_file(
+                        seckey_path=seckey_path,
+                        infile=storage.path / file_path,
+                        outfile=storage.path / out_path,
+                        sender_pubkey=sender_pubkey,
+                        passphrase=passphrase,
+                    )
+                    storage.remove(storage.path / file_path)
+            with open(storage.path / decrypted_path, "rb") as src:
+                source_checksum = compute_checksum(src)
+            self._set_metadata(
+                data_path=str(decrypted_path), data_checksum=source_checksum
+            )
 
 
 def compute_checksum(file_obj: RawIOBase) -> str:

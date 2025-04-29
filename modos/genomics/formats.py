@@ -20,8 +20,7 @@ class GenomicFileSuffix(tuple, Enum):
     FASTQ = (".fastq", ".fq")
 
     @classmethod
-    @property
-    def formats(cls):
+    def list_formats(cls):
         return [fmt.name for fmt in cls]
 
     @classmethod
