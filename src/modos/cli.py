@@ -469,7 +469,7 @@ def callback(
     ),
 ):
     """Multi-Omics Digital Objects command line interface."""
-    ...
+    setup_logging()
 
 
 # Generate a click group to autogenerate docs via sphinx-click:
