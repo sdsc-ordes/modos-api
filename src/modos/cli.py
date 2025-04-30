@@ -9,6 +9,7 @@ from typing import Optional
 from typing_extensions import Annotated
 
 from linkml_runtime.loaders import json_loader
+from loguru import logger
 import modos_schema.datamodel as model
 from pydantic import HttpUrl
 import sys
@@ -23,6 +24,7 @@ from modos.helpers.schema import UserElementType
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import parse_instance, parse_attributes
+from modos.logging import setup_logging
 from modos.prompt import SlotPrompter
 from modos.remote import EndpointManager
 from modos.prompt import fuzzy_complete
@@ -141,7 +143,7 @@ def remove(
                     f"Removing {element_id} will permanently delete {rm_path}.\n Please confirm that you want to continue?"
                 )
                 if not delete:
-                    print(f"Stop removing element {element_id}!")
+                    logger.warning(f"Stop removing element {element_id}!")
                     raise typer.Abort()
         modo.remove_element(element_id)
 
