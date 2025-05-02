@@ -283,7 +283,6 @@ def upload(
 
 @c4gh.command()
 def decrypt(
-    ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     secret_key: Annotated[
         str,
@@ -293,15 +292,24 @@ def decrypt(
             help="Secret key of the recipient to decrypt files in the MODO.",
         ),
     ],
+    passphrase: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--passphrase",
+            "-pw",
+            help="Path to file with passphrase to unlock secret key.",
+        ),
+    ] = None,
 ):
     """Decrypt a local MODO."""
     modo = MODO(object_path)
-    modo.decrypt(secret_key)
+    modo.decrypt(
+        secret_key, passphrase=open.read(passphrase) if passphrase else None
+    )
 
 
 @c4gh.command()
 def encrypt(
-    ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     public_key: Annotated[
         list[str],
@@ -319,10 +327,22 @@ def encrypt(
             help="Secret key of the sender to encrypt files in the MODO.",
         ),
     ] = None,
+    passphrase: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--passphrase",
+            "-pw",
+            help="Path to file with passphrase to unlock secret key.",
+        ),
+    ] = None,
 ):
     """Encrypt a local MODO."""
     modo = MODO(object_path)
-    modo.encrypt(public_key, secret_key)
+    modo.encrypt(
+        public_key,
+        secret_key,
+        passphrase=open.read(passphrase) if passphrase else None,
+    )
 
 
 @cli.command(rich_help_panel="Read")
