@@ -32,10 +32,10 @@ from modos.helpers.schema import (
     set_haspart_relationship,
     UserElementType,
     update_haspart_id,
+    update_metadata_from_model,
     DataElement,
 )
-from modos.genomics.c4gh import decrypt_file
-from modos.genomics.formats import get_index, read_pysam
+from modos.genomics.formats import read_pysam
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import extract_metadata, parse_attributes
@@ -387,8 +387,8 @@ class MODO:
         new
             Element containing the enriched metadata.
         """
-        attrs = self.zarr[element_id].attrs
-        attr_dict = attrs.asdict()
+        group = self.zarr[element_id]
+        attr_dict = group.attrs.asdict()
         if not isinstance(new, class_from_name(attr_dict.get("@type"))):
             raise ValueError(
                 f"Class {attr_dict['@type']} of {element_id} does not match {new.class_name}."
@@ -414,21 +414,7 @@ class MODO:
             )
 
         new = update_haspart_id(new)
-        new = json.loads(json_dumper.dumps(new))
-
-        # in the zarr store, empty properties are not stored
-        # in the linkml model, they present as empty lists/None.
-        new_items = {
-            field: value
-            for field, value in new.items()
-            if (field, value) not in attrs.items()
-            and field != "id"
-            and value is not None
-            and value != []
-        }
-        if not len(new_items):
-            return
-        attrs.update(**new_items)
+        update_metadata_from_model(group, new)
         self.update_date()
 
     def enrich_metadata(self):
@@ -571,11 +557,15 @@ class MODO:
             modo.remove_element(modo_ids[old_id])
         return modo
 
-    def download(self, target_dir: Path):
+    def download(self, target_path: Path):
         """Download the MODO to a local directory.
         This will download all files and metadata to the target directory.
         """
-        self.storage.download(target_dir)
+        self.storage.transfer(LocalStorage(target_path))
+
+    def upload(self, target_path: Path, s3_endpoint: HttpUrl):
+        """Upload a local MODO to a remote endpoint."""
+        self.storage.transfer(S3Storage(target_path, s3_endpoint))
 
     def encrypt(
         self,
@@ -596,8 +586,7 @@ class MODO:
                 passphrase,
                 delete,
             )
-            new_attrs = json.loads(json_dumper.dumps(data.model))
-            group.attrs.update(**new_attrs)
+            update_metadata_from_model(group, data.model)
         self.update_date()
 
     def decrypt(
@@ -612,6 +601,5 @@ class MODO:
             meta["id"] = id
             data = DataElement(dict_to_instance(meta))
             data.decrypt(self.storage, seckey_path, sender_pubkey, passphrase)
-            new_attrs = json.loads(json_dumper.dumps(data.model))
-            group.attrs.update(**new_attrs)
+            update_metadata_from_model(group, data.model)
         self.update_date()

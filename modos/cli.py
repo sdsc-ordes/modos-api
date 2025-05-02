@@ -259,7 +259,7 @@ def download(
 ):
     """Download a modo from a remote endpoint."""
     modo = MODO(object_path, endpoint=ctx.obj.endpoint)
-    modo.storage.transfer(LocalStorage(target_path))
+    modo.download(target_path)
 
 
 @remote.command()
@@ -278,7 +278,7 @@ def upload(
     """Upload a local modo to a remote endpoint."""
     modo = MODO(object_path)
     endpoint = EndpointManager(ctx.obj.endpoint)
-    modo.storage.transfer(S3Storage(target_path, s3_endpoint=endpoint.s3))
+    modo.upload(target_path, endpoint.s3)
 
 
 @c4gh.command()
