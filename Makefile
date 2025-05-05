@@ -4,7 +4,7 @@ LOCAL_IP := $(shell ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$$/\1/p')
 VERSION :=$(shell grep -E '^__version__ += +' src/modos/__init__.py | sed -E 's/.*= +//' | tr -d '"')
 
 .PHONY: install
-install: ## Install with the poetry and add pre-commit hooks
+install: ## Install packages with uv and add pre-commit hooks
 	@echo "🚀 Installing packages with uv"
 	@uv venv -p 3.12
 	@uv sync --all-extras --group dev
@@ -12,7 +12,7 @@ install: ## Install with the poetry and add pre-commit hooks
 
 .PHONY: check
 check: ## Run code quality tools.
-	@echo "🚀 Checking Poetry lock file consistency with 'pyproject.toml': Running poetry lock --check"
+	@echo "🚀 Checking uv lock file consistency with 'pyproject.toml': Running uv lock --check"
 	@uv lock --check
 	@echo "🚀 Linting code: Running pre-commit"
 	@uv run pre-commit run -a
