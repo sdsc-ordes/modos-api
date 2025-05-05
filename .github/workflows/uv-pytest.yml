@@ -33,7 +33,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Code Quality
-        run: make check
+        run: just check
 
       - name: Test with pytest
         env:
