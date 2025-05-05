@@ -1,5 +1,5 @@
-"""Tests for the local use of multi-omics digital object (modo) API
-"""
+"""Tests for the local use of multi-omics digital object (modo) API"""
+
 from typing import Iterator
 from pathlib import Path
 import re

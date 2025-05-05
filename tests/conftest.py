@@ -2,7 +2,6 @@
 
 import modos_schema.datamodel as model
 import pytest
-import shutil
 
 from modos.api import MODO
 from pathlib import Path

@@ -1,5 +1,4 @@
-"""Tests for the remote use of multi-omics digital object (modo) API
-"""
+"""Tests for the remote use of multi-omics digital object (modo) API"""
 
 from modos.api import MODO
 

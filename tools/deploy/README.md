@@ -29,7 +29,7 @@ subgraph " "
   Vminiodata x-. /data/s3 .-x htsget
   Vminioreferences([minio-references]) x-. /bitnami/minio/references .-x minio
   Vminioreferences x-. /references/s3 .-x refget
-  
+
   P1((9001)) -.-> minio
   nginx -.- modonetwork[/modos-network/]
   minio -.- modonetwork

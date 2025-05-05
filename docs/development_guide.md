@@ -7,7 +7,7 @@ git clone https://github.com/sdsc-ordes/modos-api && cd modos-api
 make install
 ```
 
-This will install dependencies and create the python virtual environment using [poetry](https://python-poetry.org/) and setup pre-commit hooks with [pre-commit](https://pre-commit.com/).
+This will install dependencies and create the python virtual environment using [uv](https://docs.astral.sh/uv/) and setup pre-commit hooks with [pre-commit](https://pre-commit.com/).
 
 The tests can be run with `make test`, it will execute pytest with the doctest module.
 
@@ -17,7 +17,7 @@ If you are using [`nix`](https://nixos.org/download) package manager with [flake
 you can enter a development shell with all requirements installed by doing:
 
 ```shell
-nix develop ./nix#default
+nix develop ./tools/nix#default
 ```
 
 ## Making a release

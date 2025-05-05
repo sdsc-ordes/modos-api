@@ -1,4 +1,5 @@
 """Module for extracting metabolomics metadata from mzTab-M 2.0 files."""
+
 from pathlib import Path
 import re
 
