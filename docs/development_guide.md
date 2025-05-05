@@ -4,12 +4,12 @@ The development environment can be set up as follows:
 
 ```sh
 git clone https://github.com/sdsc-ordes/modos-api && cd modos-api
-make install
+just setup
 ```
 
 This will install dependencies and create the python virtual environment using [uv](https://docs.astral.sh/uv/) and setup pre-commit hooks with [pre-commit](https://pre-commit.com/).
 
-The tests can be run with `make test`, it will execute pytest with the doctest module.
+The tests can be run with `just test`, it will execute pytest with the doctest module.
 
 ## Using Nix Package Manager
 

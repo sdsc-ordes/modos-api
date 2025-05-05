@@ -57,7 +57,7 @@ end
 1. Start the server
 
 ```sh
-make deploy
+just deploy
 ```
 
 2. Upload MODO(s) to the default bucket from the minio console (default is http://localhost:9001)
@@ -91,7 +91,7 @@ In the `.env` file, each service has a `<service>_PUBLIC_URL` and a `<service>_L
 
 There are two options to let the htsget and refget servers talk to the minio embedded in the compose setup:
 
-1. Set `S3_PUBLIC_URL=http://<LOCAL-IP>:9000` where `<LOCAL-IP>` is your local IP address (find it using hostname -I). **This is done automatically when starting the server with `make deploy`**.
+1. Set `S3_PUBLIC_URL=http://<LOCAL-IP>:9000` where `<LOCAL-IP>` is your local IP address (find it using hostname -I). **This is done automatically when starting the server with `just deploy`**.
 
 2. Manually create a host mapping from the minio service to localhost on the machine:
 > `echo "127.0.0.1 minio" >> /etc/hosts`
