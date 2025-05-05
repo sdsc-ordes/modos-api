@@ -563,9 +563,14 @@ class MODO:
         """
         self.storage.transfer(LocalStorage(target_path))
 
-    def upload(self, target_path: Path, s3_endpoint: HttpUrl):
-        """Upload a local MODO to a remote endpoint."""
-        self.storage.transfer(S3Storage(target_path, s3_endpoint))
+    def upload(
+        self,
+        target_path: Path,
+        s3_endpoint: HttpUrl,
+        s3_kwargs: Optional[dict[str, Any]] = None,
+    ):
+        """Upload a local MODO to a target_path on a remote endpoint."""
+        self.storage.transfer(S3Storage(target_path, s3_endpoint, s3_kwargs))
 
     def encrypt(
         self,
