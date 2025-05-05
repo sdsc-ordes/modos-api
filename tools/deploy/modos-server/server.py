@@ -19,6 +19,10 @@ S3_LOCAL_URL = os.environ["S3_LOCAL_URL"]
 S3_PUBLIC_URL = os.environ["S3_PUBLIC_URL"]
 BUCKET = os.environ["S3_BUCKET"]
 HTSGET_LOCAL_URL = os.environ["HTSGET_LOCAL_URL"]
+SERVICES = {
+    "s3": S3_LOCAL_URL,
+    "htsget": HTSGET_LOCAL_URL,
+}
 
 app = FastAPI()
 minio = connect_s3(S3_LOCAL_URL, {"anon": True})  # type: ignore
@@ -34,11 +38,11 @@ def list_modos() -> dict[str, list[str]]:
 
 @app.get("/meta")
 def gather_metadata():
-    """Generate metadata KG from all MODOs."""
+    """gather metadata from all MODOs."""
     meta = {}
 
     for modo in minio.ls(BUCKET, refresh=True):
-        meta.update(MODO(path=modo, endpoint=S3_LOCAL_URL).metadata)  # type: ignore
+        meta[modo] = MODO(path=f"s3://{modo}", services=SERVICES).metadata  # type: ignore
 
     return meta
 
@@ -64,9 +68,9 @@ def get_s3_path(query: str, exact_match: bool = False):
         res = [p[0] for p in pairs]
     return [
         {
-            f"{S3_PUBLIC_URL}/{modo}": {
+            f"{modo}": {
                 "s3_endpoint": S3_PUBLIC_URL,
-                "modo_path": modo,
+                "modo_path": f"s3://{modo}",
             }
         }
         for modo in res
