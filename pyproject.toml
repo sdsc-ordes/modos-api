@@ -27,13 +27,13 @@ dependencies = [
 
 [project.optional-dependencies]
 pyfuzon = ["pyfuzon>=0.2,<0.3"]
-test = [
-  "pytest",
-  "testcontainers[minio]",
-]
+
+[dependency-groups]
 dev = [
   "ruff",
   "pre-commit",
+  "pytest",
+  "testcontainers[minio]",
 ]
 docs = [
   "myst-parser>=2.0.0,<3.0",
