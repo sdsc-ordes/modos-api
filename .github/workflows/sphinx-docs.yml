@@ -30,7 +30,7 @@ jobs:
 
       - name: Sphinx build
         run: |
-          make doc
+          just doc
 
   docs-push:
     runs-on: ubuntu-latest
