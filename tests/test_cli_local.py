@@ -118,3 +118,43 @@ def test_not_remove_modo_without_force(test_modo, tmp_path):
     result = runner.invoke(cli, ["remove", str(tmp_path), test_modo.path.name])
     assert result.exit_code == 1
     assert isinstance(result.exception, ValueError)
+
+
+## Encryption
+
+
+def test_encrypt_modo(test_modo, c4gh_keypair, tmp_path):
+    pk_path = c4gh_keypair["public_key"]
+    result = runner.invoke(
+        cli,
+        [
+            "c4gh",
+            "encrypt",
+            "--public-key",
+            pk_path,
+            str(tmp_path),
+        ],
+    )
+    assert result.exit_code == 0
+    assert (tmp_path / "demo1.cram.c4gh").exists()
+    assert not (tmp_path / "demo1.cram").exists()
+
+
+## Decryption
+
+
+def test_decrypt_modo(test_modo, c4gh_keypair, tmp_path):
+    sk_path = c4gh_keypair["private_key"]
+    result = runner.invoke(
+        cli,
+        [
+            "c4gh",
+            "decrypt",
+            "--secret-key",
+            sk_path,
+            str(tmp_path),
+        ],
+    )
+    assert result.exit_code == 0
+    assert not (tmp_path / "demo1.cram.c4gh").exists()
+    assert (tmp_path / "demo1.cram").exists()
