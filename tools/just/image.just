@@ -11,7 +11,7 @@ ctr := "docker"
 default:
   just --unsorted --no-aliases --list image
 
-# Build the modos-api client image
+# Build the modos-api client image.
 build:
   @echo "🐋 Building docker image"
   cd {{root_dir}} && \
@@ -20,7 +20,7 @@ build:
       --build-arg="VERSION_BUILD={{tag}}" \
       -t {{registry}}/{{repository}}:{{tag}} .
 
-# Push the modos-api client image
+# Push the modos-api client image.
 push: build
   cd {{root_dir}} && \
     {{ctr}} push {{registry}}/{{repository}}:{{tag}}
