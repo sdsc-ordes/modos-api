@@ -17,11 +17,7 @@ get-version:
   | tr -d '"'
 
 # Retrieve local IP of the host
-[private]
-get-ip:
-  #!/usr/bin/env bash
-  ip route get 1 \
-  | sed -En 's/^.*src ([0-9.]*) .*$/\1/p'
+get-ip := `ip route get 1 | sed -En 's/^.*src ([0-9.]*) .*$/\1/p'`
 
 # Setup python environment
 setup:
@@ -57,7 +53,7 @@ docs: setup
 
 # Start server-side services
 deploy:
-  S3_PUBLIC_URL="http://$(just get-ip):9000" \
+  S3_PUBLIC_URL="http://{{get-ip}}:9000" \
     docker compose \
       -f tools/deploy/compose.yaml \
       up \
