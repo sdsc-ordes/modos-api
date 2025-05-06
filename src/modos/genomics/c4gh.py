@@ -10,7 +10,7 @@ References
 .. [1] https://samtools.github.io/hts-specs/crypt4gh.pdf
 .. [2] https://github.com/EGA-archive/crypt4gh
 """
-import io
+
 from typing import List, Optional, Set, Tuple
 import os
 from pathlib import Path

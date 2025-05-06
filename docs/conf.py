@@ -65,7 +65,7 @@ myst_enable_extensions = ["colon_fence"]
 
 
 # Options for autoapi
-autoapi_dirs = ["../modos"]
+autoapi_dirs = ["../src/modos"]
 autoapi_ignore = ["*cli*"]
 autodoc_typehints = "description"
 

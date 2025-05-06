@@ -1,4 +1,5 @@
 """Utilities to automatically find / recommend terminology codes from text."""
+
 from dataclasses import dataclass
 from typing import Optional, Protocol
 
@@ -26,8 +27,7 @@ class CodeMatcher(Protocol):
     slot: str
     top: int
 
-    def find_codes(self, query: str) -> list[Code]:
-        ...
+    def find_codes(self, query: str) -> list[Code]: ...
 
 
 class LocalCodeMatcher(CodeMatcher):

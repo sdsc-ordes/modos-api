@@ -3,6 +3,7 @@
 This module provides helpers for accessing the schema structure
 and for converting instances to different representations.
 """
+
 from enum import Enum
 from functools import lru_cache, reduce
 from hashlib import file_digest
