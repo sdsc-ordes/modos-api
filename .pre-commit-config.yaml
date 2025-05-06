@@ -13,3 +13,4 @@ repos:
       - id: ruff
       # Run the formatter.
       - id: ruff-format
+        args: ["--check"]
