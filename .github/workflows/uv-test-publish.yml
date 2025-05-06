@@ -23,8 +23,6 @@ jobs:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v4
 
-      - uses: extractions/setup-just@v3
-
       - name: Set up Python
       # https://github.com/actions/setup-python
         uses: actions/setup-python@v5.1.1
