@@ -42,7 +42,7 @@ alias fmt := format
 # Format code
 format *args: setup
   @echo "🚀 Formatting python code"
-  uv run ruff format
+  uv run ruff format {{args}}
 
 # Run unit tests
 test *args: setup
