@@ -123,3 +123,22 @@ def test_update_source_file_and_data_path(remote_modo):
     )
     assert remote_modo.storage.exists("demo1.cram")
     assert not remote_modo.storage.exists("demo2.cram")
+
+
+# Upload/download entire modo
+@pytest.mark.slow
+def test_upload_modo(setup, test_modo):
+    minio_client = setup["minio"].get_client()
+    minio_endpoint = setup["minio"].get_config()["endpoint"]
+    minio_creds = {"secret": "minioadmin", "key": "minioadmin"}
+    test_modo.upload(
+        "s3://test/upload_ex", f"http://{minio_endpoint}", minio_creds
+    )
+    objects = minio_client.list_objects("test")
+    assert "upload_ex/" in [o.object_name for o in objects]
+
+
+@pytest.mark.slow
+def test_download_modo(remote_modo, tmp_path):
+    remote_modo.download(tmp_path / "download_ex")
+    assert (tmp_path / "download_ex").exists()

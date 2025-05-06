@@ -39,9 +39,6 @@
             "has_reference": [
                 "reference/reference1"
             ],
-            "has_sample": [
-                "sample/sample1"
-            ],
             "name": "Demo 1"
         },
         "data/demo1/.zgroup": {

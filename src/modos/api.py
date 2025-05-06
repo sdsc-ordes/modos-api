@@ -32,6 +32,7 @@ from modos.helpers.schema import (
     set_haspart_relationship,
     UserElementType,
     update_haspart_id,
+    update_metadata_from_model,
     DataElement,
 )
 from modos.genomics.formats import read_pysam
@@ -144,6 +145,10 @@ class MODO:
         return self.storage.zarr
 
     @property
+    def is_remote(self) -> bool:
+        return self.endpoint.s3 is not None
+
+    @property
     def path(self) -> Path:
         return self.storage.path
 
@@ -201,7 +206,9 @@ class MODO:
 
     def list_files(self) -> List[Path]:
         """Lists files in the archive recursively (except for the zarr file)."""
-        return [fi for fi in self.storage.list()]
+        return [
+            fi for fi in self.storage.list() if not fi.name.endswith(".zarr")
+        ]
 
     def list_arrays(
         self, element: Optional[str] = None
@@ -335,7 +342,8 @@ class MODO:
             if isinstance(element, model.ReferenceGenome):
                 source_path = Path(source_file)
                 target_path = Path(element._get("data_path"))
-                self.storage.put(source_path, target_path)
+                with open(source_path, "rb") as src:
+                    self.storage.put(src, target_path)
 
             # Add data_checksum attribute
             if isinstance(element, model.DataEntity):
@@ -379,8 +387,8 @@ class MODO:
         new
             Element containing the enriched metadata.
         """
-        attrs = self.zarr[element_id].attrs
-        attr_dict = attrs.asdict()
+        group = self.zarr[element_id]
+        attr_dict = group.attrs.asdict()
         if not isinstance(new, class_from_name(attr_dict.get("@type"))):
             raise ValueError(
                 f"Class {attr_dict['@type']} of {element_id} does not match {new.class_name}."
@@ -406,21 +414,7 @@ class MODO:
             )
 
         new = update_haspart_id(new)
-        new = json.loads(json_dumper.dumps(new))
-
-        # in the zarr store, empty properties are not stored
-        # in the linkml model, they present as empty lists/None.
-        new_items = {
-            field: value
-            for field, value in new.items()
-            if (field, value) not in attrs.items()
-            and field != "id"
-            and value is not None
-            and value != []
-        }
-        if not len(new_items):
-            return
-        attrs.update(**new_items)
+        update_metadata_from_model(group, new)
         self.update_date()
 
     def enrich_metadata(self):
@@ -562,3 +556,55 @@ class MODO:
         for old_id in old_ids:
             modo.remove_element(modo_ids[old_id])
         return modo
+
+    def download(self, target_path: Path):
+        """Download the MODO to a local directory.
+        This will download all files and metadata to the target directory.
+        """
+        self.storage.transfer(LocalStorage(target_path))
+
+    def upload(
+        self,
+        target_path: Path,
+        s3_endpoint: HttpUrl,
+        s3_kwargs: Optional[dict[str, Any]] = None,
+    ):
+        """Upload a local MODO to a target_path on a remote endpoint."""
+        self.storage.transfer(S3Storage(target_path, s3_endpoint, s3_kwargs))
+
+    def encrypt(
+        self,
+        recipient_pubkeys: List[os.PathLike] | os.PathLike,
+        seckey_path: Optional[os.PathLike] = None,
+        passphrase: Optional[str] = None,
+        delete: bool = True,
+    ):
+        """Encrypt genomic data files including index files in a modo using crypt4gh"""
+        for id, group in self.zarr.data.items():
+            meta = group.attrs.asdict()
+            meta["id"] = id
+            data = DataElement(dict_to_instance(meta))
+            data.encrypt(
+                self.storage,
+                recipient_pubkeys,
+                seckey_path,
+                passphrase,
+                delete,
+            )
+            update_metadata_from_model(group, data.model)
+        self.update_date()
+
+    def decrypt(
+        self,
+        seckey_path: os.PathLike,
+        sender_pubkey: Optional[os.PathLike] = None,
+        passphrase: Optional[str] = None,
+    ):
+        """Decrypt all c4gh encrypted data files in modo"""
+        for id, group in self.zarr.data.items():
+            meta = group.attrs.asdict()
+            meta["id"] = id
+            data = DataElement(dict_to_instance(meta))
+            data.decrypt(self.storage, seckey_path, sender_pubkey, passphrase)
+            update_metadata_from_model(group, data.model)
+        self.update_date()
