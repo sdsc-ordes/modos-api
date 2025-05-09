@@ -39,6 +39,8 @@ jobs:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v3
+
       # https://github.com/actions/setup-python
       - uses: actions/setup-python@v5
         with:
