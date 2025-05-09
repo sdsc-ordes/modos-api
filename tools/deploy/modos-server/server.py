@@ -12,6 +12,7 @@ import os
 
 from fastapi import FastAPI
 from modos.api import MODO
+from modos.logging import setup_logging
 from modos.storage import connect_s3
 
 
@@ -26,6 +27,10 @@ SERVICES = {
 
 app = FastAPI()
 minio = connect_s3(S3_LOCAL_URL, {"anon": True})  # type: ignore
+setup_logging(
+    level="INFO",
+    time=True,
+)
 
 
 @app.get("/list")

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import io
+from loguru import logger
 import os
 from pathlib import Path
 import re
@@ -100,7 +101,7 @@ class LocalStorage(Storage):
     def remove(self, target: Path):
         if target.exists():
             target.unlink()
-            print(f"INFO: Permanently deleted {target} from filesystem.")
+            logger.info(f"Permanently deleted {target} from filesystem.")
 
     def put(self, source: Path, target: Path):
         shutil.copy(source, self.path / target)
@@ -218,8 +219,8 @@ class S3Storage(Storage):
     def remove(self, target: Path):
         if self.zarr.store.fs.exists(target):
             self.zarr.store.fs.rm(str(target))
-            print(
-                f"INFO: Permanently deleted {target} from remote filesystem."
+            logger.info(
+                f"Permanently deleted {target} from remote filesystem."
             )
 
     def put(self, source: Path, target: Path):
