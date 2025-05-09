@@ -1057,7 +1057,7 @@ docs = [
 requires-dist = [
     { name = "calamus", specifier = ">=0.4.2,<0.5.0" },
     { name = "gtars", specifier = ">=0.2.2,<0.3.0" },
-    { name = "modos-schema", git = "https://github.com/sdsc-ordes/modos-schema?branch=chore%2Fpy313-support" },
+    { name = "modos-schema", specifier = ">=0.3.2" },
     { name = "pandas", specifier = ">=2.2.3,<3.0.0" },
     { name = "prompt-toolkit", specifier = ">=3.0.48,<4.0.0" },
     { name = "pydantic", specifier = ">=2.8.2,<3.0.0" },
@@ -1090,10 +1090,14 @@ docs = [
 
 [[package]]
 name = "modos-schema"
-version = "0.3.1.post7.dev0+431c01a"
-source = { git = "https://github.com/sdsc-ordes/modos-schema?branch=chore%2Fpy313-support#431c01ae161c55661cb345b654053775968db9b5" }
+version = "0.3.2"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "linkml-runtime" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8e/85/4d1a715e2e2109fa91bc3d4c79de5acd0b77f44337c9c56f7e532d75e4c0/modos_schema-0.3.2.tar.gz", hash = "sha256:ba959644c74feef3056b43cad5869bc3ebf9393940a1f4c056c820888ed022d3", size = 38009 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4e/f1/1f8eeedd7464fe3954e6db2abcb8e19e200c4148a5e6c451df6c40394dcd/modos_schema-0.3.2-py3-none-any.whl", hash = "sha256:e6a980c2dee93f205322dc5665af93d5f282133f67f3831f0f05fd31a37829b9", size = 15512 },
 ]
 
 [[package]]
