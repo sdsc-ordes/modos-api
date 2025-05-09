@@ -360,16 +360,16 @@ wheels = [
 
 [[package]]
 name = "curies"
-version = "0.10.13"
+version = "0.10.16"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
     { name = "pytrie" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cb/ca/4ecb31f8240b69876b84a0e7d9c7105778e1c698febbd132a3f7e73e3385/curies-0.10.13.tar.gz", hash = "sha256:bbd47f1dbc3f25c94538f0ecf1fe18498e27a1689b4e759615c2ccac5ee6275b", size = 270252 }
+sdist = { url = "https://files.pythonhosted.org/packages/2d/1d/1108e085302aaa55fae14c48d0396b1c2d213adce6f506ac5abd7e890cc3/curies-0.10.16.tar.gz", hash = "sha256:33c5239cc38463aa07fd8a33cef9fcabac7b477146d7a4fc6c650c6a7b97a8dc", size = 270602 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/97/af/ced1a72cff08ec23bc9e747e9e71420dd0454541e0e70290d8895f055978/curies-0.10.13-py3-none-any.whl", hash = "sha256:5fec2af05b61f45dbe0638e196c3ce4cf8dc95af298c20325db779dac488df40", size = 59840 },
+    { url = "https://files.pythonhosted.org/packages/67/e0/cd7154792079d0d57ed24eb438e5f012084542c0d178ce6b07c724c903ea/curies-0.10.16-py3-none-any.whl", hash = "sha256:23c3eb4e2d79ae1a355bd7e6346d83d05b20895a4e9c6df9f8c0b7c51e97d8a4", size = 59983 },
 ]
 
 [[package]]
@@ -636,14 +636,14 @@ wheels = [
 
 [[package]]
 name = "jsonschema-specifications"
-version = "2024.10.1"
+version = "2025.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "referencing" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/10/db/58f950c996c793472e336ff3655b13fbcf1e3b359dcf52dcf3ed3b52c352/jsonschema_specifications-2024.10.1.tar.gz", hash = "sha256:0f38b83639958ce1152d02a7f062902c41c8fd20d558b0c34344292d417ae272", size = 15561 }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/ce/46fbd9c8119cfc3581ee5643ea49464d168028cfb5caff5fc0596d0cf914/jsonschema_specifications-2025.4.1.tar.gz", hash = "sha256:630159c9f4dbea161a6a2205c3011cc4f18ff381b189fff48bb39b9bf26ae608", size = 15513 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d1/0f/8910b19ac0670a0f80ce1008e5e751c4a57e14d2c4c13a482aa6079fa9d6/jsonschema_specifications-2024.10.1-py3-none-any.whl", hash = "sha256:a09a0680616357d9a0ecf05c12ad234479f549239d0f5b55f3deea67475da9bf", size = 18459 },
+    { url = "https://files.pythonhosted.org/packages/01/0e/b27cdbaccf30b890c40ed1da9fd4a3593a5cf94dae54fb34f8a4b74fcd3f/jsonschema_specifications-2025.4.1-py3-none-any.whl", hash = "sha256:4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af", size = 18437 },
 ]
 
 [[package]]
@@ -661,7 +661,7 @@ wheels = [
 
 [[package]]
 name = "linkml-runtime"
-version = "1.8.3"
+version = "1.9.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -678,9 +678,9 @@ dependencies = [
     { name = "rdflib" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f4/77/e967dc366a4649e7aa9842bc8dd2b83dc23ec7f689b2a8a2f6b2ce4290ce/linkml_runtime-1.8.3.tar.gz", hash = "sha256:5b7f682eef54aaf0a59c50eeacdb11463b43b124a044caf496cde59936ac05c8", size = 485034 }
+sdist = { url = "https://files.pythonhosted.org/packages/35/e9/c5d3b61651b00e3bfb45756a23332275bb5f677298a3c8d1252774017534/linkml_runtime-1.9.2.tar.gz", hash = "sha256:d37b3ca479464ec1fec04551f98e8e0e74620ee62a45bbd80da1ff2022132d92", size = 479147 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ce/24/4d8806bedc1bbbbf9167b308d95a43a463bca06570987f7ab58aef1ce98c/linkml_runtime-1.8.3-py3-none-any.whl", hash = "sha256:0750920f1348fffa903d99e7b5834ce425a2a538285aff9068dbd96d05caabd1", size = 577528 },
+    { url = "https://files.pythonhosted.org/packages/22/f7/79e887291a9acf23259e26e4b21feb9fbcd116dca6415d29514de03987d1/linkml_runtime-1.9.2-py3-none-any.whl", hash = "sha256:ff9fd51d38e5c6b991b88e90fb603120629b9da28861f334ea48139c7266f941", size = 576756 },
 ]
 
 [[package]]
@@ -858,7 +858,7 @@ docs = [
 requires-dist = [
     { name = "calamus", specifier = ">=0.4.2,<0.5.0" },
     { name = "gtars", specifier = ">=0.2.2,<0.3.0" },
-    { name = "modos-schema", specifier = ">=0.3,<0.4" },
+    { name = "modos-schema", git = "https://github.com/sdsc-ordes/modos-schema?branch=chore%2Fpy313-support" },
     { name = "pandas", specifier = ">=2.2.3,<3.0.0" },
     { name = "prompt-toolkit", specifier = ">=3.0.48,<4.0.0" },
     { name = "pydantic", specifier = ">=2.8.2,<3.0.0" },
@@ -891,14 +891,10 @@ docs = [
 
 [[package]]
 name = "modos-schema"
-version = "0.3.1"
-source = { registry = "https://pypi.org/simple" }
+version = "0.3.1.post7.dev0+431c01a"
+source = { git = "https://github.com/sdsc-ordes/modos-schema?branch=chore%2Fpy313-support#431c01ae161c55661cb345b654053775968db9b5" }
 dependencies = [
     { name = "linkml-runtime" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/19/d9/116d82b92d8db6a2d6f6a6d73600326f334db252d9b25449ffa342cc0410/modos_schema-0.3.1.tar.gz", hash = "sha256:194f513ab0958338ffb3ad6bffb08ded397f7d47edfc81ee888b8152949eba01", size = 37066 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/56/c3/f47edb01366ec334d1633163936b6a9619674de0afab7fda4b045feb222d/modos_schema-0.3.1-py3-none-any.whl", hash = "sha256:5d7134ec68e14d477d0dde171520a800e845083f36067daf7017c94ff9e17cf6", size = 15439 },
 ]
 
 [[package]]
