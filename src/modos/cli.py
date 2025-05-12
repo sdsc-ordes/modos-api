@@ -467,9 +467,17 @@ def callback(
         callback=version_callback,
         help="Print version of modos client",
     ),
+    debug: Optional[bool] = typer.Option(
+        None,
+        "--debug",
+        help="Enable debug logging.",
+    ),
 ):
     """Multi-Omics Digital Objects command line interface."""
-    setup_logging()
+    if debug:
+        setup_logging(level="DEBUG", diagnose=True, backtrace=True, time=True)
+    else:
+        setup_logging()
 
 
 # Generate a click group to autogenerate docs via sphinx-click:
