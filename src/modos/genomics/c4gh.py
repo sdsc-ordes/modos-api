@@ -84,6 +84,7 @@ def encrypt_file(
     seckey_path: Optional[os.PathLike] = None,
     passphrase: Optional[str] = None,
 ):
+    """Encrypt a file using the crypt4gh algorithm (authenticated encryption)."""
     seckey = get_secret_key(seckey_path, passphrase=passphrase)
     keys = get_keys(recipient_pubkeys, seckey)
     with open(infile, "rb") as input, open(outfile, "wb") as output:
