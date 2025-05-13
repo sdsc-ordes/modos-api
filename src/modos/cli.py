@@ -9,6 +9,7 @@ from typing import Optional
 from typing_extensions import Annotated
 
 from linkml_runtime.loaders import json_loader
+from loguru import logger
 import modos_schema.datamodel as model
 from pydantic import HttpUrl
 import sys
@@ -23,6 +24,7 @@ from modos.helpers.schema import UserElementType
 from modos.genomics.htsget import HtsgetConnection
 from modos.genomics.region import Region
 from modos.io import parse_instance, parse_attributes
+from modos.logging import setup_logging
 from modos.prompt import SlotPrompter
 from modos.remote import EndpointManager
 from modos.prompt import fuzzy_complete
@@ -141,7 +143,7 @@ def remove(
                     f"Removing {element_id} will permanently delete {rm_path}.\n Please confirm that you want to continue?"
                 )
                 if not delete:
-                    print(f"Stop removing element {element_id}!")
+                    logger.warning(f"Stop removing element {element_id}!")
                     raise typer.Abort()
         modo.remove_element(element_id)
 
@@ -430,7 +432,7 @@ def update(
                 f"Object contains element '{old_id}' which was not in config_file.\n Delete {old_id} ?"
             )
             if not delete:
-                print(
+                logger.warning(
                     f"Keeping {old_id} in {modo_id}. Consider updating your config_file."
                 )
                 continue
@@ -465,9 +467,17 @@ def callback(
         callback=version_callback,
         help="Print version of modos client",
     ),
+    debug: Optional[bool] = typer.Option(
+        None,
+        "--debug",
+        help="Enable debug logging.",
+    ),
 ):
     """Multi-Omics Digital Objects command line interface."""
-    ...
+    if debug:
+        setup_logging(level="DEBUG", diagnose=True, backtrace=True, time=True)
+    else:
+        setup_logging()
 
 
 # Generate a click group to autogenerate docs via sphinx-click:
