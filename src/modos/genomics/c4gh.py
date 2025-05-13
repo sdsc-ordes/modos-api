@@ -63,10 +63,22 @@ def get_secret_key(
 def get_keys(
     recipient_pubkeys: List[os.PathLike] | os.PathLike, seckey: bytes
 ) -> Set[Tuple[int, bytes, bytes]]:
+    """Retrieves recipient public keys and builds a collection of "key tuples".
+
+    Parameters
+    ---------------
+    recipient_pubkeys:
+        Path to the recipient public key, or list of paths if multiple recipients.
+    seckey:
+        Secret key of the sender.
+
+    Returns
+    ----------
+    {(method, seckey, recipient_pubkey)}
+        Set of key triplets, one for each recipient.
+    """
     if not isinstance(recipient_pubkeys, List):
         recipient_pubkeys = [recipient_pubkeys]
-    # get recepient public key(s) and generate "key tuple":
-    # keys = (method, privkey, recipient_pubkey=None)
     recipient_list = []
     for pubkey in recipient_pubkeys:
         pubkey_path = os.path.expanduser(pubkey)
