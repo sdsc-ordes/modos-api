@@ -176,6 +176,7 @@ class DataElement:
         target_path = Path(self.model.data_path)
         target_idx = get_index(target_path)
         if storage.exists(source_path) and source_path != target_path:
+            # Renaming / moving existing file within modo.
             storage.move(source_path, target_path)
             if source_idx:
                 storage.move(source_idx, target_idx)
