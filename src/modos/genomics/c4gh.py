@@ -27,6 +27,20 @@ def get_secret_key(
     generate: bool = True,
     passphrase: Optional[str] = None,
 ) -> bytes:
+    """
+    Get the secret key for encryption/decryption.
+    If no secret key path is provided and generate is True, a new secret key will be generated.
+    This can be used to allow authicated encryption without prior key generation.
+
+    Parameters
+    ----------
+    seckey_path
+        Path to the secret key.
+    generate
+        Generate a new secret key, if no seckey_path is provided.
+    passphrase
+        Passphrase for the secret key.
+    """
     # auto generate a secret key
     if generate and seckey_path is None:
         sk = PrivateKey.generate()
