@@ -8,7 +8,7 @@
   <a href="https://github.com/sdsc-ordes/modos-api/releases/latest">
     <img src="https://img.shields.io/github/release/sdsc-ordes/modos-api.svg?style=for-the-badge" alt="Current Release label" /></a>
   <a href="https://github.com/sdsc-ordes/modos-api/actions/workflows/poetry-pytest.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/sdsc-ordes/modos-api/poetry-pytest.yml?label=tests&style=for-the-badge" alt="Test Status label" /></a>
+    <img src="https://img.shields.io/github/actions/workflow/status/sdsc-ordes/modos-api/uv-pytest.yml?label=tests&style=for-the-badge" alt="Test Status label" /></a>
   <a href="https://sdsc-ordes.github.io/modos-api">
     <img src="https://img.shields.io/website?url=https%3A%2F%2Fsdsc-ordes.github.io%2Fmodos-api&up_message=online&up_color=blue&down_message=offline&style=for-the-badge&label=docs" alt="Documentation website" /></a>
   <a href="http://www.apache.org/licenses/LICENSE-2.0.html">

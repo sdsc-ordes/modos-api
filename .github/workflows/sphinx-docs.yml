@@ -16,6 +16,8 @@ jobs:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v3
+
       # https://github.com/actions/setup-python
       - uses: actions/setup-python@v5
         with:
@@ -28,7 +30,7 @@ jobs:
 
       - name: Sphinx build
         run: |
-          make doc
+          just docs
 
   docs-push:
     runs-on: ubuntu-latest
@@ -37,6 +39,8 @@ jobs:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v3
+
       # https://github.com/actions/setup-python
       - uses: actions/setup-python@v5
         with:
@@ -49,7 +53,7 @@ jobs:
 
       - name: Sphinx build
         run: |
-          make doc
+          just docs
 
       # https://github.com/peaceiris/actions-gh-pages
       - name: Deploy
