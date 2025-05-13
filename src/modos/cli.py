@@ -432,7 +432,7 @@ def update(
                 f"Object contains element '{old_id}' which was not in config_file.\n Delete {old_id} ?"
             )
             if not delete:
-                print(
+                logger.warning(
                     f"Keeping {old_id} in {modo_id}. Consider updating your config_file."
                 )
                 continue
