@@ -25,7 +25,6 @@ from modos.storage import (
     S3Storage,
 )
 from modos.helpers.schema import (
-    class_from_name,
     dict_to_instance,
     ElementType,
     set_data_path,
@@ -344,10 +343,12 @@ class MODO:
                 with open(source_path, "rb") as src:
                     self.storage.put(src, target_path)
 
-            # Add data_checksum attribute
+            # Add file (+ index) and update data_checksum attribute
             if isinstance(element, model.DataEntity):
                 new_data = DataElement(element)
-                new_data.process_and_store(self.storage, Path(source_file))
+                new_data.add_file(
+                    self.storage, Path(source_file), Path(element.data_path)
+                )
 
         # Infer type
         type_name = allowed_elements.from_object(element).value
@@ -388,20 +389,18 @@ class MODO:
         """
         group = self.zarr[element_id]
         attr_dict = group.attrs.asdict()
-        if not isinstance(new, class_from_name(attr_dict.get("@type"))):
+        element = dict_to_instance(attr_dict | {"id": element_id})
+
+        if not isinstance(new, type(element)):
             raise ValueError(
-                f"Class {attr_dict['@type']} of {element_id} does not match {new.class_name}."
+                f"Class {element.class_name} of {element_id} does not match {new.class_name}."
             )
 
-        if isinstance(new, model.DataEntity):
-            new_data = DataElement(new)
-            old_path = attr_dict.get("data_path")
-            # path changed in metadata -> move file inside modos
-            if new_data.model._get("data_path") != old_path:
-                new_data.process_and_store(self.storage, Path(old_path))
-            # new input file provided -> replace file content
-            if source_file:
-                new_data.process_and_store(self.storage, Path(source_file))
+        if isinstance(element, model.DataEntity):
+            data = DataElement(element)
+            data.update_file(self.storage, Path(new.data_path), source_file)
+            # NOTE: data_checksum was updated and needs to be synced with new
+            new.data_checksum = data.model.data_checksum
 
         type_name = allowed_elements.from_object(new).value
         element_path = f"{type_name}/{new.id}"
