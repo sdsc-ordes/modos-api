@@ -21,6 +21,7 @@ import json
 from typing import Dict, Optional
 
 from gtars.digests import digest_fasta, sha512t24u_digest, md5_digest
+from loguru import logger
 from pydantic import ConfigDict
 from pydantic.dataclasses import dataclass
 import pysam
@@ -117,4 +118,4 @@ def upload_to_s3(
     with fs.open(s3_path, "wb", metadata=s3_metadata) as f:
         f.write(file_data)
 
-    print(f"File uploaded successfully to {s3_path}")
+    logger.info(f"File uploaded successfully to {s3_path}")

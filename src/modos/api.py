@@ -9,13 +9,13 @@ import yaml
 
 from linkml_runtime.dumpers import json_dumper
 import rdflib
+from loguru import logger
 import modos_schema.datamodel as model
 import numcodecs
 from pydantic import HttpUrl
 from pysam import AlignedSegment, VariantRecord
 import zarr.hierarchy
 import zarr
-
 
 from modos.rdf import attrs_to_graph
 from modos.storage import (
@@ -108,18 +108,17 @@ class MODO:
         services: Optional[dict[str, HttpUrl]] = None,
     ):
         self.endpoint = EndpointManager(endpoint, services or {})
-
         if is_s3_path(str(path)):
             if not self.endpoint.s3:
                 raise ValueError("S3 path requires an endpoint.")
-            print(
-                f"INFO: Using remote endpoint {endpoint} for {path}.",
+            logger.info(
+                f"Using remote endpoint {endpoint} for {path}.",
                 file=sys.stderr,
             )
             self.storage = S3Storage(str(path), self.endpoint.s3, s3_kwargs)
         else:
             # log to stderr
-            print(f"INFO: Using local storage for {path}.", file=sys.stderr)
+            logger.info(f"Using local storage for {path}")
             self.storage = LocalStorage(Path(path))
         # Opening existing object
         if self.storage.empty():
@@ -251,8 +250,8 @@ class MODO:
         except KeyError as err:
             keys = []
             self.zarr.visit(lambda k: keys.append(k))
-            print(f"Element {element_id} not found in the archive.")
-            print(f"Available elements are {keys}")
+            logger.warning(f"Element {element_id} not found in the archive.")
+            logger.info(f"Available elements are {keys}")
             raise err
 
         # Remove data file
@@ -282,7 +281,7 @@ class MODO:
         # NOTE: Locally remove the empty directory (does not affect remote).
         if self.path.exists():
             os.rmdir(self.path)
-        print(f"INFO: Permanently deleted {self.path}.")
+        logger.info(f"Permanently deleted {self.path}.")
 
     def add_element(
         self,
