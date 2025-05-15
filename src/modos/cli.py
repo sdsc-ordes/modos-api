@@ -41,6 +41,27 @@ class RdfFormat(str, Enum):
 
 
 cli = typer.Typer(add_completion=False)
+c4gh = typer.Typer(add_completion=False)
+cli.add_typer(
+    c4gh,
+    name="c4gh",
+    short_help="Local encryption via crypt4gh.",
+    rich_help_panel="Command groups",
+)
+remote = typer.Typer(add_completion=False)
+cli.add_typer(
+    remote,
+    name="remote",
+    short_help="Remote object management.",
+    rich_help_panel="Command groups",
+)
+codes = typer.Typer(add_completion=False)
+cli.add_typer(
+    codes,
+    name="codes",
+    short_help="Terminology codes utilities.",
+    rich_help_panel="Command groups",
+)
 
 OBJECT_PATH_ARG = Annotated[
     str,
@@ -52,7 +73,7 @@ OBJECT_PATH_ARG = Annotated[
 
 
 # Create command
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def create(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -105,7 +126,7 @@ def create(
     MODO(path=object_path, endpoint=endpoint.modos, **attrs)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def remove(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -148,7 +169,7 @@ def remove(
         modo.remove_element(element_id)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def add(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -211,7 +232,7 @@ def add(
     modo.add_element(obj, source_file=source_file, part_of=parent)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def enrich(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -225,7 +246,110 @@ def enrich(
     zarr.consolidate_metadata(modo.zarr.store)
 
 
-@cli.command()
+@remote.command()
+def download(
+    ctx: typer.Context,
+    object_path: OBJECT_PATH_ARG,
+    target_path: Annotated[
+        Path,
+        typer.Option(
+            "--target",
+            "-t",
+            help="Path where to download the digital object.",
+            exists=False,
+            dir_okay=True,
+        ),
+    ],
+):
+    """Download a modo from a remote endpoint."""
+    modo = MODO(object_path, endpoint=ctx.obj.endpoint)
+    modo.download(target_path)
+
+
+@remote.command()
+def upload(
+    ctx: typer.Context,
+    object_path: OBJECT_PATH_ARG,
+    target_path: Annotated[
+        str,
+        typer.Option(
+            "--target",
+            "-t",
+            help="S3 path where to upload the digital object (format: s3://bucket/name).",
+        ),
+    ],
+):
+    """Upload a local modo to a remote endpoint."""
+    modo = MODO(object_path)
+    endpoint = EndpointManager(ctx.obj.endpoint)
+    modo.upload(target_path, endpoint.s3)
+
+
+@c4gh.command()
+def decrypt(
+    object_path: OBJECT_PATH_ARG,
+    secret_key: Annotated[
+        str,
+        typer.Option(
+            "--secret-key",
+            "-s",
+            help="Secret key of the recipient to decrypt files in the MODO.",
+        ),
+    ],
+    passphrase: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--passphrase",
+            "-pw",
+            help="Path to file with passphrase to unlock secret key.",
+        ),
+    ] = None,
+):
+    """Decrypt a local MODO."""
+    modo = MODO(object_path)
+    modo.decrypt(
+        secret_key, passphrase=open.read(passphrase) if passphrase else None
+    )
+
+
+@c4gh.command()
+def encrypt(
+    object_path: OBJECT_PATH_ARG,
+    public_key: Annotated[
+        list[str],
+        typer.Option(
+            "--public-key",
+            "-p",
+            help="Public key(s) of the recipent(s) to decrypt files in the MODO.",
+        ),
+    ],
+    secret_key: Annotated[
+        Optional[str],
+        typer.Option(
+            "--secret-key",
+            "-s",
+            help="Secret key of the sender to encrypt files in the MODO.",
+        ),
+    ] = None,
+    passphrase: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--passphrase",
+            "-pw",
+            help="Path to file with passphrase to unlock secret key.",
+        ),
+    ] = None,
+):
+    """Encrypt a local MODO."""
+    modo = MODO(object_path)
+    modo.encrypt(
+        public_key,
+        secret_key,
+        passphrase=open.read(passphrase) if passphrase else None,
+    )
+
+
+@cli.command(rich_help_panel="Read")
 def show(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -271,7 +395,7 @@ def show(
     print(out)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Read")
 def publish(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -287,7 +411,7 @@ def publish(
     )
 
 
-@cli.command()
+@remote.command()
 def list(
     ctx: typer.Context,
 ):
@@ -299,8 +423,8 @@ def list(
         print(item)
 
 
-@cli.command()
-def search_codes(
+@codes.command()
+def search(
     ctx: typer.Context,
     slot: Annotated[
         str,
@@ -341,7 +465,7 @@ def search_codes(
     print(out)
 
 
-@cli.command()
+@remote.command()
 def stream(
     ctx: typer.Context,
     file_path: Annotated[
@@ -379,7 +503,7 @@ def stream(
             sys.stdout.buffer.write(chunk)
 
 
-@cli.command()
+@cli.command(rich_help_panel="Write")
 def update(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
@@ -440,7 +564,7 @@ def update(
 
 
 def version_callback(value: bool):
-    """Prints version and exits"""
+    """Prints version and exits."""
     if value:
         print(f"modos {__version__}")
         # Exits successfully

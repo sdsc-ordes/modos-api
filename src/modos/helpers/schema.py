@@ -8,20 +8,28 @@ from enum import Enum
 from functools import lru_cache, reduce
 from hashlib import file_digest
 from io import RawIOBase
+import json
+import os
 from pathlib import Path
 from typing import Any, Mapping, Optional, Union
 from urllib.parse import urlparse
 
 import zarr
-from linkml_runtime.dumpers import rdflib_dumper
+from linkml_runtime.dumpers import rdflib_dumper, json_dumper
 from linkml_runtime.utils.schemaview import SchemaView
 from rdflib import Graph
 from rdflib.term import URIRef
 
 import modos_schema.datamodel as model
 import modos_schema.schema as schema
+import zarr.hierarchy
 
-from modos.genomics.formats import get_index
+from modos.genomics.formats import (
+    GenomicFileSuffix,
+    get_index,
+    toggle_c4gh_file_path,
+)
+from modos.genomics.c4gh import encrypt_file, decrypt_file
 
 SCHEMA_PATH = Path(schema.__path__[0]) / "modos_schema.yaml"
 
@@ -39,6 +47,31 @@ def dict_to_instance(element: Mapping[str, Any]) -> Any:
     return target_class(
         **{k: v for k, v in element.items() if k not in "@type"}
     )
+
+
+def update_metadata_from_model(
+    group: zarr.hierarchy.group,
+    element: model.DataEntity
+    | model.Sample
+    | model.Assay
+    | model.ReferenceGenome,
+):
+    """Update the metadata of a zarr group with the metadata of a model element."""
+    new = json.loads(json_dumper.dumps(element))
+
+    # in the zarr store, empty properties are not stored
+    # in the linkml model, they present as empty lists/None.
+    new_items = {
+        field: value
+        for field, value in new.items()
+        if (field, value) not in group.attrs.items()
+        and field != "id"
+        and value is not None
+        and value != []
+    }
+    if not len(new_items):
+        return
+    group.attrs.update(**new_items)
 
 
 def is_full_id(element_id: str) -> bool:
@@ -115,30 +148,112 @@ def set_data_path(
 
 
 class DataElement:
-    """Facade class to wrap model.DataEntity and include index logic for genomic files"""
+    """Facade class to wrap model. DataEntity and include index logic for genomic files"""
 
     def __init__(self, model: model.DataEntity):
         self.model = model
 
-    def _set_checksum(self, source_checksum):
-        if source_checksum != self.model._get("data_checksum"):
-            self.model["data_checksum"] = source_checksum
+    def _set_metadata(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self.model, key, value)
+
+    def _update_checksum(self, source_path: Path):
+        with open(source_path, "rb") as src:
+            source_checksum = compute_checksum(src)
+        if source_checksum != self.model.data_checksum:
+            self.model.data_checksum = source_checksum
+
+    @property
+    def is_genomic(self) -> bool:
+        """Check if the data element is genomic."""
+        return (
+            self.model.data_format.code.text
+            in GenomicFileSuffix.list_formats()
+        )
 
     def process_and_store(self, storage, source_path: Path):
         source_idx = get_index(source_path)
-        target_path = Path(self.model._get("data_path"))
+        target_path = Path(self.model.data_path)
         target_idx = get_index(target_path)
+        # Renaming / moving existing file within modo.
         if storage.exists(source_path) and source_path != target_path:
             storage.move(source_path, target_path)
             if source_idx:
                 storage.move(source_idx, target_idx)
+        # Importing / overwriting external file into modo.
         else:
-            source_checksum = compute_checksum(open(source_path, "rb"))
-            if source_checksum != self.model._get("data_checksum"):
-                storage.put(source_path, target_path)
-                self._set_checksum(source_checksum)
+            source_checksum = self.model.data_checksum
+            self._update_checksum(source_path)
+            if source_checksum != self.model.data_checksum:
+                with open(source_path, "rb") as src:
+                    storage.put(src, target_path)
             if source_idx:
-                storage.put(source_idx, target_idx)
+                with open(source_idx, "rb") as src:
+                    storage.put(src, target_idx)
+
+    def encrypt(
+        self,
+        storage,
+        recipient_pubkeys: list[os.PathLike] | os.PathLike,
+        seckey_path: Optional[os.PathLike] = None,
+        passphrase: Optional[str] = None,
+        delete: bool = True,
+    ):
+        """
+        Encrypt data path linked to the DataElement.
+        Works for genomic files and their index files.
+        """
+        if not self.is_genomic:
+            return
+
+        data_path = Path(self.model.data_path)
+        encrypted_path = toggle_c4gh_file_path(data_path)
+        idx_path = get_index(data_path)
+        for file_path in filter(None, [data_path, idx_path]):
+            out_path = toggle_c4gh_file_path(file_path)
+            encrypt_file(
+                recipient_pubkeys=recipient_pubkeys,
+                infile=storage.path / file_path,
+                outfile=storage.path / out_path,
+                seckey_path=seckey_path,
+                passphrase=passphrase,
+            )
+            if delete:
+                storage.remove(storage.path / file_path)
+        self._update_checksum(storage.path / encrypted_path)
+        self._set_metadata(data_path=str(encrypted_path))
+
+    def decrypt(
+        self,
+        storage,
+        seckey_path: os.PathLike,
+        sender_pubkey: Optional[os.PathLike] = None,
+        passphrase: Optional[str] = None,
+    ):
+        """
+        Decrypt data path linked to the DataElement.
+        Works for genomic files and their index files.
+        """
+        data_path = Path(self.model.data_path)
+        if not data_path.name.endswith(".c4gh"):
+            return
+
+        decrypted_path = toggle_c4gh_file_path(data_path)
+        idx_path = get_index(decrypted_path)
+        if idx_path:
+            idx_path = toggle_c4gh_file_path(idx_path)
+        for file_path in filter(None, [data_path, idx_path]):
+            out_path = toggle_c4gh_file_path(file_path)
+            decrypt_file(
+                seckey_path=seckey_path,
+                infile=storage.path / file_path,
+                outfile=storage.path / out_path,
+                sender_pubkey=sender_pubkey,
+                passphrase=passphrase,
+            )
+            storage.remove(storage.path / file_path)
+        self._update_checksum(storage.path / decrypted_path)
+        self._set_metadata(data_path=str(decrypted_path))
 
 
 def compute_checksum(file_obj: RawIOBase) -> str:

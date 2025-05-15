@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 import io
 from loguru import logger
@@ -33,16 +34,7 @@ class Storage(ABC):
     def exists(self, target: Path) -> bool: ...
 
     @abstractmethod
-    def put(self, source: Path, target: Path): ...
-
-    @abstractmethod
-    def remove(self, target: Path): ...
-
-    @abstractmethod
     def list(self, target: Optional[Path]) -> Generator[Path, None, None]: ...
-
-    @abstractmethod
-    def open(self, target: Path) -> io.BufferedReader: ...
 
     @abstractmethod
     def move(self, rel_source: Path, target: Path):
@@ -56,6 +48,22 @@ class Storage(ABC):
             target path within storage
         """
         ...
+
+    @abstractmethod
+    def open(self, target: Path) -> io.BufferedReader: ...
+
+    @abstractmethod
+    def put(self, source: io.BufferedReader, target: Path): ...
+
+    @abstractmethod
+    def remove(self, target: Path): ...
+
+    def transfer(self, other: Storage):
+        """Transfer all contents of one storage to another one."""
+        for path in self.list():
+            item = path.relative_to(self.path)
+            with self.open(item) as src:
+                other.put(src, item)
 
     def empty(self) -> bool:
         return len(self.zarr.attrs.keys()) == 0
@@ -95,19 +103,23 @@ class LocalStorage(Storage):
                 if file.is_file():
                     yield file
 
+    def move(self, rel_source: Path, target: Path):
+        shutil.move(self.path / rel_source, self.path / target)
+
     def open(self, target: Path) -> io.BufferedReader:
         return open(self.path / target, "rb")
+
+    def put(self, source: io.BufferedReader, target: Path):
+        os.makedirs(self.path / target.parent, exist_ok=True)
+
+        with open(self.path / target, "wb") as f:
+            while chunk := source.read(8192):
+                f.write(chunk)
 
     def remove(self, target: Path):
         if target.exists():
             target.unlink()
             logger.info(f"Permanently deleted {target} from filesystem.")
-
-    def put(self, source: Path, target: Path):
-        shutil.copy(source, self.path / target)
-
-    def move(self, rel_source: Path, target: Path):
-        shutil.move(self.path / rel_source, self.path / target)
 
 
 @dataclass
@@ -205,13 +217,11 @@ class S3Storage(Storage):
         fs = self.zarr.store.fs
         path = self.path / (target or "")
         for node in fs.glob(f"{path}/*"):
-            if Path(node).name.endswith(".zarr"):
-                continue
-            elif fs.isfile(node):
-                yield Path(node)
-            elif fs.isdir(node):
+            if fs.isdir(node):
                 for file in fs.find(node):
                     yield Path(file)
+            else:
+                yield Path(node)
 
     def open(self, target: Path) -> io.BufferedReader:
         return self.zarr.store.fs.open(str(self.path / target))
@@ -223,8 +233,12 @@ class S3Storage(Storage):
                 f"Permanently deleted {target} from remote filesystem."
             )
 
-    def put(self, source: Path, target: Path):
-        self.zarr.store.fs.put_file(source, self.path / Path(target))
+    def put(self, source: io.BufferedReader, target: Path):
+        out_file = f"{self.path}/{target.as_posix()}"
+        with self.zarr.store.fs.open(out_file, "wb") as f:
+            while chunk := source.read(8192):
+                f.write(chunk)
+                f.flush()
 
     def move(self, rel_source: Path, target: Path):
         self.zarr.store.fs.mv(

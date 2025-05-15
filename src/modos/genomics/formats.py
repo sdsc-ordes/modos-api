@@ -20,6 +20,10 @@ class GenomicFileSuffix(tuple, Enum):
     FASTQ = (".fastq", ".fq")
 
     @classmethod
+    def list_formats(cls):
+        return [fmt.name for fmt in cls]
+
+    @classmethod
     def from_path(cls, path: Path) -> GenomicFileSuffix:
         for genome_ft in cls:
             if "".join(path.suffixes) in genome_ft.value:
@@ -85,3 +89,11 @@ def get_index(file_path: Path) -> Optional[Path]:
         return file_path.with_suffix(file_path.suffix + ft.get_index_suffix())
     except ValueError:
         return None
+
+
+def toggle_c4gh_file_path(file_path: Path) -> Path:
+    """Toggle the c4gh encrypted file path to an unencrypted file path and vice versa."""
+    if file_path.suffix == ".c4gh":
+        return file_path.with_name(file_path.stem)
+    else:
+        return file_path.with_suffix(file_path.suffix + ".c4gh")

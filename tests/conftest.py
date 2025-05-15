@@ -1,11 +1,14 @@
 """Common fixtures for testing"""
 
-import modos_schema.datamodel as model
+import os
+from pathlib import Path
 import pytest
 
-from modos.api import MODO
-from pathlib import Path
+import modos_schema.datamodel as model
+import crypt4gh.keys.c4gh as c4gh
 from testcontainers.minio import MinioContainer
+
+from modos.api import MODO
 
 ## Add --runslow option
 # see: https://docs.pytest.org/en/latest/example/simple.html#control-skipping-of-tests-according-to-command-line-option
@@ -99,3 +102,35 @@ def remote_modo(setup):
         services={"s3": f"http://{minio_endpoint}"},
         s3_kwargs=minio_creds,
     )
+
+
+## A c4gh key pair for de/encryption
+@pytest.fixture
+def c4gh_keypair(tmp_path):
+    """Generate a temporary c4gh keypair and store them in temp files."""
+
+    # NOTE: nacl.public keypair does not work, because c4gh adds header lines and checks for it.
+
+    key_dir = tmp_path / "keys"
+    key_dir.mkdir(parents=True, exist_ok=True)
+    private_key_path = key_dir / "test_key.sec"
+    public_key_path = key_dir / "test_key.pub"
+
+    # NOTE: crypt4gh generates the keys with read-only umask without scoping (!).
+    # So we need to manually restore the original umask after key generation
+    # for later tests to work, e.g. to write to test_modo in tmp_dir.
+
+    # store original umask
+    original_umask = os.umask(0)
+    os.umask(original_umask)
+
+    # Generate a new keypair
+    c4gh.generate(private_key_path, public_key_path)
+
+    # Restore umask
+    os.umask(original_umask)
+
+    return {
+        "private_key": private_key_path,
+        "public_key": public_key_path,
+    }
