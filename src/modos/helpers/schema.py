@@ -148,7 +148,7 @@ def set_data_path(
 
 
 class DataElement:
-    """Facade class to wrap model. DataEntity and include index logic for genomic files"""
+    """Facade class to wrap model DataEntity to facilitate file handling (including index files)."""
 
     def __init__(self, model: model.DataEntity):
         self.model = model
@@ -171,10 +171,9 @@ class DataElement:
             in GenomicFileSuffix.list_formats()
         )
 
-    def add_file(self, storage, source_path: Path):
-        """Add a file to the data_path specified in metadata.
-        If existing also add the index file and update data checksum in metadata"""
-        target_path = Path(self.model.data_path)
+    def add_file(self, storage, source_path: Path, target_path: Path):
+        """Add a file to target_path to the storage.
+        If existing also add the index file and update data_path and checksum in metadata"""
         with open(source_path, "rb") as src:
             storage.put(src, target_path)
 
@@ -185,11 +184,12 @@ class DataElement:
                 storage.put(src, target_idx)
 
         self._update_checksum(source_path)
+        self._set_metadata(data_path=str(target_path))
 
-    def move_file(self, storage, source_path: Path):
-        """Move a file to the data_path specified in metadata.
+    def move_file(self, storage, target_path: Path):
+        """Move a file from the path specified in metadata to the target_path.
         If existing also move the index file."""
-        target_path = Path(self.model.data_path)
+        source_path = Path(self.model.data_path)
         storage.move(source_path, target_path)
         source_idx = get_index(source_path)
         if source_idx:
@@ -206,21 +206,21 @@ class DataElement:
     def update_file(
         self,
         storage,
-        old_path: Path,
-        old_checksum: str,
+        new_path: Path,
         source_file: Path | None = None,
     ):
-        """Update file, its corresponding index file and metadata, based on old metadata and source_file .
+        """Update file, its corresponding index file and metadata, based on new data_path and source_file .
         There are four cases:
         1. The metadata path is the same and the source file has not changed or is none --> do nothing.
         2. The metadata path is the same and the source file has changed --> overwrite the file(s).
         3. The metadata path is different and the source file has not changed or is none -> move file(s).
         4. The metadata path is different and the source file has changed -> add new file(s) and remove old ones.
         """
-        new_path = Path(self.model.data_path)
+        old_path = Path(self.model.data_path)
         path_has_changed = new_path != old_path
 
         if source_file:
+            old_checksum = self.model.data_checksum
             self._update_checksum(source_file)
             checksum_has_changed = old_checksum != self.model.data_checksum
         else:
@@ -230,12 +230,12 @@ class DataElement:
             case False, False:
                 pass
             case False, True:
-                self.add_file(storage, Path(source_file))
+                self.add_file(storage, Path(source_file), new_path)
             case True, False:
-                self.move_file(storage, old_path)
+                self.move_file(storage, new_path)
             case True, True:
-                self.add_file(storage, Path(source_file))
-                self.remove_file(storage, old_path)
+                self.add_file(storage, Path(source_file), new_path)
+                self.remove_file(storage, storage.path / old_path)
 
     def encrypt(
         self,
