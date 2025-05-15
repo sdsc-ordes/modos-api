@@ -171,25 +171,71 @@ class DataElement:
             in GenomicFileSuffix.list_formats()
         )
 
-    def process_and_store(self, storage, source_path: Path):
-        source_idx = get_index(source_path)
+    def add_file(self, storage, source_path: Path):
+        """Add a file to the data_path specified in metadata.
+        If existing also add the index file and update data checksum in metadata"""
         target_path = Path(self.model.data_path)
-        target_idx = get_index(target_path)
-        # Renaming / moving existing file within modo.
-        if storage.exists(source_path) and source_path != target_path:
-            storage.move(source_path, target_path)
-            if source_idx:
-                storage.move(source_idx, target_idx)
-        # Importing / overwriting external file into modo.
+        with open(source_path, "rb") as src:
+            storage.put(src, target_path)
+
+        source_idx = get_index(source_path)
+        if source_idx:
+            target_idx = get_index(target_path)
+            with open(source_idx, "rb") as src:
+                storage.put(src, target_idx)
+
+        self._update_checksum(source_path)
+
+    def move_file(self, storage, source_path: Path):
+        """Move a file to the data_path specified in metadata.
+        If existing also move the index file."""
+        target_path = Path(self.model.data_path)
+        storage.move(source_path, target_path)
+        source_idx = get_index(source_path)
+        if source_idx:
+            target_idx = get_index(target_path)
+            storage.move(source_idx, target_idx)
+
+    def remove_file(self, storage, rm_path: Path):
+        """Remove a file and its related index from the storage."""
+        storage.remove(rm_path)
+        rm_idx = get_index(rm_path)
+        if rm_idx:
+            storage.remove(rm_idx)
+
+    def update_file(
+        self,
+        storage,
+        old_path: Path,
+        old_checksum: str,
+        source_file: Path | None = None,
+    ):
+        """Update file, its corresponding index file and metadata, based on old metadata and source_file .
+        There are four cases:
+        1. The metadata path is the same and the source file has not changed or is none --> do nothing.
+        2. The metadata path is the same and the source file has changed --> overwrite the file(s).
+        3. The metadata path is different and the source file has not changed or is none -> move file(s).
+        4. The metadata path is different and the source file has changed -> add new file(s) and remove old ones.
+        """
+        new_path = Path(self.model.data_path)
+        path_has_changed = new_path != old_path
+
+        if source_file:
+            self._update_checksum(source_file)
+            checksum_has_changed = old_checksum != self.model.data_checksum
         else:
-            source_checksum = self.model.data_checksum
-            self._update_checksum(source_path)
-            if source_checksum != self.model.data_checksum:
-                with open(source_path, "rb") as src:
-                    storage.put(src, target_path)
-            if source_idx:
-                with open(source_idx, "rb") as src:
-                    storage.put(src, target_idx)
+            checksum_has_changed = False
+
+        match path_has_changed, checksum_has_changed:
+            case False, False:
+                pass
+            case False, True:
+                self.add_file(storage, Path(source_file))
+            case True, False:
+                self.move_file(storage, old_path)
+            case True, True:
+                self.add_file(storage, Path(source_file))
+                self.remove_file(storage, old_path)
 
     def encrypt(
         self,

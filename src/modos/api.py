@@ -345,10 +345,10 @@ class MODO:
                 with open(source_path, "rb") as src:
                     self.storage.put(src, target_path)
 
-            # Add data_checksum attribute
+            # Add file (+ index) and update data_checksum attribute
             if isinstance(element, model.DataEntity):
                 new_data = DataElement(element)
-                new_data.process_and_store(self.storage, Path(source_file))
+                new_data.add_file(self.storage, Path(source_file))
 
         # Infer type
         type_name = allowed_elements.from_object(element).value
@@ -395,14 +395,13 @@ class MODO:
             )
 
         if isinstance(new, model.DataEntity):
+            # Can we revese the logic here --> update the old model entity? new_path, new_checksum?
             new_data = DataElement(new)
-            old_path = attr_dict.get("data_path")
-            # path changed in metadata -> move file inside modos
-            if new_data.model._get("data_path") != old_path:
-                new_data.process_and_store(self.storage, Path(old_path))
-            # new input file provided -> replace file content
-            if source_file:
-                new_data.process_and_store(self.storage, Path(source_file))
+            old_path = Path(attr_dict.get("data_path"))
+            old_checksum = attr_dict.get("data_checksum")
+            new_data.update_file(
+                self.storage, old_path, old_checksum, source_file
+            )
 
         type_name = allowed_elements.from_object(new).value
         element_path = f"{type_name}/{new.id}"
