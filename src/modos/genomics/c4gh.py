@@ -19,30 +19,31 @@ from crypt4gh.keys import get_public_key, get_private_key
 from crypt4gh.lib import decrypt, encrypt
 from functools import partial
 from getpass import getpass
+from loguru import logger
 from nacl.public import PrivateKey
 
 
 def get_secret_key(
     seckey_path: Optional[os.PathLike] = None,
-    generate: bool = True,
     passphrase: Optional[str] = None,
 ) -> bytes:
     """
     Get the secret key for encryption/decryption.
-    If no secret key path is provided and generate is True, a new secret key will be generated.
+    If no secret key path is provided a new secret key will be generated automatically.
     This can be used to allow authicated encryption without prior key generation.
 
     Parameters
     ----------
     seckey_path
         Path to the secret key.
-    generate
-        Generate a new secret key, if no seckey_path is provided.
     passphrase
         Passphrase for the secret key.
     """
     # auto generate a secret key
-    if generate and seckey_path is None:
+    if seckey_path is None:
+        logger.info(
+            "No secret key path provided. Generating a new secret key."
+        )
         sk = PrivateKey.generate()
         return bytes(sk)
 
@@ -110,7 +111,11 @@ def decrypt_file(
     sender_pubkey: Optional[os.PathLike] = None,
     passphrase: Optional[str] = None,
 ):
-    seckey = get_secret_key(seckey_path, generate=False, passphrase=passphrase)
+    if not seckey_path:
+        raise ValueError(
+            "Missing required argument 'seckey_path' \n. Please provide a secret key path for decryption."
+        )
+    seckey = get_secret_key(seckey_path, passphrase=passphrase)
     keys = [
         (0, seckey, None)
     ]  # keys = list of (method, privkey, recipient_pubkey=None)
