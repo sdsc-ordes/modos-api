@@ -150,8 +150,9 @@ def set_data_path(
 class DataElement:
     """Facade class to wrap model DataEntity to facilitate file handling (including index files)."""
 
-    def __init__(self, model: model.DataEntity):
+    def __init__(self, model: model.DataEntity, storage):
         self.model = model
+        self.storage = storage
 
     def _set_metadata(self, **kwargs):
         for key, value in kwargs.items():
@@ -171,50 +172,58 @@ class DataElement:
             in GenomicFileSuffix.list_formats()
         )
 
-    def add_file(self, storage, source_path: Path, target_path: Path):
+    def add_file(self, source_path: Path, target_path: Path):
         """Add a file to target_path to the storage.
         If existing also add the index file and update data_path and checksum in metadata"""
         with open(source_path, "rb") as src:
-            storage.put(src, target_path)
+            self.storage.put(src, target_path)
 
         source_idx = get_index(source_path)
         if source_idx:
             target_idx = get_index(target_path)
             with open(source_idx, "rb") as src:
-                storage.put(src, target_idx)
+                self.storage.put(src, target_idx)
 
         self._update_checksum(source_path)
         self._set_metadata(data_path=str(target_path))
 
-    def move_file(self, storage, target_path: Path):
+    def move_file(self, target_path: Path):
         """Move a file from the path specified in metadata to the target_path.
         If existing also move the index file."""
         source_path = Path(self.model.data_path)
-        storage.move(source_path, target_path)
+        self.storage.move(source_path, target_path)
         source_idx = get_index(source_path)
         if source_idx:
             target_idx = get_index(target_path)
-            storage.move(source_idx, target_idx)
+            self.storage.move(source_idx, target_idx)
 
-    def remove_file(self, storage, rm_path: Path):
+    def remove_file(self, rm_path: Path):
         """Remove a file and its related index from the storage."""
-        storage.remove(rm_path)
+        self.storage.remove(rm_path)
         rm_idx = get_index(rm_path)
         if rm_idx:
-            storage.remove(rm_idx)
+            self.storage.remove(rm_idx)
 
     def update_file(
         self,
-        storage,
         new_path: Path,
         source_file: Path | None = None,
     ):
-        """Update file, its corresponding index file and metadata, based on new data_path and source_file .
+        """Update file, its corresponding index file and metadata, based on new data_path and source_file.
+
         There are four cases:
         1. Neither path nor contents changed --> do nothing.
         2. Only contents changed --> overwrite the file(s).
         3. Only path changed -> move file(s).
         4. Both path and contents changed -> add new file(s) and remove old ones.
+
+        Parameters
+        ----------
+        new_path
+            Path to where the file should be placed.
+        source_file
+            Path to the file that shall be added. If None the file already associated to the DataElement will be used.
+
         """
         old_path = Path(self.model.data_path)
         path_has_changed = new_path != old_path
@@ -230,16 +239,15 @@ class DataElement:
             case False, False:
                 pass
             case False, True:
-                self.add_file(storage, Path(source_file), new_path)
+                self.add_file(Path(source_file), new_path)
             case True, False:
-                self.move_file(storage, new_path)
+                self.move_file(new_path)
             case True, True:
-                self.add_file(storage, Path(source_file), new_path)
-                self.remove_file(storage, storage.path / old_path)
+                self.add_file(Path(source_file), new_path)
+                self.remove_file(self.storage.path / old_path)
 
     def encrypt(
         self,
-        storage,
         recipient_pubkeys: list[os.PathLike] | os.PathLike,
         seckey_path: Optional[os.PathLike] = None,
         passphrase: Optional[str] = None,
@@ -259,19 +267,18 @@ class DataElement:
             out_path = toggle_c4gh_file_path(file_path)
             encrypt_file(
                 recipient_pubkeys=recipient_pubkeys,
-                infile=storage.path / file_path,
-                outfile=storage.path / out_path,
+                infile=self.storage.path / file_path,
+                outfile=self.storage.path / out_path,
                 seckey_path=seckey_path,
                 passphrase=passphrase,
             )
             if delete:
-                storage.remove(storage.path / file_path)
-        self._update_checksum(storage.path / encrypted_path)
+                self.storage.remove(self.storage.path / file_path)
+        self._update_checksum(self.storage.path / encrypted_path)
         self._set_metadata(data_path=str(encrypted_path))
 
     def decrypt(
         self,
-        storage,
         seckey_path: os.PathLike,
         sender_pubkey: Optional[os.PathLike] = None,
         passphrase: Optional[str] = None,
@@ -292,13 +299,13 @@ class DataElement:
             out_path = toggle_c4gh_file_path(file_path)
             decrypt_file(
                 seckey_path=seckey_path,
-                infile=storage.path / file_path,
-                outfile=storage.path / out_path,
+                infile=self.storage.path / file_path,
+                outfile=self.storage.path / out_path,
                 sender_pubkey=sender_pubkey,
                 passphrase=passphrase,
             )
-            storage.remove(storage.path / file_path)
-        self._update_checksum(storage.path / decrypted_path)
+            self.storage.remove(self.storage.path / file_path)
+        self._update_checksum(self.storage.path / decrypted_path)
         self._set_metadata(data_path=str(decrypted_path))
 
 

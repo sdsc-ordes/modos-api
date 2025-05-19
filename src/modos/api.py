@@ -345,10 +345,8 @@ class MODO:
 
             # Add file (+ index) and update data_checksum attribute
             if isinstance(element, model.DataEntity):
-                new_data = DataElement(element)
-                new_data.add_file(
-                    self.storage, Path(source_file), Path(element.data_path)
-                )
+                new_data = DataElement(element, self.storage)
+                new_data.add_file(Path(source_file), Path(element.data_path))
 
         # Infer type
         type_name = allowed_elements.from_object(element).value
@@ -397,8 +395,8 @@ class MODO:
             )
 
         if isinstance(element, model.DataEntity):
-            data = DataElement(element)
-            data.update_file(self.storage, Path(new.data_path), source_file)
+            data = DataElement(element, self.storage)
+            data.update_file(Path(new.data_path), source_file)
             # NOTE: data_checksum was updated in data, but needs to be synced into new
             new.data_checksum = data.model.data_checksum
 
@@ -581,9 +579,8 @@ class MODO:
         for id, group in self.zarr.data.items():
             meta = group.attrs.asdict()
             meta["id"] = id
-            data = DataElement(dict_to_instance(meta))
+            data = DataElement(dict_to_instance(meta), self.storage)
             data.encrypt(
-                self.storage,
                 recipient_pubkeys,
                 seckey_path,
                 passphrase,
@@ -602,7 +599,7 @@ class MODO:
         for id, group in self.zarr.data.items():
             meta = group.attrs.asdict()
             meta["id"] = id
-            data = DataElement(dict_to_instance(meta))
-            data.decrypt(self.storage, seckey_path, sender_pubkey, passphrase)
+            data = DataElement(dict_to_instance(meta), self.storage)
+            data.decrypt(seckey_path, sender_pubkey, passphrase)
             update_metadata_from_model(group, data.model)
         self.update_date()
