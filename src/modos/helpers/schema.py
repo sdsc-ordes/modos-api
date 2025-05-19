@@ -211,10 +211,10 @@ class DataElement:
     ):
         """Update file, its corresponding index file and metadata, based on new data_path and source_file .
         There are four cases:
-        1. The metadata path is the same and the source file has not changed or is none --> do nothing.
-        2. The metadata path is the same and the source file has changed --> overwrite the file(s).
-        3. The metadata path is different and the source file has not changed or is none -> move file(s).
-        4. The metadata path is different and the source file has changed -> add new file(s) and remove old ones.
+        1. Neither path nor contents changed --> do nothing.
+        2. Only contents changed --> overwrite the file(s).
+        3. Only path changed -> move file(s).
+        4. Both path and contents changed -> add new file(s) and remove old ones.
         """
         old_path = Path(self.model.data_path)
         path_has_changed = new_path != old_path
