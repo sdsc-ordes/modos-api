@@ -399,7 +399,7 @@ class MODO:
         if isinstance(element, model.DataEntity):
             data = DataElement(element)
             data.update_file(self.storage, Path(new.data_path), source_file)
-            # NOTE: data_checksum was updated and needs to be synced with new
+            # NOTE: data_checksum was updated in data, but needs to be synced into new
             new.data_checksum = data.model.data_checksum
 
         type_name = allowed_elements.from_object(new).value
