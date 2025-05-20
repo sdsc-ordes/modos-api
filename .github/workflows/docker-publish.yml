@@ -34,7 +34,7 @@ jobs:
       - name: Get current release version
         id: release-version
         run: |
-          version=$(grep -E '^version += +' pyproject.toml | sed -E 's/.*= +//' | sed "s/['\"]//g")
+          version=$(grep -E '^__version__ += +' src/modos/__init__.py | sed -E 's/.*= +//' \ | tr -d '"')
           echo "version=${version}" >> $GITHUB_OUTPUT
 
       # https://github.com/docker/login-action
