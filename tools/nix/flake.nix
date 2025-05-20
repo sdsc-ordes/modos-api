@@ -35,6 +35,7 @@
           curl
           findutils
           git
+          git-cliff
           just
           pyright
           uv
