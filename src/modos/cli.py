@@ -589,7 +589,7 @@ def callback(
         None,
         "--version",
         callback=version_callback,
-        help="Print version of modos client",
+        help="Print version of modos client.",
     ),
     debug: Optional[bool] = typer.Option(
         None,
