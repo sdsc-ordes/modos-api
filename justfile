@@ -61,3 +61,7 @@ deploy:
       up \
         --build \
         --force-recreate
+
+# Generate changelog
+changelog *args:
+  @git-cliff -l -c pyproject.toml
