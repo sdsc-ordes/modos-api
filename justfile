@@ -64,4 +64,4 @@ deploy:
 
 # Generate changelog
 changelog *args:
-  @git-cliff -l -c pyproject.toml
+  @git-cliff -l -c pyproject.toml {{args}}
