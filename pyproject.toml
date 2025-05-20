@@ -75,7 +75,7 @@ pattern = '__version__ = "(?P<version>[^"]+)"'
 packages = ["src/modos"]
 
 [tool.git-cliff.changelog]
-header = "Notable changes introduced in gimie releases are documented in this file\n\n"
+header = "Notable changes introduced in modos releases are documented in this file\n\n"
 body = """
 
 {% if version %}\

@@ -1,4 +1,4 @@
-Notable changes introduced in gimie releases are documented in this file
+Notable changes introduced in modos releases are documented in this file
 
 
 ## [0.3.0] - 2025-05-20
