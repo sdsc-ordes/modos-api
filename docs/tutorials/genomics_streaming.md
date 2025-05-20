@@ -90,3 +90,7 @@ modos c4gh decrypt -s path/to/recipient.sec / to ensure encryption throughout a 
 :::
 
 ::::
+
+:::{note}
+Only local modos can be encrypted or decrypted, but **not remote** objects.
+:::
