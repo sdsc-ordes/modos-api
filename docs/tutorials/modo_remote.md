@@ -25,7 +25,7 @@ import modos.remote as remo
 remo.get_metadata_from_remote("http://localhost")
 
 # Get metadata of MODO with id ex
-remo.get_metadata_from_remote("http://localhost", modo_id = "ex")
+remo.get_metadata_from_remote("http://localhost", modo_id="ex")
 ```
 
 ## Find a specific MODO and get it's S3 path
@@ -39,7 +39,7 @@ remo.get_s3_path("http://localhost", query="ex")
 # [{'http://localhost/s3/modos-demo/ex': {'s3_endpoint': 'http://localhost/s3', 'modo_path': 'modos-demo/ex'}}]
 
 # Query all MODOs exactly matching "ex"
-remo.get_s3_path("http://localhost", query="ex", exact_match = True)
+remo.get_s3_path("http://localhost", query="ex", exact_match=True)
 # []
 ```
 
@@ -55,7 +55,7 @@ Remotely stored `MODOs` can be intiantiated by specifiying their remote endpoint
 from modos.api import MODO
 
 # Load MODO from remote storage
-modo=MODO(path= 's3://modos-demo/ex', endpoint = 'http://localhost')
+modo=MODO(path='s3://modos-demo/ex', endpoint='http://localhost')
 
 # All operations can be applied as if locally
 modo.metadata
@@ -110,7 +110,7 @@ from pathlib import Path
 config_ex = Path("path/to/ex.yaml")
 
 # Create a modo remotely
-modo = MODO.from_file(config_ex, "s3://modos-demo/ex", endpoint= "http://localhost")
+modo = MODO.from_file(config_ex, "s3://modos-demo/ex", endpoint="http://localhost")
 ```
 :::
 
@@ -118,7 +118,7 @@ modo = MODO.from_file(config_ex, "s3://modos-demo/ex", endpoint= "http://localho
 :sync: cli
 ```{code-block} console
 # Create a modo from file remotely
-modos create --endpoint "http://localhost" --from-file "path/to/ex.yaml" s3://modos-demo/ex3
+modos --endpoint "http://localhost" create --from-file "path/to/ex.yaml" s3://modos-demo/ex3
 ```
 :::
 
@@ -127,3 +127,59 @@ modos create --endpoint "http://localhost" --from-file "path/to/ex.yaml" s3://mo
 :::{note}
 Similar to `MODO` creation, any other modifying functionality of the `modos-api`, (e.g.  `modos add`, `modos remove` or `MODO.add_element()`, `MODO.remove_element()`) can be performed on remotely stored objects by specifying the __endpoint__ and object path as s3 scheme + __bucket name__ as path.
 :::
+
+## Download and upload a MODO
+
+A `MODO` can directly be __downloaded__ from a remote endpoint.
+
+::::{tab-set}
+
+:::{tab-item} python
+:sync: python
+```{code-block} python
+from modos.api import MODO
+
+# Load MODO from remote storage
+modo=MODO(path='s3://modos-demo/ex', endpoint='http://localhost')
+
+# Download MODO to local path "data/ex"
+modo.download("data/ex")
+```
+:::
+
+:::{tab-item} cli
+:sync: cli
+```{code-block} console
+# Download a remote modos from "modos-demo/ex" to local path "data/ex"
+modos --endpoint http://localhost remote download --target data/ex s3://modos-demo/ex
+```
+:::
+
+::::
+
+A local `MODO` can be __uploaded__ to a remote endpoint.
+
+::::{tab-set}
+
+:::{tab-item} python
+:sync: python
+```{code-block} python
+from modos.api import MODO
+
+# Load MODO from local storage
+modo=MODO(path='data/ex')
+
+# Upload MODO to remote path "modos-demo/ex"
+modo.upload("s3://modos-demo/ex", s3_endpoint='http://localhost')
+```
+:::
+
+:::{tab-item} cli
+:sync: cli
+```{code-block} console
+# Upload a local modos from "data/ex" to remote path "modos-demo/ex"
+modos --endpoint http://localhost remote upload --target s3://modos-demo/ex data/ex
+```
+:::
+
+::::

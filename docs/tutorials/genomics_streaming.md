@@ -85,7 +85,7 @@ modos c4gh encrypt -p path/to/recipient.pub /data/ex
 
 
 # Decrypt encrypted files in data/ex using the secret key stored at "path/to/recipient.sec"
-modos c4gh decrypt -s path/to/recipient.sec / to ensure encryption throughout a files lifetimedata/ex
+modos c4gh decrypt -s path/to/recipient.sec /data/ex
 ```
 :::
 
