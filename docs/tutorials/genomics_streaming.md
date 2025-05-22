@@ -17,7 +17,7 @@ from modos.api import MODO
 # Load MODO from remote storage
 modo=MODO(path= 's3://modos-demo/ex', endpoint = 'http://localhost')
 
-# Stream a specific regiontwo-fold: the data itself is encrypted, and so is the mechanism for unlocking it.
+# Stream a specific region
 modo.stream_genomics(file_path = "demo1.cram", region = "BA000007.3")
 ```
 :::
