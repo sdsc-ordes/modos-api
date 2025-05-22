@@ -39,7 +39,7 @@ We highly recommend using the `MODOs` CLI for streaming. The output can directly
 ## Data encryption and decryption
 
 Genomic data is typically sensitive, and data sharing increases the risk to data security.
-`MODOs` supports <a href="https://samtools.github.io/hts-specs/crypt4gh.pdf" target="_blank">Crypt4GH</a> an encryption format developed by the Global Alliance for Genomics and Health (GA4GH).
+`MODOs` supports <a href="https://samtools.github.io/hts-specs/crypt4gh.pdf" target="_blank">Crypt4GH</a>, an encryption format developed by the Global Alliance for Genomics and Health (GA4GH).
 Crypt4GH encryption is based on authenticated envelope encryption that will encrypt the data itself as well as the key to decrypt the data.
 
 In `MODOs`, all genomic files can be encrypted or decrypted with a single command call:
