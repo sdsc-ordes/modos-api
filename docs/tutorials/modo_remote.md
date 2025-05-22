@@ -150,7 +150,7 @@ modo.download("data/ex")
 :::{tab-item} cli
 :sync: cli
 ```{code-block} console
-# Download a remote modos from "modos-demo/ex" to local path "data/ex"
+# Download a remote modo from "modos-demo/ex" to local path "data/ex"
 modos --endpoint http://localhost remote download --target data/ex s3://modos-demo/ex
 ```
 :::
