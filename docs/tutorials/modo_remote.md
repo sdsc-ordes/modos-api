@@ -177,7 +177,7 @@ modo.upload("s3://modos-demo/ex", s3_endpoint='http://localhost')
 :::{tab-item} cli
 :sync: cli
 ```{code-block} console
-# Upload a local modos from "data/ex" to remote path "modos-demo/ex"
+# Upload a local modo from "data/ex" to remote path "modos-demo/ex"
 modos --endpoint http://localhost remote upload --target s3://modos-demo/ex data/ex
 ```
 :::
