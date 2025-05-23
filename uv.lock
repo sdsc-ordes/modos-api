@@ -1189,7 +1189,7 @@ docs = [
 [package.metadata]
 requires-dist = [
     { name = "calamus", specifier = ">=0.4.2,<0.5.0" },
-    { name = "click", specifier = ">=8.1.3,<9.0" },
+    { name = "click", specifier = ">=8.1.3,<8.2.0" },
     { name = "crypt4gh", specifier = ">=1.7,<2.0" },
     { name = "gtars", specifier = ">=0.2.2,<0.3.0" },
     { name = "loguru", specifier = ">=0.7.3" },
