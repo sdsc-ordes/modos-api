@@ -289,7 +289,7 @@ def upload(
 def decrypt(
     object_path: OBJECT_PATH_ARG,
     secret_key: Annotated[
-        str,
+        Path,
         typer.Option(
             "--secret-key",
             "-s",
@@ -308,7 +308,7 @@ def decrypt(
     """Decrypt a local MODO."""
     modo = MODO(object_path)
     modo.decrypt(
-        secret_key, passphrase=open.read(passphrase) if passphrase else None
+        secret_key, passphrase=open(passphrase).read() if passphrase else None
     )
 
 
