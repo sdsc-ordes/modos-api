@@ -294,7 +294,10 @@ class DataElement:
         data_path = Path(self.model.data_path)
         if not is_encrypted(self.storage.path / data_path):
             return
-
+        if data_path.suffix != ".c4gh":
+            raise ValueError(
+                f"File {data_path} has unknown suffix.\n Please rename to .c4gh before decryption."
+            )
         decrypted_path = remove_suffix(data_path, ".c4gh")
         idx_path = get_index(decrypted_path)
         if idx_path:
