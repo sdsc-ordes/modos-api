@@ -9,7 +9,7 @@
 project = "modos-api"
 copyright = "2024, sdsc-ordes"
 author = "sdsc-ordes"
-release = "0.3.0"
+release = "0.3.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
