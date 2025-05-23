@@ -4,7 +4,10 @@ Notable changes introduced in modos releases are documented in this file
 ## [0.3.1] - 2025-05-23
 
 ### Bug Fixes
+
+- *(api)* sequential encryption (#138)
 - pin typer AND click versions for compatibility
+
 
 ### Documentation
 - add encryption and upload sections (#136)
