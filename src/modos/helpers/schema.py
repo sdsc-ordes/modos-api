@@ -26,8 +26,10 @@ import zarr.hierarchy
 
 from modos.genomics.formats import (
     GenomicFileSuffix,
+    add_suffix,
     get_index,
-    toggle_c4gh_file_path,
+    is_encrypted,
+    remove_suffix,
 )
 from modos.genomics.c4gh import encrypt_file, decrypt_file
 
@@ -261,10 +263,12 @@ class DataElement:
             return
 
         data_path = Path(self.model.data_path)
-        encrypted_path = toggle_c4gh_file_path(data_path)
+        if is_encrypted(self.storage.path / data_path):
+            return
+        encrypted_path = add_suffix(data_path, ".c4gh")
         idx_path = get_index(data_path)
         for file_path in filter(None, [data_path, idx_path]):
-            out_path = toggle_c4gh_file_path(file_path)
+            out_path = add_suffix(file_path, ".c4gh")
             encrypt_file(
                 recipient_pubkeys=recipient_pubkeys,
                 infile=self.storage.path / file_path,
@@ -288,15 +292,15 @@ class DataElement:
         Works for genomic files and their index files.
         """
         data_path = Path(self.model.data_path)
-        if not data_path.name.endswith(".c4gh"):
+        if not is_encrypted(self.storage.path / data_path):
             return
 
-        decrypted_path = toggle_c4gh_file_path(data_path)
+        decrypted_path = remove_suffix(data_path, ".c4gh")
         idx_path = get_index(decrypted_path)
         if idx_path:
-            idx_path = toggle_c4gh_file_path(idx_path)
+            idx_path = add_suffix(idx_path, ".c4gh")
         for file_path in filter(None, [data_path, idx_path]):
-            out_path = toggle_c4gh_file_path(file_path)
+            out_path = remove_suffix(file_path, ".c4gh")
             decrypt_file(
                 seckey_path=seckey_path,
                 infile=self.storage.path / file_path,
