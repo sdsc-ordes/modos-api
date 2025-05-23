@@ -7,6 +7,8 @@ import pysam
 
 from modos.genomics.region import Region
 
+MAGIC_NUMBER = b"crypt4gh"
+
 
 class GenomicFileSuffix(tuple, Enum):
     """Enumeration of all supported genomic file suffixes."""
@@ -91,9 +93,23 @@ def get_index(file_path: Path) -> Optional[Path]:
         return None
 
 
-def toggle_c4gh_file_path(file_path: Path) -> Path:
-    """Toggle the c4gh encrypted file path to an unencrypted file path and vice versa."""
-    if file_path.suffix == ".c4gh":
-        return file_path.with_name(file_path.stem)
+def is_encrypted(file_path):
+    with open(file_path, "rb") as f:
+        magic = f.read(8)
+    return magic == MAGIC_NUMBER
+
+
+def add_suffix(file_path: Path, suffix: str) -> Path:
+    """Return the file path with specific suffix."""
+    if file_path.suffix == suffix:
+        return file_path
     else:
-        return file_path.with_suffix(file_path.suffix + ".c4gh")
+        return file_path.with_suffix(file_path.suffix + suffix)
+
+
+def remove_suffix(file_path: Path, suffix: str) -> Path:
+    """Return the file path without specific suffix."""
+    if file_path.suffix == suffix:
+        return file_path.with_suffix("")
+    else:
+        return file_path
