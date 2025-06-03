@@ -24,7 +24,6 @@ get-version:
 # Set up python environment.
 setup:
   @echo "🔧 Setting up python environment"
-  uv venv -p 3.13
   uv sync --all-extras --group dev
   uv run pre-commit install
 
