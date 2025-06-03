@@ -5,8 +5,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Direnv cache
+# Direnv/Devenv cache
 .direnv
+.devenv
 
 
 # Distribution / packaging
