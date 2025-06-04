@@ -1,9 +1,13 @@
 set positional-arguments
 set dotenv-load
 set shell := ["bash", "-cue"]
+root_dir := `git rev-parse --show-toplevel`
+flake_dir := root_dir / "tools/nix"
 
 # Manage container images.
 mod image 'tools/just/image.just'
+# Manage nix flakes
+mod nix 'tools/just/nix.just'
 
 # local IP of the host
 host := `ip route get 1 | sed -En 's/^.*src ([0-9.]*) .*$/\1/p'`
@@ -20,11 +24,14 @@ get-version:
   | sed -E 's/.*= +//' \
   | tr -d '"'
 
+alias dev := develop
+# Enter a development shell.
+develop:
+  just nix::develop default
 
 # Set up python environment.
 setup:
   @echo "🔧 Setting up python environment"
-  uv venv -p 3.13
   uv sync --all-extras --group dev
   uv run pre-commit install
 

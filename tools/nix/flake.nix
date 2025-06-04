@@ -11,25 +11,32 @@
     # Also see the 'stable-packages' overlay at 'overlays/default.nix'.
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    devenv.url = "github:cachix/devenv";
   };
 
   outputs = {
     nixpkgs,
     flake-utils,
+    devenv,
     ...
-  }:
-    flake-utils.lib.eachDefaultSystem
+  }@inputs:
     # Creates an attribute map `{ devShells.<system>.default = ...}`
-    # by calling this function:
-    (
-      system: let
+    flake-utils.lib.eachDefaultSystem (system:
+      let
         # Import nixpkgs and load it into pkgs.
         pkgs = import nixpkgs {
           inherit system;
         };
 
-        # Things needed at build-time.
-        packagesBasic = with pkgs; [
+        # python environment defined separately
+        pythonModules = import ./python-uv.nix {
+          inherit pkgs;
+          lib = pkgs.lib;
+          namespace = "python";
+        };
+
+        tools = with pkgs; [
           bash
           coreutils
           curl
@@ -37,18 +44,16 @@
           git
           git-cliff
           just
-          pyright
-          uv
           zsh
         ];
 
-        # Things needed at runtime.
-        buildInputs = [];
       in {
         devShells = {
-          default = pkgs.mkShell {
-            inherit buildInputs;
-            nativeBuildInputs = packagesBasic;
+          default = devenv.lib.mkShell {
+            inherit inputs pkgs;
+            modules = pythonModules ++ [
+              { packages = tools; }
+            ];
           };
         };
       }
