@@ -8,6 +8,9 @@ __pycache__/
 # Direnv cache
 .direnv
 
+# devenv (nix)
+.devenv/
+
 
 # Distribution / packaging
 .Python
