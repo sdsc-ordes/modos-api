@@ -20,17 +20,17 @@
     flake-utils,
     devenv,
     ...
-  }@inputs:
-    # Creates an attribute map `{ devShells.<system>.default = ...}`
-    flake-utils.lib.eachDefaultSystem (system:
-      let
+  } @ inputs:
+  # Creates an attribute map `{ devShells.<system>.default = ...}`
+    flake-utils.lib.eachDefaultSystem (
+      system: let
         # Import nixpkgs and load it into pkgs.
         pkgs = import nixpkgs {
           inherit system;
         };
 
         # python environment defined separately
-        pythonModules = import ./python-uv.nix {
+        pythonFile = import ./python-uv.nix {
           inherit pkgs;
           lib = pkgs.lib;
           namespace = "python";
@@ -44,16 +44,19 @@
           git
           git-cliff
           just
+          pyright # Language Server.
+          ruff # Formatter and linter.
           zsh
         ];
-
       in {
         devShells = {
           default = devenv.lib.mkShell {
             inherit inputs pkgs;
-            modules = pythonModules ++ [
-              { packages = tools; }
-            ];
+            modules =
+              pythonFile
+              ++ [
+                {packages = tools;}
+              ];
           };
         };
       }

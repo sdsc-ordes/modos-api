@@ -9,17 +9,9 @@
   lib,
   namespace,
   ...
-}:
-[
+}: [
   {
     packages = [
-
-      # Language Server.
-      pkgs.pyright
-
-      # Formatter and linter.
-      pkgs.ruff
-
       pkgs.stdenv.cc.cc.lib # fix: libstdc++ required by jupyter.
       pkgs.libz # fix: for numpy/pandas import
     ];
