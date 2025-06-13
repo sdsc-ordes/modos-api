@@ -57,7 +57,7 @@ Issues = "https://github.com/sdsc-ordes/modos-api/issues"
 
 [tool.ruff]
 # Allow lambda functions
-ignore = ["E731"]
+lint.ignore = ["E731"]
 line-length = 79
 
 [tool.pytest.ini_options]
