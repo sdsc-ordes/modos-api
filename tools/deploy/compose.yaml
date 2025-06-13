@@ -19,7 +19,7 @@ services:
       - FUZON_PUBLIC_URL=${FUZON_PUBLIC_URL:-http://localhost/fuzon}
       - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
       - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3}
-      - FUZON_LOCAL_URL=${FUZON_LOCAL_URL:-http://fuzon:8080}
+      - FUZON_LOCAL_URL=${FUZON_LOCAL_URL:-http://fuzon:9090}
       - REFGET_LOCAL_URL=${REFGET_LOCAL_URL:-http://refget:8080}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - MODOS_LOCAL_URL=${MODOS_LOCAL_URL:-http://modos-server:8000}
@@ -74,7 +74,7 @@ services:
     volumes:
       - ./fuzon/config.json.template:/fuzon/config.json.template:ro
     expose:
-      - "8080"
+      - "9090"
     networks:
       - modos-network
 

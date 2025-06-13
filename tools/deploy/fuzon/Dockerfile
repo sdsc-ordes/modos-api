@@ -19,7 +19,7 @@ COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 COPY --from=builder /build/target/release/fuzon-http /usr/local/bin/fuzon-http
 COPY docker-entrypoint.sh /
 
-EXPOSE 8080
+EXPOSE 9090
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
