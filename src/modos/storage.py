@@ -34,7 +34,19 @@ class Storage(ABC):
     def exists(self, target: Path) -> bool: ...
 
     @abstractmethod
-    def list(self, target: Optional[Path]) -> Generator[Path, None, None]: ...
+    def list(
+        self,
+        target: Optional[Path] = None,
+    ) -> Generator[Path, None, None]:
+        """List files in the storage.
+
+        Parameters
+        ----------
+        target:
+            path to a directory to list relative to storage.path.
+            If None, list all files in storage.
+        """
+        ...
 
     @abstractmethod
     def move(self, rel_source: Path, target: Path):
@@ -92,12 +104,12 @@ class LocalStorage(Storage):
     def exists(self, target: Path) -> bool:
         return (self.path / target).exists()
 
-    def list(self, target: Optional[Path] = None):
+    def list(
+        self, target: Optional[Path] = None
+    ) -> Generator[Path, None, None]:
         path = self.path / (target or "")
         for path in path.glob("*"):
-            if path.name.endswith(".zarr"):
-                continue
-            elif path.is_file():
+            if path.is_file():
                 yield path
             for file in path.rglob("*"):
                 if file.is_file():
