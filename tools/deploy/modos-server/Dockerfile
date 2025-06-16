@@ -1,4 +1,4 @@
-FROM ghcr.io/sdsc-ordes/modos-api:0.2.3
+FROM ghcr.io/sdsc-ordes/modos-api:0.3.1
 
 USER root
 
