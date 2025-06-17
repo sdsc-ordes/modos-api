@@ -1204,7 +1204,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.2.3,<3.0.0" },
     { name = "prompt-toolkit", specifier = ">=3.0.48,<4.0.0" },
     { name = "pydantic", specifier = ">=2.8.2,<3.0.0" },
-    { name = "pyfuzon", marker = "extra == 'pyfuzon'", specifier = ">=0.2,<0.3" },
+    { name = "pyfuzon", marker = "extra == 'pyfuzon'", specifier = ">=0.4" },
     { name = "pysam", specifier = ">=0.22.0,<0.24.0" },
     { name = "pyteomics", specifier = ">=4.7.4,<5.0.0" },
     { name = "pyyaml", specifier = ">=6.0.1,<7.0.0" },
@@ -1764,19 +1764,19 @@ wheels = [
 
 [[package]]
 name = "pyfuzon"
-version = "0.2.5"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/de/5e/ab257c3e88cc594290dc4932e70d998e85e2b671cb0ecf5633118bff434e/pyfuzon-0.2.5.tar.gz", hash = "sha256:b13457fd5c4083ef73b4a1fe6d58b9b3334ca1b9b4fff443cdac7e26104d4d57", size = 28628, upload-time = "2024-10-23T00:56:17.338Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4c/09/742882460b0d71f662e09defe10b933b3d766f459ba51b6c1aee753f9bc2/pyfuzon-0.4.0.tar.gz", hash = "sha256:4d8c25bcdc423b8887580729f7ddaae79e3fbc3d1b0b305effed4d62a01a694b", size = 31874, upload-time = "2025-05-23T17:20:47.648Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fd/18/b8fba232f095beb2e4ea20a90d2fa9ca5acb2e98fb43927e2e81fb73f093/pyfuzon-0.2.5-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:998dd3986bc5f8e8ce6f4227262f7c80f3043cdd208f132c26090e875ade4de4", size = 1619248, upload-time = "2024-10-23T00:56:08.541Z" },
-    { url = "https://files.pythonhosted.org/packages/1a/c7/0451b4315139db50e2648d625b1e5cd90b3c1a90f92e9f6d8d5487f5dea0/pyfuzon-0.2.5-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:d1d7d8c1c858d2eddfa7376fbc977e273bdb34e901611741fba085633a42d00d", size = 1604396, upload-time = "2024-10-23T00:56:06.797Z" },
-    { url = "https://files.pythonhosted.org/packages/73/9f/24cd1efb622f52f1399b1ba4d15e39d4e9f0291c5e9584e3dbf7955d2dfe/pyfuzon-0.2.5-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:00a138d9d67dadb5137659480b1be4cd8b42f122c7fd53193c3dd57f90eca498", size = 4018793, upload-time = "2024-10-23T00:56:01.241Z" },
-    { url = "https://files.pythonhosted.org/packages/c2/24/62d27d85df28b2612ecf974a6b7d017b46511a903bbd2a427d18c494a7f0/pyfuzon-0.2.5-cp310-abi3-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:c5cbce48e17bc2ddb384ea0f971cdedc2cd91993ba43aaaade5b2172de957efe", size = 3328312, upload-time = "2024-10-23T00:56:03.073Z" },
-    { url = "https://files.pythonhosted.org/packages/75/9c/18cfd874408aa452ff5ee472471cc84ed3968070dbbe2240f4fa6987fe04/pyfuzon-0.2.5-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8c6e518c4b4589012a062e653c706436e891819dd160d7aad0d99297813b28dc", size = 3748585, upload-time = "2024-10-23T00:56:04.928Z" },
-    { url = "https://files.pythonhosted.org/packages/3d/5e/9f30b27a537c0fb0c7b25f78597ef43fc20cc967369bd6327da4dde9cf5e/pyfuzon-0.2.5-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:28db9b361cbb5953d1631c934003a8c67e5b0bc89795f2790abe0eb9c4359b4c", size = 4364674, upload-time = "2024-10-23T00:56:10.429Z" },
-    { url = "https://files.pythonhosted.org/packages/84/28/dbed6d279e6505196a164396f284d750b9b49887c5915b39d9304dcd704d/pyfuzon-0.2.5-cp310-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:4c8fc4d376a4c77a4bdf712c07113d30073fdbf8e2aff295037f66b0ed9264a2", size = 3639010, upload-time = "2024-10-23T00:56:12.074Z" },
-    { url = "https://files.pythonhosted.org/packages/d0/f5/48ebedc6585655d2717da83c11f212f8b2eace90cac8c9edb917e27e6e29/pyfuzon-0.2.5-cp310-abi3-musllinux_1_2_i686.whl", hash = "sha256:d204f73fa8c52636a16937e37f45f3e8c4a0ed9a728c593969cab5dfd8439d6c", size = 3911643, upload-time = "2024-10-23T00:56:13.608Z" },
-    { url = "https://files.pythonhosted.org/packages/71/bf/c43d5c18a8026ebe91edf94dc70c1bd9a64cce55efa0ffbd4c0d7d796dc1/pyfuzon-0.2.5-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:bf9ae9fc7579e032db62f224d1f7e021a32754f457a21ac20e748eb02338e854", size = 3927169, upload-time = "2024-10-23T00:56:15.594Z" },
+    { url = "https://files.pythonhosted.org/packages/3e/6f/0a7db6c4eeea0b1a999222cd63b1882183f0959df9cd4d147e4a54dddbf0/pyfuzon-0.4.0-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:67f9ffa172c030caa07c79713d659473ca4c9b116789a052c4b3eb8e968f5dc4", size = 1575086, upload-time = "2025-05-23T17:20:39.144Z" },
+    { url = "https://files.pythonhosted.org/packages/35/86/f3478281e8f8a377119d05acdbff2e7d31f3a36caf89217fe75d9e64684c/pyfuzon-0.4.0-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:154518a2685390cf37c4a32e86dfc68cc4074337e59ee3d5ee29d0c02d039238", size = 1548357, upload-time = "2025-05-23T17:20:37.667Z" },
+    { url = "https://files.pythonhosted.org/packages/6b/58/98738e36c242e0c34d1ea608e8538cc7955afd5deeecc4ea4093ee8fe85f/pyfuzon-0.4.0-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a52d4a8b25cfcc0332860b37c7f60acbad0a8d162ffdf8fbd107617f576d8a66", size = 3932582, upload-time = "2025-05-23T17:20:31.994Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/19/74cb55bd57d2ce446d1309d131b77b10314d04ef91dfbfaf316820933ca4/pyfuzon-0.4.0-cp310-abi3-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:80e332dff63c14f6b8d786a9dbc41dbb95a7556cf489b0a2c788b02d68d98b65", size = 3276197, upload-time = "2025-05-23T17:20:34.314Z" },
+    { url = "https://files.pythonhosted.org/packages/73/2d/072499225cc3bb168464ecb1b671bfa94012a49e6ef1bb18fbab5378ac6d/pyfuzon-0.4.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:011802ebd2589d45e459eb6090a83fb0d5869510dba5c4f53be98f93ea387fd0", size = 3743471, upload-time = "2025-05-23T17:20:36.245Z" },
+    { url = "https://files.pythonhosted.org/packages/8f/9d/ad5aeb89ed904fbdf98cd3f620034e058e4621679dbababd3080766d7e85/pyfuzon-0.4.0-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:12424fd643ced1f810159a39848acba3f548cdee11b6d03f392f3bb7bd6a6e9d", size = 4279069, upload-time = "2025-05-23T17:20:41.054Z" },
+    { url = "https://files.pythonhosted.org/packages/17/6e/a9c400f3f270f041d26729700783af368417167239202bc18e97ca38d627/pyfuzon-0.4.0-cp310-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:c74d3d8d56bebdfe07d4375955919cefc89def4d631b3667cf780ad998bdc5f8", size = 3584120, upload-time = "2025-05-23T17:20:43.079Z" },
+    { url = "https://files.pythonhosted.org/packages/ec/21/b6bdaefd777e28973ecbe762a835db649b1b82eb79052428bb80ac35699f/pyfuzon-0.4.0-cp310-abi3-musllinux_1_2_i686.whl", hash = "sha256:6ceeea1e1cebaa217df9f0ca3a3cb8acb2e88713de7bda05836e35bec59d6525", size = 3867149, upload-time = "2025-05-23T17:20:44.602Z" },
+    { url = "https://files.pythonhosted.org/packages/8c/86/286bc1aa9f0208aaaa7400449e7793fd5bd4918db40ebf85c176b82f2cce/pyfuzon-0.4.0-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:53a0b1799033f8140262abbc7a48838305f9737754e3cbdd214088ef85d0f387", size = 3870261, upload-time = "2025-05-23T17:20:46.463Z" },
 ]
 
 [[package]]

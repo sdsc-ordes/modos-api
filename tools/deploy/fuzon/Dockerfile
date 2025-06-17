@@ -6,7 +6,7 @@ RUN cargo install cargo-strip
 
 RUN apt-get update && apt-get install -y git
 
-RUN git clone https://github.com/sdsc-ordes/fuzon.git --branch v0.2.5 .
+RUN git clone https://github.com/sdsc-ordes/fuzon.git --branch v0.4.0 .
 
 RUN cd fuzon-http && cargo build --release && cargo strip
 
@@ -19,7 +19,7 @@ COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 COPY --from=builder /build/target/release/fuzon-http /usr/local/bin/fuzon-http
 COPY docker-entrypoint.sh /
 
-EXPOSE 8080
+EXPOSE 9090
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
