@@ -1,0 +1,1023 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Command Line Interface &#8212; modos-api 0.3.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=71d9d8e6"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'cli';</script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="[0.3.2] - 2025-06-16" href="changelog-link.html" />
+    <link rel="prev" title="modos.storage" href="autoapi/modos/storage/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/modos.png" class="logo__image only-light" alt="modos-api 0.3.2 documentation - Home"/>
+    <img src="_static/modos.png" class="logo__image only-dark pst-js-only" alt="modos-api 0.3.2 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/background.html">
+    Background
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Command Line Interface
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="changelog-link.html">
+    [0.3.2] - 2025-06-16
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/background.html">
+    Background
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Command Line Interface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="changelog-link.html">
+    [0.3.2] - 2025-06-16
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Command Line Interface</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="command-line-interface">
+<h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading">#</a></h1>
+<section id="modo">
+<h2>modo<a class="headerlink" href="#modo" title="Link to this heading">#</a></h2>
+<p>Multi-Omics Digital Objects command line interface.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMMAND<span class="w"> </span><span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-endpoint">
+<span class="sig-name descname"><span class="pre">--endpoint</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;endpoint&gt;</span></span><a class="headerlink" href="#cmdoption-modo-endpoint" title="Link to this definition">#</a></dt>
+<dd><p>URL of modos server.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-version">
+<span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-version" title="Link to this definition">#</a></dt>
+<dd><p>Print version of modos client.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-debug">
+<span class="sig-name descname"><span class="pre">--debug</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-debug" title="Link to this definition">#</a></dt>
+<dd><p>Enable debug logging.</p>
+</dd></dl>
+
+<p class="rubric">Environment variables</p>
+<dl class="std envvar" id="modo-endpoint-modos-endpoint">
+<dt class="sig sig-object std">
+<span class="sig-name descname"><span class="pre">MODOS_ENDPOINT</span></span></dt>
+<dd><blockquote>
+<div><p>Provide a default for <a class="reference internal" href="#cmdoption-modo-endpoint"><code class="xref std std-option docutils literal notranslate"><span class="pre">--endpoint</span></code></a></p>
+</div></blockquote>
+</dd></dl>
+
+<section id="modo-add">
+<h3>add<a class="headerlink" href="#modo-add" title="Link to this heading">#</a></h3>
+<p>Add elements to a modo.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>add<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH<span class="w"> </span>ELEMENT_TYPE:<span class="o">{</span>sample<span class="p">|</span>assay<span class="p">|</span>data<span class="p">|</span>reference<span class="o">}</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-add-p">
+<span id="cmdoption-modo-add-parent"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--parent</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;parent&gt;</span></span><a class="headerlink" href="#cmdoption-modo-add-p" title="Link to this definition">#</a></dt>
+<dd><p>Parent object in the zarr store.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-add-e">
+<span id="cmdoption-modo-add-element"></span><span class="sig-name descname"><span class="pre">-e</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--element</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;element&gt;</span></span><a class="headerlink" href="#cmdoption-modo-add-e" title="Link to this definition">#</a></dt>
+<dd><p>Create instance from element metadata provided as a json string.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-add-f">
+<span id="cmdoption-modo-add-from-file"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--from-file</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;from_file&gt;</span></span><a class="headerlink" href="#cmdoption-modo-add-f" title="Link to this definition">#</a></dt>
+<dd><p>Read instance metadata from a file. The file must be in json or yaml format.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-add-s">
+<span id="cmdoption-modo-add-source-file"></span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--source-file</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;source_file&gt;</span></span><a class="headerlink" href="#cmdoption-modo-add-s" title="Link to this definition">#</a></dt>
+<dd><p>Specify a data file (if any) to copy into the digital object and associate with the instance.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-add-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-add-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-add-arg-ELEMENT_TYPE">
+<span class="sig-name descname"><span class="pre">ELEMENT_TYPE</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-add-arg-ELEMENT_TYPE" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Type of element to add to the digital object.</p>
+</dd></dl>
+
+</section>
+<section id="modo-c4gh">
+<h3>c4gh<a class="headerlink" href="#modo-c4gh" title="Link to this heading">#</a></h3>
+<p>Local encryption via crypt4gh.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>c4gh<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMMAND<span class="w"> </span><span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<section id="modo-c4gh-decrypt">
+<h4>decrypt<a class="headerlink" href="#modo-c4gh-decrypt" title="Link to this heading">#</a></h4>
+<p>Decrypt a local MODO.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>c4gh<span class="w"> </span>decrypt<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-c4gh-decrypt-s">
+<span id="cmdoption-modo-c4gh-decrypt-secret-key"></span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--secret-key</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;secret_key&gt;</span></span><a class="headerlink" href="#cmdoption-modo-c4gh-decrypt-s" title="Link to this definition">#</a></dt>
+<dd><p><strong>Required</strong> Secret key of the recipient to decrypt files in the MODO.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-c4gh-decrypt-pw">
+<span id="cmdoption-modo-c4gh-decrypt-passphrase"></span><span class="sig-name descname"><span class="pre">-pw</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--passphrase</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;passphrase&gt;</span></span><a class="headerlink" href="#cmdoption-modo-c4gh-decrypt-pw" title="Link to this definition">#</a></dt>
+<dd><p>Path to file with passphrase to unlock secret key.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-c4gh-decrypt-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-c4gh-decrypt-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+</section>
+<section id="modo-c4gh-encrypt">
+<h4>encrypt<a class="headerlink" href="#modo-c4gh-encrypt" title="Link to this heading">#</a></h4>
+<p>Encrypt a local MODO.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>c4gh<span class="w"> </span>encrypt<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-c4gh-encrypt-p">
+<span id="cmdoption-modo-c4gh-encrypt-public-key"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--public-key</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;public_key&gt;</span></span><a class="headerlink" href="#cmdoption-modo-c4gh-encrypt-p" title="Link to this definition">#</a></dt>
+<dd><p><strong>Required</strong> Public key(s) of the recipent(s) to decrypt files in the MODO.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-c4gh-encrypt-s">
+<span id="cmdoption-modo-c4gh-encrypt-secret-key"></span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--secret-key</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;secret_key&gt;</span></span><a class="headerlink" href="#cmdoption-modo-c4gh-encrypt-s" title="Link to this definition">#</a></dt>
+<dd><p>Secret key of the sender to encrypt files in the MODO.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-c4gh-encrypt-pw">
+<span id="cmdoption-modo-c4gh-encrypt-passphrase"></span><span class="sig-name descname"><span class="pre">-pw</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--passphrase</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;passphrase&gt;</span></span><a class="headerlink" href="#cmdoption-modo-c4gh-encrypt-pw" title="Link to this definition">#</a></dt>
+<dd><p>Path to file with passphrase to unlock secret key.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-c4gh-encrypt-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-c4gh-encrypt-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="modo-codes">
+<h3>codes<a class="headerlink" href="#modo-codes" title="Link to this heading">#</a></h3>
+<p>Terminology codes utilities.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>codes<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMMAND<span class="w"> </span><span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<section id="modo-codes-search">
+<h4>search<a class="headerlink" href="#modo-codes-search" title="Link to this heading">#</a></h4>
+<p>Search for terminology codes using free text.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>codes<span class="w"> </span>search<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>SLOT
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-codes-search-q">
+<span id="cmdoption-modo-codes-search-query"></span><span class="sig-name descname"><span class="pre">-q</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--query</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;query&gt;</span></span><a class="headerlink" href="#cmdoption-modo-codes-search-q" title="Link to this definition">#</a></dt>
+<dd><p>Predefined text to use when search codes.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-codes-search-t">
+<span id="cmdoption-modo-codes-search-top"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--top</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;top&gt;</span></span><a class="headerlink" href="#cmdoption-modo-codes-search-t" title="Link to this definition">#</a></dt>
+<dd><p>Show at most N codes when using a prefedined query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">50</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-codes-search-arg-SLOT">
+<span class="sig-name descname"><span class="pre">SLOT</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-codes-search-arg-SLOT" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>The slot to search for codes. Possible values are cell_type, source_material, taxon_id</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="modo-create">
+<h3>create<a class="headerlink" href="#modo-create" title="Link to this heading">#</a></h3>
+<p>Create a modo interactively or from a file.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>create<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-create-f">
+<span id="cmdoption-modo-create-from-file"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--from-file</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;from_file&gt;</span></span><a class="headerlink" href="#cmdoption-modo-create-f" title="Link to this definition">#</a></dt>
+<dd><p>Create a modo from a file. The file must be in json or yaml format.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-create-m">
+<span id="cmdoption-modo-create-meta"></span><span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--meta</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;meta&gt;</span></span><a class="headerlink" href="#cmdoption-modo-create-m" title="Link to this definition">#</a></dt>
+<dd><p>Create instance from metadata provided as a json string.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-create-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-create-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+</section>
+<section id="modo-enrich">
+<h3>enrich<a class="headerlink" href="#modo-enrich" title="Link to this heading">#</a></h3>
+<p>Enrich metadata of a digital object using file contents.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>enrich<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH
+</pre></div>
+</div>
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-enrich-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-enrich-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+</section>
+<section id="modo-publish">
+<h3>publish<a class="headerlink" href="#modo-publish" title="Link to this heading">#</a></h3>
+<p>Export a modo as linked data. Turns all paths into URIs.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>publish<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-publish-output-format">
+<span class="sig-name descname"><span class="pre">--output-format</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_format&gt;</span></span><a class="headerlink" href="#cmdoption-modo-publish-output-format" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">RdfFormat.TURTLE</span></code></p>
+</dd>
+<dt class="field-even">Options<span class="colon">:</span></dt>
+<dd class="field-even"><p>turtle | xml | json-ld</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-publish-base-uri">
+<span class="sig-name descname"><span class="pre">--base-uri</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;base_uri&gt;</span></span><a class="headerlink" href="#cmdoption-modo-publish-base-uri" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-publish-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-publish-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+</section>
+<section id="modo-remote">
+<h3>remote<a class="headerlink" href="#modo-remote" title="Link to this heading">#</a></h3>
+<p>Remote object management.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>remote<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMMAND<span class="w"> </span><span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<section id="modo-remote-download">
+<h4>download<a class="headerlink" href="#modo-remote-download" title="Link to this heading">#</a></h4>
+<p>Download a modo from a remote endpoint.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>remote<span class="w"> </span>download<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-remote-download-t">
+<span id="cmdoption-modo-remote-download-target"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--target</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;target_path&gt;</span></span><a class="headerlink" href="#cmdoption-modo-remote-download-t" title="Link to this definition">#</a></dt>
+<dd><p><strong>Required</strong> Path where to download the digital object.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-remote-download-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-remote-download-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+</section>
+<section id="modo-remote-list">
+<h4>list<a class="headerlink" href="#modo-remote-list" title="Link to this heading">#</a></h4>
+<p>List remote modos on the endpoint.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>remote<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+<section id="modo-remote-stream">
+<h4>stream<a class="headerlink" href="#modo-remote-stream" title="Link to this heading">#</a></h4>
+<p>Stream genomic file from a remote modo into stdout.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>remote<span class="w"> </span>stream<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>FILE_PATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-remote-stream-r">
+<span id="cmdoption-modo-remote-stream-region"></span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--region</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;region&gt;</span></span><a class="headerlink" href="#cmdoption-modo-remote-stream-r" title="Link to this definition">#</a></dt>
+<dd><p>Restrict stream to genomic region (chr:start-end).</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-remote-stream-arg-FILE_PATH">
+<span class="sig-name descname"><span class="pre">FILE_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-remote-stream-arg-FILE_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>The s3 path of the file to stream . Use modos show –files to check it.</p>
+</dd></dl>
+
+</section>
+<section id="modo-remote-upload">
+<h4>upload<a class="headerlink" href="#modo-remote-upload" title="Link to this heading">#</a></h4>
+<p>Upload a local modo to a remote endpoint.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>remote<span class="w"> </span>upload<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-remote-upload-t">
+<span id="cmdoption-modo-remote-upload-target"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--target</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;target_path&gt;</span></span><a class="headerlink" href="#cmdoption-modo-remote-upload-t" title="Link to this definition">#</a></dt>
+<dd><p><strong>Required</strong> S3 path where to upload the digital object (format: s3://bucket/name).</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-remote-upload-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-remote-upload-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="modo-remove">
+<h3>remove<a class="headerlink" href="#modo-remove" title="Link to this heading">#</a></h3>
+<p>Removes an element and its files from the modo.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>remove<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH<span class="w"> </span><span class="o">[</span>ELEMENT_ID<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-remove-f">
+<span id="cmdoption-modo-remove-force"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--force</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-remove-f" title="Link to this definition">#</a></dt>
+<dd><p>Skip confirmation for file deletion and allow deletion of the root object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-remove-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-remove-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-remove-arg-ELEMENT_ID">
+<span class="sig-name descname"><span class="pre">ELEMENT_ID</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-remove-arg-ELEMENT_ID" title="Link to this definition">#</a></dt>
+<dd><p>Optional argument</p>
+<p>The identifier within the modo. Use modos show to check it. Leave empty to remove the whole object.</p>
+</dd></dl>
+
+</section>
+<section id="modo-show">
+<h3>show<a class="headerlink" href="#modo-show" title="Link to this heading">#</a></h3>
+<p>Show the contents of a modo.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>show<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH<span class="w"> </span><span class="o">[</span>ELEMENT_ID<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-show-z">
+<span id="cmdoption-modo-show-zarr"></span><span class="sig-name descname"><span class="pre">-z</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--zarr</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-show-z" title="Link to this definition">#</a></dt>
+<dd><p>Show the structure of the zarr archive</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-show-f">
+<span id="cmdoption-modo-show-files"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--files</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-show-f" title="Link to this definition">#</a></dt>
+<dd><p>Show data files in the digital object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-show-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-show-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-show-arg-ELEMENT_ID">
+<span class="sig-name descname"><span class="pre">ELEMENT_ID</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-show-arg-ELEMENT_ID" title="Link to this definition">#</a></dt>
+<dd><p>Optional argument</p>
+<p>The identifier within the modo. Use modos show to check it.</p>
+</dd></dl>
+
+</section>
+<section id="modo-update">
+<h3>update<a class="headerlink" href="#modo-update" title="Link to this heading">#</a></h3>
+<p>Update a modo based on a yaml file.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>modo<span class="w"> </span>update<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OBJECT_PATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-update-c">
+<span id="cmdoption-modo-update-config"></span><span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--config</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;config_file&gt;</span></span><a class="headerlink" href="#cmdoption-modo-update-c" title="Link to this definition">#</a></dt>
+<dd><p><strong>Required</strong> File defining the updated modo. The file must be in json or yaml format.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-update-f">
+<span id="cmdoption-modo-update-force"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--force</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-update-f" title="Link to this definition">#</a></dt>
+<dd><p>Force deletion of elements that are missing in the config_file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-modo-update-arg-OBJECT_PATH">
+<span class="sig-name descname"><span class="pre">OBJECT_PATH</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-modo-update-arg-OBJECT_PATH" title="Link to this definition">#</a></dt>
+<dd><p>Required argument</p>
+<p>Path to the digital object. Remote paths should have format s3://bucket/path</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="autoapi/modos/storage/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">modos.storage</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="changelog-link.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">[0.3.2] - 2025-06-16</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modo">modo</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-add">add</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-c4gh">c4gh</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-c4gh-decrypt">decrypt</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-c4gh-encrypt">encrypt</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-codes">codes</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-codes-search">search</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-create">create</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-enrich">enrich</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-publish">publish</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-remote">remote</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-remote-download">download</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-remote-list">list</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-remote-stream">stream</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-remote-upload">upload</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-remove">remove</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-show">show</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modo-update">update</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cli.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, sdsc-ordes.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
