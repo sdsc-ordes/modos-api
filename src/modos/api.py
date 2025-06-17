@@ -204,9 +204,8 @@ class MODO:
 
     def list_files(self) -> List[Path]:
         """Lists files in the archive recursively (except for the zarr file)."""
-        return [
-            fi for fi in self.storage.list() if not fi.name.endswith(".zarr")
-        ]
+        meta_dir = Path(self.path / "data.zarr")
+        return [fi for fi in self.storage.list() if meta_dir not in fi.parents]
 
     def list_arrays(
         self, element: Optional[str] = None
