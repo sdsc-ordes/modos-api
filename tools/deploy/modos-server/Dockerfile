@@ -12,5 +12,5 @@ RUN uv pip install \
   "fastapi ~= 0.109.2" \
   "uvicorn ~= 0.27.0.post1"
 
-ENTRYPOINT ["uv", "run"]
+ENTRYPOINT ["uv", "run", "--offline"]
 CMD ["uvicorn", "--reload", "server:app"]
