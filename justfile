@@ -64,6 +64,7 @@ docs: setup
 deploy:
   S3_PUBLIC_URL="http://{{host}}:9000" \
     docker compose \
+      --profile local \
       -f tools/deploy/compose.yaml \
       up \
         --build \
