@@ -31,6 +31,8 @@ services:
 
   minio:
     image: docker.io/bitnami/minio:2025.2.3
+    profiles:
+      - local
     ports:
       - "9000:9000" # api
       - "9001:9001" # console
