@@ -14,7 +14,8 @@ RUN uv pip install --system "git+https://github.com/ga4gh/refget-cloud/@c39a65ac
 ADD . /app
 WORKDIR /app
 
-COPY --chmod=755 docker-entrypoint.sh /
+COPY docker-entrypoint.sh /
+RUN chmod 755 /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
