@@ -52,10 +52,6 @@ services:
 
   htsget:
     build: ./htsget
-    depends_on:
-      minio:
-        condition: service_started
-        required: false
     ports:
       - "8080:8080" # ticket server
     volumes:
@@ -87,10 +83,6 @@ services:
 
   refget:
     build: ./refget
-    depends_on:
-      minio:
-        condition: service_started
-        required: false
     volumes:
       - ./refget/config.properties.template:/refget/config.properties.template:ro
     expose:
