@@ -2,8 +2,8 @@
   "host": "::",
   "port": 9090,
   "collections": {
-    "cell_type": ["https://purl.obolibrary.org/obo/cl.owl"],
-    "source_material": ["https://purl.obolibrary.org/obo/uberon.owl"],
-    "taxon_id": ["https://purl.obolibrary.org/obo/ncbitaxon/subsets/taxslim.owl"]
+    "cell_type": ["/data/cl.owl"],
+    "source_material": ["/data/uberon.owl"],
+    "taxon_id": ["/data/taxslim.owl"]
   }
 }
