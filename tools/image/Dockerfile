@@ -13,8 +13,8 @@ COPY --from=ghcr.io/astral-sh/uv:0.6.3 /uv /uvx /bin/
 
 # include source files
 WORKDIR /app
-ADD CHANGELOG.md LICENSE README.md pyproject.toml uv.lock /app
-ADD src ./src
+COPY CHANGELOG.md LICENSE README.md pyproject.toml uv.lock /app
+COPY src ./src
 
 # Set user and permissions
 RUN useradd -ms /bin/bash modos_user

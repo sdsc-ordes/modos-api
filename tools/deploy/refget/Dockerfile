@@ -15,7 +15,7 @@ RUN chmod 755 /docker-entrypoint.sh
 RUN addgroup appgroup && adduser appuser --ingroup appgroup
 USER appuser
 WORKDIR /app
-ADD . /app
+COPY . /app
 USER root
 RUN mkdir /refget
 RUN chown -R appuser:appgroup /app /refget
