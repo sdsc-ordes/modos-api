@@ -14,7 +14,7 @@ RUN cargo build --features s3-storage --release && cargo strip
 FROM debian:stable-slim
 
 # gettext-base is required for envsubst (config templating)
-RUN apt update && apt install -y gettext-base libc6-dev && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install --no-install-recommends -y gettext-base libc6-dev && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 COPY --from=builder /build/target/release/htsget-actix /usr/local/bin/htsget-actix
