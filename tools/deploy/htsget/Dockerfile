@@ -20,6 +20,7 @@ COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 COPY --from=builder /build/target/release/htsget-actix /usr/local/bin/htsget-actix
 COPY docker-entrypoint.sh /
 
+# Set user and permissions
 RUN addgroup appgroup && adduser appuser --ingroup appgroup
 USER appuser
 USER root

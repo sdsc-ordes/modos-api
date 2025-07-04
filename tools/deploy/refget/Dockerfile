@@ -9,8 +9,9 @@ RUN apt update && apt install -y gettext-base libc6-dev git && apt-get clean
 COPY --from=ghcr.io/astral-sh/uv:0.6.3 /uv /uvx /bin/
 
 COPY docker-entrypoint.sh /
-RUN chmod 755 /docker-entrypoint.sh
 
+# Set user and permissions
+RUN chmod 755 /docker-entrypoint.sh
 RUN addgroup appgroup && adduser appuser --ingroup appgroup
 USER appuser
 WORKDIR /app

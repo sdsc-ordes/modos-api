@@ -27,6 +27,7 @@ RUN curl -L "https://purl.obolibrary.org/obo/cl.owl" -o /data/cl.owl && \
 
 EXPOSE 9090
 
+# Set user and permissions
 RUN addgroup  appgroup && adduser appuser --ingroup appgroup
 USER appuser
 USER root

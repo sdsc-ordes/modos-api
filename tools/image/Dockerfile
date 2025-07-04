@@ -16,7 +16,7 @@ WORKDIR /app
 ADD CHANGELOG.md LICENSE README.md pyproject.toml uv.lock /app
 ADD src ./src
 
-# Set user
+# Set user and permissions
 RUN useradd -ms /bin/bash modos_user
 RUN chown -R modos_user:modos_user /app
 RUN chmod -R 755 /app
