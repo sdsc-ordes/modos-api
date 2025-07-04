@@ -2,7 +2,7 @@
 set -e
 
 # only use entrypoint if running refget-server
-if [ "$1" = "refget-server" ] ; then
+if [ "$1" = "uv" ] ; then
 
   # Templating
   if [ -e "/refget/config.properties" ]; then
