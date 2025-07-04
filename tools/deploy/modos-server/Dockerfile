@@ -1,11 +1,8 @@
 FROM ghcr.io/sdsc-ordes/modos-api:0.3.2
 
-USER root
-
+USER modos_user
 WORKDIR /app
 COPY ./server.py /app
-
-USER modos_user
 
 RUN uv venv -p 3.12 --allow-existing
 RUN uv pip install \

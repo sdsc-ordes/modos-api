@@ -20,12 +20,18 @@ COPY --from=builder /build/target/release/fuzon-http /usr/local/bin/fuzon-http
 COPY docker-entrypoint.sh /
 
 # Download terminologies into the image
-RUN mkdir /data && chmod -R 770 /data
+RUN mkdir /data && chmod -R 744 /data
 RUN curl -L "https://purl.obolibrary.org/obo/cl.owl" -o /data/cl.owl && \
     curl -L "https://purl.obolibrary.org/obo/uberon.owl" -o /data/uberon.owl && \
     curl -L "https://purl.obolibrary.org/obo/ncbitaxon/subsets/taxslim.owl" -o /data/taxslim.owl
 
 EXPOSE 9090
+
+RUN addgroup  appgroup && adduser appuser --ingroup appgroup
+USER appuser
+USER root
+RUN mkdir /fuzon && chown -R appuser:appgroup /fuzon /data
+USER appuser
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
