@@ -13,19 +13,26 @@ RUN cd fuzon-http && cargo build --release && cargo strip
 FROM debian:stable-slim
 
 # gettext-base is required for envsubst (config templating)
-RUN apt update && apt install -y curl gettext-base libc6-dev && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install --no-install-recommends -y curl gettext-base libc6-dev && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 COPY --from=builder /build/target/release/fuzon-http /usr/local/bin/fuzon-http
 COPY docker-entrypoint.sh /
 
 # Download terminologies into the image
-RUN mkdir /data && chmod -R 770 /data
+RUN mkdir /data && chmod -R 744 /data
 RUN curl -L "https://purl.obolibrary.org/obo/cl.owl" -o /data/cl.owl && \
     curl -L "https://purl.obolibrary.org/obo/uberon.owl" -o /data/uberon.owl && \
     curl -L "https://purl.obolibrary.org/obo/ncbitaxon/subsets/taxslim.owl" -o /data/taxslim.owl
 
 EXPOSE 9090
+
+# Set user and permissions
+RUN addgroup  appgroup && adduser appuser --ingroup appgroup
+USER appuser
+USER root
+RUN mkdir /fuzon && chown -R appuser:appgroup /fuzon /data
+USER appuser
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
