@@ -27,7 +27,7 @@ services:
       - caddy-data:/data
       - caddy-config:/config
     environment:
-      - DOMAIN=${DOMAIN}
+      - DOMAIN=${DOMAIN:-http://localhost}
       - FUZON_LOCAL_URL=${FUZON_LOCAL_URL:-http://fuzon:9090}
       - REFGET_LOCAL_URL=${REFGET_LOCAL_URL:-http://refget:8080}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
@@ -99,6 +99,7 @@ services:
     environment:
       - ENDPOINT=${S3_PUBLIC_URL:-http://localhost/s3}
       - BUCKET=${REFERENCE_BUCKET:-reference-genomes}
+
 
   modos-server:
     build: ./modos-server
