@@ -1,0 +1,27 @@
+modos.logging
+=============
+
+.. py:module:: modos.logging
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.logging.setup_logging
+
+
+Module Contents
+---------------
+
+.. py:function:: setup_logging(level=None, file=None, diagnose=False, backtrace=False, time=False)
+
+   Configure logging behaviour.
+
+   :param level: The logging level to use. Default is "INFO".
+   :param file: A file where logs should be persisted in addition to being printed to stderr.
+   :param diagnose: Include diagnostic information. Could leak sensitive information.
+   :param backtrace: Include full stack traces. Could leak sensitive information.
+
+
