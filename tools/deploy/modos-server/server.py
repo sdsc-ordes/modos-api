@@ -15,11 +15,13 @@ from modos.api import MODO
 from modos.logging import setup_logging
 from modos.storage import connect_s3
 
-
+FUZON_PUBLIC_URL = os.environ["FUZON_PUBLIC_URL"]
 S3_LOCAL_URL = os.environ["S3_LOCAL_URL"]
 S3_PUBLIC_URL = os.environ["S3_PUBLIC_URL"]
 BUCKET = os.environ["S3_BUCKET"]
 HTSGET_LOCAL_URL = os.environ["HTSGET_LOCAL_URL"]
+HTSGET_PUBLIC_URL = os.environ["HTSGET_PUBLIC_URL"]
+REFGET_PUBLIC_URL = os.environ["REFGET_PUBLIC_URL"]
 SERVICES = {
     "s3": S3_LOCAL_URL,
     "htsget": HTSGET_LOCAL_URL,
@@ -80,3 +82,14 @@ def get_s3_path(query: str, exact_match: bool = False):
         }
         for modo in res
     ]
+
+
+@app.get("/")
+def get_endpoints():
+    return {
+        "status": "success",
+        "s3": S3_PUBLIC_URL,
+        "htsget": HTSGET_PUBLIC_URL,
+        "fuzon": FUZON_PUBLIC_URL,
+        "refget": REFGET_PUBLIC_URL,
+    }

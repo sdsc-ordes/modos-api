@@ -1,0 +1,38 @@
+{
+    admin off
+    default_bind 0.0.0.0
+    http_port 80
+}
+
+http:// {
+
+  encode
+  request_body {
+      max_size 5TB
+  }
+
+  # object storage service
+  handle_path /s3/* {
+      reverse_proxy {$S3_LOCAL_URL}
+  }
+
+  # genomics streaming service
+  handle_path /htsget/* {
+      reverse_proxy {$HTSGET_LOCAL_URL}
+  }
+
+  # terminology code matching service
+  handle_path /fuzon/* {
+      reverse_proxy {$FUZON_LOCAL_URL}
+  }
+
+  # reference sequence server
+  handle_path /refget/* {
+    reverse_proxy {$REFGET_LOCAL_URL}
+
+  }
+
+  handle /* {
+      reverse_proxy {$MODOS_LOCAL_URL}
+  }
+}

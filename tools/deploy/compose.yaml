@@ -1,4 +1,6 @@
 volumes:
+  caddy-data:
+  caddy-config:
   minio-data:
     driver: local
 
@@ -8,24 +10,27 @@ networks:
 
 services:
 
-  nginx:
-    image: nginx:1.23
+  caddy:
+    image: docker.io/caddy:2
+    restart: always
     depends_on:
       - htsget
+    ports:
+      - "80:80"
+      - "80:80/udp"
+      - "443:443"
+      - "443:443/udp"
     volumes:
-      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
     environment:
-      - REFGET_PUBLIC_URL=${REFGET_PUBLIC_URL:-http://localhost/refget}
-      - FUZON_PUBLIC_URL=${FUZON_PUBLIC_URL:-http://localhost/fuzon}
-      - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
-      - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3}
+      - DOMAIN=${DOMAIN:-http://localhost}
       - FUZON_LOCAL_URL=${FUZON_LOCAL_URL:-http://fuzon:9090}
       - REFGET_LOCAL_URL=${REFGET_LOCAL_URL:-http://refget:8080}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - MODOS_LOCAL_URL=${MODOS_LOCAL_URL:-http://modos-server:8000}
       - S3_LOCAL_URL=${S3_LOCAL_URL:-http://minio:9000}
-    ports:
-      - "80:80"
     networks:
       - modos-network
 
@@ -93,6 +98,7 @@ services:
       - ENDPOINT=${S3_PUBLIC_URL:-http://localhost/s3}
       - BUCKET=${REFERENCE_BUCKET:-reference-genomes}
 
+
   modos-server:
     build: ./modos-server
     expose:
@@ -100,9 +106,12 @@ services:
     networks:
       - modos-network
     environment:
+      - FUZON_PUBLIC_URL=${FUZON_PUBLIC_URL:-http://localhost/fuzon}
+      - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
+      - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
+      - REFGET_PUBLIC_URL=${REFGET_PUBLIC_URL:-http://localhost/refget}
+      - S3_ADDRESSING_STYLE=${S3_ADDRESSING_STYLE:-auto}
+      - S3_BUCKET=${S3_BUCKET:-modos-demo}
       - S3_LOCAL_URL=${S3_LOCAL_URL:-http://minio:9000}
       - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3}
-      - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
-      - S3_BUCKET=${S3_BUCKET:-modos-demo}
-      - S3_ADDRESSING_STYLE=${S3_ADDRESSING_STYLE:-auto}
     command: uv run uvicorn --host 0.0.0.0 --port 8000 --reload server:app
