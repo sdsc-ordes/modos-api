@@ -15,8 +15,6 @@ services:
     restart: always
     depends_on:
       - htsget
-    cap_add:
-      - NET_ADMIN
     ports:
       - "80:80"
       - "80:80/udp"
