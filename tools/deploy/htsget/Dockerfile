@@ -21,7 +21,7 @@ COPY --from=builder /build/target/release/htsget-actix /usr/local/bin/htsget-act
 COPY docker-entrypoint.sh /
 
 # Set user and permissions
-RUN addgroup appgroup && adduser appuser --ingroup appgroup
+RUN groupadd -r appgroup && useradd -r -g appgroup -m appuser
 USER appuser
 USER root
 RUN mkdir /htsget && chown -R appuser:appgroup /htsget

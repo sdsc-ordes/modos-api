@@ -28,7 +28,7 @@ RUN curl -L "https://purl.obolibrary.org/obo/cl.owl" -o /data/cl.owl && \
 EXPOSE 9090
 
 # Set user and permissions
-RUN addgroup  appgroup && adduser appuser --ingroup appgroup
+RUN groupadd -r appgroup && useradd -r -g appgroup -m appuser
 USER appuser
 USER root
 RUN mkdir /fuzon && chown -R appuser:appgroup /fuzon /data
