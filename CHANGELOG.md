@@ -1,5 +1,18 @@
 Notable changes introduced in modos releases are documented in this file
 
+## [0.3.3] - 2025-08-22
+
+### Bug Fixes
+
+- _(deploy)_ drop depends_on.required for compat with older compose (#156)
+- _(deploy)_ nonroot container users (#157)
+- _(deploy)_ addgroup -> groupadd for debian-based images
+
+### Features
+
+- _(deploy)_ caddy with https support (#160)- compatibility with air-gapped
+  deployments (#154)
+
 ## [0.3.2] - 2025-06-16
 
 ### Bug Fixes
