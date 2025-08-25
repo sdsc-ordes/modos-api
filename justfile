@@ -32,7 +32,7 @@ develop:
 # Set up python environment.
 setup:
   @echo "🔧 Setting up python environment"
-  UV_CONCURRENT_BUILDS=1 uv sync --all-extras --group dev
+  #UV_CONCURRENT_BUILDS=1 uv sync --all-extras --group dev
   #uv run pre-commit install
 
 
