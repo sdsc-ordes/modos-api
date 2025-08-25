@@ -16,15 +16,8 @@ host := `ip route get 1 | sed -En 's/^.*src ([0-9.]*) .*$/\1/p'`
 default:
   just --unsorted --list --no-aliases
 
-# Get package version.
-[private]
-get-version:
-  #!/usr/bin/env bash
-  grep -E '^__version__ += +' src/modos/__init__.py \
-  | sed -E 's/.*= +//' \
-  | tr -d '"'
-
 alias dev := develop
+
 # Enter a development shell.
 develop:
   just nix::develop default
@@ -32,8 +25,8 @@ develop:
 # Set up python environment.
 setup:
   @echo "🔧 Setting up python environment"
-  #UV_CONCURRENT_BUILDS=1 uv sync --all-extras --group dev
-  #uv run pre-commit install
+  uv sync --all-extras --group dev
+  uv run pre-commit install
 
 
 # Run all quality checks.
