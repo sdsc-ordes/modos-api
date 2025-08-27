@@ -1,10 +1,12 @@
+from collections.abc import Mapping
 from datetime import date
 import re
-from typing import Any, List, Mapping, Optional
+from typing import Any
 
 import click
 from prompt_toolkit import prompt
-from prompt_toolkit.completion import Completer, Completion
+from prompt_toolkit.completion import CompleteEvent, Completer, Completion
+from prompt_toolkit.document import Document
 import typer
 
 from modos.codes import CodeMatcher, get_slot_matchers
@@ -22,11 +24,11 @@ class SlotCodeCompleter(Completer):
     """Auto-suggestions for terminology codes."""
 
     def __init__(self, matcher: CodeMatcher):
-        self.matcher = matcher
+        self.matcher: CodeMatcher = matcher
 
-    def get_completions(self, document, complete_event):
-        self.matcher.find_codes(document.text)
-
+    def get_completions(
+        self, document: Document, complete_event: CompleteEvent
+    ):
         for rec in self.matcher.find_codes(document.text):
             yield Completion(
                 f"{rec.label} {rec.uri}",
@@ -64,9 +66,9 @@ class SlotPrompter:
 
     def __init__(
         self,
-        endpoint: Optional[EndpointManager] = None,
-        suggest=True,
-        prompt: Optional[str] = None,
+        endpoint: EndpointManager | None = None,
+        suggest: bool = True,
+        prompt: str | None = None,
     ):
         self.prompt = prompt
         if suggest:
@@ -106,7 +108,9 @@ class SlotPrompter:
         return output
 
     def prompt_for_slots(
-        self, target_class: type, exclude: Optional[Mapping[str, List]] = None
+        self,
+        target_class: type,
+        exclude: Mapping[str, list[str]] | None = None,
     ) -> dict[str, Any]:
         """Prompt the user to provide values for the slots of input class.
         values of required fields can be excluded to repeat the prompt.
