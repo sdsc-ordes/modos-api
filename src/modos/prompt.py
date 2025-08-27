@@ -1,9 +1,11 @@
 from collections.abc import Mapping
 from datetime import date
+import importlib.util
 import re
 from typing import Any
 
 import click
+from loguru import logger
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import CompleteEvent, Completer, Completion
 from prompt_toolkit.document import Document
@@ -18,6 +20,16 @@ from modos.helpers.schema import (
 )
 
 from modos.remote import EndpointManager
+
+
+def is_fuzon_available(endpoint: EndpointManager | None) -> bool:
+    """Check if fuzon is available on server or client side."""
+
+    if endpoint and endpoint.fuzon:
+        return True
+    if importlib.util.find_spec("pyfuzon"):
+        return True
+    return False
 
 
 class SlotCodeCompleter(Completer):
@@ -71,9 +83,14 @@ class SlotPrompter:
         prompt: str | None = None,
     ):
         self.prompt = prompt
-        if suggest:
+        if not suggest:
+            self.slot_matchers = {}
+            return
+
+        if is_fuzon_available(endpoint):
             self.slot_matchers = get_slot_matchers(endpoint.fuzon)
         else:
+            logger.warning("fuzon not available, disabling code suggestions.")
             self.slot_matchers = {}
 
     def prompt_for_slot(self, slot_name: str, optional: bool = False):
