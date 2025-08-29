@@ -1,7 +1,7 @@
 """Utilities to automatically find / recommend terminology codes from text."""
 
 from dataclasses import dataclass
-from typing import override, Protocol
+from typing import Protocol
 
 from pathlib import Path
 import requests
@@ -55,7 +55,6 @@ class LocalCodeMatcher(CodeMatcher):
             cache.cache_by_source(sources)
             self.matcher = cache.load_by_source(sources)
 
-    @override
     def find_codes(self, query: str) -> list[Code]:
         return self.matcher.top(query, self.top)
 
@@ -68,7 +67,6 @@ class RemoteCodeMatcher(CodeMatcher):
         self.slot: str = slot
         self.top: int = top
 
-    @override
     def find_codes(self, query: str) -> list[Code]:
         codes: list[dict[str, str]] = requests.get(
             f"{self.endpoint}/codes/top?collection={self.slot}&query={query}&num={self.top}"
