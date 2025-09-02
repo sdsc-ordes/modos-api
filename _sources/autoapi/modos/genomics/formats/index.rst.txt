@@ -1,0 +1,125 @@
+modos.genomics.formats
+======================
+
+.. py:module:: modos.genomics.formats
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   modos.genomics.formats.MAGIC_NUMBER
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.genomics.formats.GenomicFileSuffix
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.genomics.formats.read_pysam
+   modos.genomics.formats.get_index
+   modos.genomics.formats.is_encrypted
+   modos.genomics.formats.add_suffix
+   modos.genomics.formats.remove_suffix
+
+
+Module Contents
+---------------
+
+.. py:data:: MAGIC_NUMBER
+   :value: b'crypt4gh'
+
+
+.. py:class:: GenomicFileSuffix
+
+   Bases: :py:obj:`tuple`, :py:obj:`enum.Enum`
+
+
+   Enumeration of all supported genomic file suffixes.
+
+
+   .. py:attribute:: CRAM
+      :value: ('.cram',)
+
+
+
+   .. py:attribute:: BAM
+      :value: ('.bam',)
+
+
+
+   .. py:attribute:: SAM
+      :value: ('.sam',)
+
+
+
+   .. py:attribute:: VCF
+      :value: ('.vcf', '.vcf.gz')
+
+
+
+   .. py:attribute:: BCF
+      :value: ('.bcf',)
+
+
+
+   .. py:attribute:: FASTA
+      :value: ('.fasta', '.fa')
+
+
+
+   .. py:attribute:: FASTQ
+      :value: ('.fastq', '.fq')
+
+
+
+   .. py:method:: list_formats()
+      :classmethod:
+
+
+
+   .. py:method:: from_path(path)
+      :classmethod:
+
+
+
+   .. py:method:: get_index_suffix()
+
+      Return the supported index suffix related to a genomic filetype
+
+
+
+   .. py:method:: to_htsget_endpoint()
+
+      Return the htsget endpoint for a genomic file type
+
+
+
+.. py:function:: read_pysam(path, region = None, **kwargs)
+
+   Automatically instantiate a pysam file object from input path and passes any additional kwarg to it.
+
+
+.. py:function:: get_index(file_path)
+
+.. py:function:: is_encrypted(file_path)
+
+.. py:function:: add_suffix(file_path, suffix)
+
+   Return the file path with specific suffix.
+
+
+.. py:function:: remove_suffix(file_path, suffix)
+
+   Return the file path without specific suffix.
+
+
