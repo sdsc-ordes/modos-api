@@ -10,7 +10,7 @@ available modos, as well as their metadata.
 import difflib
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from modos.api import MODO
 from modos.logging import setup_logging
 from modos.storage import connect_s3
@@ -38,7 +38,12 @@ setup_logging(
 @app.get("/list")
 def list_modos() -> dict[str, list[str]]:
     """List MODO entries in bucket."""
-    modos = minio.ls(BUCKET, refresh=True)
+    try:
+        modos = minio.ls(BUCKET, refresh=True)
+    except PermissionError:
+        raise HTTPException(
+            status_code=500, detail=f"Cannot access S3 bucket: {BUCKET}"
+        )
     # NOTE: modo contains bucket name
     return {"modos": [f"s3://{modo}" for modo in modos]}
 
@@ -48,8 +53,13 @@ def gather_metadata():
     """gather metadata from all MODOs."""
     meta = {}
 
-    for modo in minio.ls(BUCKET, refresh=True):
-        meta[modo] = MODO(path=f"s3://{modo}", services=SERVICES).metadata  # type: ignore
+    try:
+        for modo in minio.ls(BUCKET, refresh=True):
+            meta[modo] = MODO(path=f"s3://{modo}", services=SERVICES).metadata  # type: ignore
+    except PermissionError:
+        raise HTTPException(
+            status_code=500, detail=f"Cannot access S3 bucket: {BUCKET}"
+        )
 
     return meta
 
