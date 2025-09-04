@@ -33,6 +33,7 @@ dependencies = [
 dev = [
   "ruff",
   "pre-commit",
+  "pyinstrument",
   "pytest",
   "testcontainers[minio]",
 ]

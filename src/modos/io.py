@@ -13,7 +13,6 @@ import modos_schema.datamodel as model
 import zarr
 
 import modos.genomics.cram as cram
-import modos.metabolomics.mztab as mztab
 from modos.helpers.schema import dict_to_instance
 
 ext2loader = {
@@ -74,6 +73,8 @@ def extract_metadata(instance, base_path: Path) -> ExtractedMetadata:
 
     match str(instance.data_format):
         case "mzTab":
+            import modos.metabolomics.mztab as mztab
+
             elems = mztab.extract_metadata(instance, base_path)
             arrays = None
         case "CRAM":
