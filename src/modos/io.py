@@ -72,11 +72,6 @@ def extract_metadata(instance, base_path: Path) -> ExtractedMetadata:
         raise ValueError(f"{instance} is not a DataEntity, cannot extract")
 
     match str(instance.data_format):
-        case "mzTab":
-            import modos.metabolomics.mztab as mztab
-
-            elems = mztab.extract_metadata(instance, base_path)
-            arrays = None
         case "CRAM":
             elems = cram.extract_metadata(instance, base_path)
             arrays = None
