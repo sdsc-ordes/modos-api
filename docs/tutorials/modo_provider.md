@@ -155,7 +155,7 @@ Using this `example.yaml` a `MODO` and all specified associated elements can be 
 :sync: python
 ```{code-block} python
 from modos.api import MODO
-modo = MODO.from_file(path = "path/to/example.yaml", object_directory = "data/ex")
+modo = MODO.from_file(config_path= "path/to/example.yaml", object_path = "data/ex")
 ```
 :::
 
