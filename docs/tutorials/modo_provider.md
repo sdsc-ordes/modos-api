@@ -112,6 +112,7 @@ Alternatively, a MODO and all associated elements can be specified in a `yaml-fi
     "@type": Assay
     name: Assay 1
     description: Example assay for tests
+    has_data: demo1
     has_sample: sample1
     omics_type: GENOMICS
 
@@ -168,6 +169,147 @@ modos create --from-file "path/to/example.yaml" data/ex
 
 ::::
 
+### Advanced example
+
+```{code-block} yaml
+# A more advanced example with multiple assays, samples and files.
+
+- element:
+    id: f2a991_full_mouse
+    "@type": MODO
+    description: "Example complex modo describing multiple assays on fictional mouse f2a991."
+    creation_date: "2024-01-17T00:00:00"
+    last_update_date: "2024-01-17T00:00:00"
+    has_assay:
+      - 001_rnaseq
+      - 001_wgs
+
+- element:
+    id: 001_rnaseq
+    "@type": Assay
+    name: Tissue specific RNA-seq.
+    description: Example RNA-seq assay with multiple samples.
+    sample_processing:
+      - http://www.ebi.ac.uk/efo/EFO_0001461
+      - http://www.ebi.ac.uk/efo/EFO_0008567
+      - http://www.ebi.ac.uk/efo/EFO_0009653
+    has_data:
+      - 001_brain_rna_aligned
+      - 001_liver_rna_aligned
+    omics_type: TRANSCRIPTOMICS
+
+- element:
+    id: 001_wgs
+    "@type": Assay
+    name: Mouse WGS
+    description: Example whole genome sequencing assay with one sample.
+    sample_processing:
+      - http://www.ebi.ac.uk/efo/EFO_0001461
+      - http://www.ebi.ac.uk/efo/EFO_0010172
+      - http://www.ebi.ac.uk/efo/EFO_0008631
+    has_data: 001_wgs_aligned
+    omics_type: GENOMICS
+
+- element:
+    id: 001_wgs_aligned
+    "@type": DataEntity
+    name: Mouse WGS.
+    description: Mouse WGS alignment, Illumina sequencing.
+    data_format: CRAM
+    data_path: 001_wgs_aligned.cram
+    has_reference: mm39
+    has_sample: 001_tail_dna
+  args:
+    source_file: data/tail.cram
+
+- element:
+    id: 001_brain_rna_aligned
+    "@type": DataEntity
+    name: Mouse brain RNAseq.
+    description: Mouse brain RNAseq alignment, Illumina sequencing.
+    data_format: CRAM
+    data_path: 001_brain_rna_aligned.cram
+    has_reference: mm39
+    has_sample: 001_brain_rna
+  args:
+    source_file: data/brain.cram
+
+- element:
+    id: 001_liver_rna_aligned
+    "@type": DataEntity
+    name: Mouse liver RNAseq.
+    description: Mouse liver RNAseq alignment, Illumina sequencing.
+    data_format: CRAM
+    data_path: 001_liver_rna_aligned.cram
+    has_reference: mm39
+    has_sample: 001_liver_rna
+  args:
+    source_file: data/liver.cram
+
+- element:
+    id: mm39
+    "@type": ReferenceGenome
+    name: Genome assembly mm39
+    description: Genome assembly mm39 of M. musculus strain C57BL/6J.
+    data_path: mm39.fa
+    version: mm39
+    source_uri: https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001635.27
+    taxon_id: http://purl.obolibrary.org/obo/NCBITaxon_39442
+  args:
+    source_file: data/reference1.fa
+
+- element:
+    id: 001_liver_rna
+    "@type": Sample
+    name: Liver RNA library
+    description: RNA library from liver of mouse f2a991.
+    collector: Foo university
+    taxon_id: http://purl.obolibrary.org/obo/NCBITaxon_39442
+    source_material: http://purl.obolibrary.org/obo/UBERON_0002107
+    sex: Male
+
+- element:
+    id: 001_brain_rna
+    "@type": Sample
+    name: Brain ventricles RNA library
+    description: RNA library from brain ventricles of mouse f2a991.
+    collector: Foo university
+    taxon_id: http://purl.obolibrary.org/obo/NCBITaxon_39442
+    source_material: http://purl.obolibrary.org/obo/UBERON_0004086
+    sex: Male
+
+- element:
+    id: 001_tail_dna
+    "@type": Sample
+    name: Tail snip DNA library
+    description: WGS library from tail snip of mouse f2a991.
+    collector: Foo university
+    taxon_id: http://purl.obolibrary.org/obo/NCBITaxon_39442
+    source_material: http://purl.obolibrary.org/obo/UBERON_0002415
+    sex: Male
+```
+
+```{code-block} console
+$ modos create -f advanced.yaml advanced
+$ modos show advanced --zarr
+
+INFO | Using local storage for advanced
+/
+ ├── assay
+ │   ├── 001_rnaseq
+ │   └── 001_wgs
+ ├── data
+ │   ├── 001_brain_rna_aligned
+ │   ├── 001_liver_rna_aligned
+ │   └── 001_wgs_aligned
+ ├── reference
+ │   └── mm39
+ ├── sample
+ │   ├── 001_brain_rna
+ │   ├── 001_liver_rna
+ │   └── 001_tail_dna
+ └── sequence
+```
 
 (update)=
 ## Update or remove a MODO element
