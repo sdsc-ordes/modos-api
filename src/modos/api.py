@@ -409,6 +409,7 @@ class MODO:
         new = update_haspart_id(new)
         update_metadata_from_model(group, new)
         self.update_date()
+        zarr.consolidate_metadata(self.zarr.store)
 
     def enrich_metadata(self):
         """Enrich MODO metadata in place using content from associated data files."""
