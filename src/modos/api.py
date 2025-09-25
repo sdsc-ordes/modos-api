@@ -152,8 +152,6 @@ class MODO:
 
     @property
     def metadata(self) -> dict:
-        # Auto refresh metadata to match data before reading
-        zarr.consolidate_metadata(self.zarr.store)
         root = zarr.convenience.open_consolidated(self.zarr.store)
 
         if isinstance(root, zarr.core.Array):
