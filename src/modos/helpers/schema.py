@@ -113,6 +113,10 @@ def set_haspart_relationship(
     # has_part is multivalued
     if has_prop not in parent_group.attrs:
         parent_group.attrs[has_prop] = []
+
+    if isinstance(parent_group.attrs[has_prop], str):
+        parent_group.attrs[has_prop] = [parent_group.attrs[has_prop]]
+
     parent_group.attrs[has_prop] += [child_path]
 
 
