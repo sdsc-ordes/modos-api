@@ -1,4 +1,5 @@
 from __future__ import annotations
+from dataclasses import asdict
 from datetime import date
 import json
 import os
@@ -101,7 +102,7 @@ class MODO:
         description: Optional[str] = None,
         creation_date: date = date.today(),
         last_update_date: date = date.today(),
-        has_assay: List = [],
+        has_assay: List[str] = [],
         source_uri: Optional[str] = None,
         endpoint: Optional[HttpUrl] = None,
         s3_kwargs: Optional[dict[str, Any]] = None,
@@ -121,6 +122,7 @@ class MODO:
             logger.info(f"Using local storage for {path}")
             self.storage = LocalStorage(Path(path))
         # Opening existing object
+
         if self.storage.empty():
             self.id = id or self.path.name
             fields = {
@@ -133,7 +135,13 @@ class MODO:
                 "has_assay": has_assay,
                 "source_uri": source_uri,
             }
-            for key, val in fields.items():
+            # instantiate and post-process
+            sanitized_fields = asdict(
+                update_haspart_id(dict_to_instance(fields))
+            )
+            sanitized_fields["@type"] = "MODO"
+
+            for key, val in sanitized_fields.items():
                 if val:
                     self.zarr["/"].attrs[key] = val
             zarr.consolidate_metadata(self.zarr.store)
@@ -529,7 +537,6 @@ class MODO:
                 metadata = set_data_path(metadata, args.get("source_file"))
                 inst = dict_to_instance(metadata)
                 instance_list.append((inst, args))
-
         modo = cls(
             path=object_path,
             endpoint=endpoint,
