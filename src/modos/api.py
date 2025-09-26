@@ -350,6 +350,10 @@ class MODO:
         type_group = self.zarr[type_name]
         element_path = f"{type_name}/{element.id}"
 
+        # Assays are always bound to the MODO itself.
+        if type_name == "assay":
+            part_of = "/"
+
         if part_of is not None:
             partof_group = self.zarr[part_of]
             set_haspart_relationship(
