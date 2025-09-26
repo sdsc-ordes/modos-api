@@ -1197,7 +1197,7 @@ requires-dist = [
     { name = "crypt4gh", specifier = ">=1.7,<2.0" },
     { name = "gtars", specifier = ">=0.2.2,<0.3.0" },
     { name = "loguru", specifier = ">=0.7.3" },
-    { name = "modos-schema", specifier = ">=0.3.2" },
+    { name = "modos-schema", specifier = ">=0.3.4" },
     { name = "pandas", specifier = ">=2.2.3,<3.0.0" },
     { name = "prompt-toolkit", specifier = ">=3.0.48,<4.0.0" },
     { name = "pydantic", specifier = ">=2.8.2,<3.0.0" },
@@ -1230,14 +1230,14 @@ docs = [
 
 [[package]]
 name = "modos-schema"
-version = "0.3.2"
+version = "0.3.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "linkml-runtime" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8e/85/4d1a715e2e2109fa91bc3d4c79de5acd0b77f44337c9c56f7e532d75e4c0/modos_schema-0.3.2.tar.gz", hash = "sha256:ba959644c74feef3056b43cad5869bc3ebf9393940a1f4c056c820888ed022d3", size = 38009, upload-time = "2025-05-09T11:36:52.169Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3d/30/c0cb1b6af1fc3782eea4761af373c1450814ee04a653e29ecde0bf45e81e/modos_schema-0.3.4.tar.gz", hash = "sha256:5f0568eae1a44ead5e080160c90a8444fb97c7b6190efeec9c11b9fd175689cc", size = 37798, upload-time = "2025-09-26T14:52:38.126Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4e/f1/1f8eeedd7464fe3954e6db2abcb8e19e200c4148a5e6c451df6c40394dcd/modos_schema-0.3.2-py3-none-any.whl", hash = "sha256:e6a980c2dee93f205322dc5665af93d5f282133f67f3831f0f05fd31a37829b9", size = 15512, upload-time = "2025-05-09T11:36:50.618Z" },
+    { url = "https://files.pythonhosted.org/packages/1e/4a/b8afd3901015209c23a609cc9181415c0882b368493b85dcfeb44e3b17e9/modos_schema-0.3.4-py3-none-any.whl", hash = "sha256:ca9b2025f5e05f2bc97d9dc8dc29419f6bffc9a0a14d11354fb8db7c518f1286", size = 15550, upload-time = "2025-09-26T14:52:37.123Z" },
 ]
 
 [[package]]

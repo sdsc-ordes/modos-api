@@ -13,7 +13,6 @@
     "@type": Assay
     name: Assay 1
     description: Example assay for tests
-    has_sample: sample1
     omics_type: GENOMICS
 
 - element:
@@ -23,6 +22,7 @@
     description: Demo CRAM file for tests.
     data_format: CRAM
     has_reference: reference1
+    has_sample: sample1
   args:
     source_file: data/demo1.cram
 
