@@ -13,6 +13,10 @@ SLOT_TERMINOLOGIES = {
     "taxon_id": [
         "https://purl.obolibrary.org/obo/ncbitaxon/subsets/taxslim.owl"
     ],
+    "sample_processing": [
+        "https://purl.obolibrary.org/obo/obi.owl",
+        "http://www.ebi.ac.uk/efo/efo.owl",
+    ],
 }
 
 
