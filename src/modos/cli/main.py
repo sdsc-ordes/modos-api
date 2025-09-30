@@ -10,7 +10,6 @@ from typing_extensions import Annotated
 from loguru import logger
 from pydantic import HttpUrl
 import typer
-from types import SimpleNamespace
 
 from modos import __version__
 from modos.cli.codes import codes
@@ -49,9 +48,18 @@ def version_callback(value: bool):
         raise typer.Exit()
 
 
+def anon_callback(ctx: typer.Context, anon: bool):
+    """Validates modos server url"""
+    ctx.ensure_object(dict)
+    ctx.obj.setdefault("s3_kwargs", {})["anon"] = anon
+    return anon
+
+
 def endpoint_callback(ctx: typer.Context, url: HttpUrl):
     """Validates modos server url"""
-    ctx.obj = SimpleNamespace(endpoint=url)
+    ctx.ensure_object(dict)
+    ctx.obj["endpoint"] = url
+    return url
 
 
 @cli.command(rich_help_panel="Read")
@@ -128,6 +136,13 @@ def callback(
         callback=endpoint_callback,
         envvar="MODOS_ENDPOINT",
         help="URL of modos server.",
+    ),
+    anon: Optional[bool] = typer.Option(
+        None,
+        "--anon",
+        callback=anon_callback,
+        envvar="MODOS_ANON",
+        help="Use anonymous access for S3 connections.",
     ),
     version: Optional[bool] = typer.Option(
         None,
