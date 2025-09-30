@@ -1,9 +1,6 @@
 {
     "@type": "Assay",
     "description": "Example assay for tests",
-    "has_sample": [
-        "sample/sample1"
-    ],
     "name": "Assay 1",
     "omics_type": [
         "GENOMICS"

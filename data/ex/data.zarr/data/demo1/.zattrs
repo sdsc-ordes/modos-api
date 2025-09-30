@@ -3,6 +3,9 @@
     "data_format": "CRAM",
     "data_path": "demo1.cram",
     "description": "Demo CRAM file for tests.",
+    "has_sample": [
+        "sample/sample1"
+    ],
     "has_reference": [
         "reference/reference1"
     ],
