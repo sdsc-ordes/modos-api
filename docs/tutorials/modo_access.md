@@ -127,7 +127,6 @@ modos publish --base-uri "http://demo-data" "data/ex"
 #     schema:description "Dummy assay for tests." ;
 #     schema:name "Assay 1" ;
 #     modos:has_data <http://demo-data/demo1> ;
-#     modos:has_sample <http://demo-data/sample1> ;
 #     modos:omics_type NCIT:C84343 .
 #
 #     ...

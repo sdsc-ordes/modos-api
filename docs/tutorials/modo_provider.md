@@ -66,7 +66,7 @@ import modos_schema.datamodel as model
 modo = MODO(path = "data/ex")
 
 # Generate a data element
-data = model.DataEntity(id="genomics1", name= "demo_genomics", description = "A tiny cram file for demos", data_format="CRAM", data_path = "/internal/path/to/store/cram_file")
+data = model.DataEntity(id="genomics1", name= "demo_genomics", description = "A tiny cram file for demos", data_format="CRAM", has_sample= "sample/sample1", data_path = "/internal/path/to/store/cram_file")
 
 # Add element to modo
 modo.add_element(element = data, source_file="path/to/cram_file.cram")
@@ -113,7 +113,6 @@ Alternatively, a MODO and all associated elements can be specified in a `yaml-fi
     name: Assay 1
     description: Example assay for tests
     has_data: demo1
-    has_sample: sample1
     omics_type: GENOMICS
 
 - element:
@@ -123,6 +122,7 @@ Alternatively, a MODO and all associated elements can be specified in a `yaml-fi
     description: Demo CRAM file for tests.
     data_format: CRAM
     data_path: demo1.cram
+    has_sample: sample1
     has_reference: reference1
   args:
     source_file: data/ex/demo1.cram
