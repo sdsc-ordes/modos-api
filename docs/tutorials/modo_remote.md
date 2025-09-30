@@ -28,7 +28,8 @@ remo.get_metadata_from_remote("http://localhost")
 remo.get_metadata_from_remote("http://localhost", modo_id="ex")
 ```
 
-## Find a specific MODO and get it's S3 path
+## Find a specific MODO and get its S3 path
+
 There are different options to query a specific `MODO` and the __bucket name__ to load it from - fuzzy search or exact string matching:
 
 ```{code-block} python
@@ -43,9 +44,11 @@ remo.get_s3_path("http://localhost", query="ex", exact_match=True)
 # []
 ```
 
-## Intiantiate a remote MODO locally
+## Instantiate a remote MODO locally
 
-Remotely stored `MODOs` can be intiantiated by specifiying their remote endpoint and then and worked with as if they were stored locally.
+Remotely stored `MODOs` can be instantiated by specifying their remote endpoint and then and worked with as if they were stored locally.
+
+The example below assumes a public s3 bucket endpoint accessible anonymously (without credentials).
 
 ::::{tab-set}
 
@@ -55,7 +58,7 @@ Remotely stored `MODOs` can be intiantiated by specifiying their remote endpoint
 from modos.api import MODO
 
 # Load MODO from remote storage
-modo=MODO(path='s3://modos-demo/ex', endpoint='http://localhost')
+modo=MODO(path='s3://modos-demo/ex', endpoint='http://localhost', s3_kwargs={"anon": True})
 
 # All operations can be applied as if locally
 modo.metadata
@@ -66,8 +69,8 @@ modo.metadata
 :::{tab-item} cli
 :sync: cli
 ```{code-block} console
-# Interact with remotly stored MODO
-modos --endpoint http://localhost show s3://modos-demo/ex
+# Interact with remotely stored MODO
+modos --anon --endpoint http://localhost show s3://modos-demo/ex
 # ex:
 #   '@type': MODO
 #   creation_date: '2024-02-19T00:00:00'
@@ -79,19 +82,51 @@ modos --endpoint http://localhost show s3://modos-demo/ex
 ::::
 
 :::{warning}
-The __bucket name__ and the __endpoint url__ are specified separatly. The __bucket name__ is part of the `object_path` and needs to be included in the s3 path, followed by the `MODO`'s name (e.g. `s3://bucket_name/modo_name`), while the __endpoint url__ needs to be specified separately. Only paths that follow the s3 scheme will be considered as remote independent of `--endpoint` being specified or not.
+The __bucket name__ and the __endpoint url__ are specified separately. The __bucket name__ is part of the `object_path` and needs to be included in the s3 path, followed by the `MODO`'s name (e.g. `s3://bucket_name/modo_name`), while the __endpoint url__ needs to be specified separately. Only paths that follow the s3 scheme will be considered as remote independent of `--endpoint` being specified or not.
 :::
 
 :::{note}
-To avoid repetition the endpoint can also be read from the `MODOS_ENDPOINT` environment variable. The syntax then follows the same as for local objects, except that the `object_path` needs to be provided as s3 scheme:
+To avoid repetition, the endpoint and anon values can also be read from environment variables.
+The syntax then follows the same as for local objects, except that the `object_path` needs to be provided as s3 scheme:
 
 ```{code-block} console
 export MODOS_ENDPOINT='http://localhost'
+export MODOS_ANON=true
 modos create s3://bucket/object1
 modos show   s3://bucket/object1
 modos delete s3://bucket/object1
 ```
 :::
+
+(authenticated_bucket)=
+## Use authenticated buckets
+
+Most use-cases require authentication to access the S3 bucket.
+This usually requires an access key and secret key.
+MODOS can access these keys through the standard [AWS environment variables](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-envvars.html):
+
+```{code-block} console
+export AWS_ACCESS_KEY_ID=<id>
+export AWS_SECRET_ACCESS_KEY=<secret>
+export MODOS_ENDPOINT='http://modos.example.org'
+modos show s3://protected-bucket/example
+```
+
+However, it is strongly recommended to avoid entering secrets in the terminal and instead store them in encrypted .env files.
+Tools like [sops](https://github.com/getsops/sops) make this easy:
+
+
+```{code-block} console
+# create public/secret key pair
+age-keygen -o keypair.txt
+# create encrypted env file
+sops --age <public-key> .enc.env
+
+# Values decrypted in memory and injected in the modos process
+sops exec-env .enc.env 'modos show s3://protected-bucket/example'
+SOPS_AGE_KEY_FILE=keypair.txt sops exec-env .enc.env \
+  'modos show s3://protected-bucket/example'
+```
 
 (generate_remote)=
 ## Generate and modify a MODO at a remote object store
