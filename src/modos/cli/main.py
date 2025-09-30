@@ -93,9 +93,13 @@ def show(
     """Show the contents of a modo."""
     from modos.api import MODO
 
-    endpoint = ctx.obj.endpoint
+    endpoint = ctx.obj["endpoint"]
     if endpoint:
-        obj = MODO(object_path, endpoint=endpoint)
+        obj = MODO(
+            object_path,
+            endpoint=endpoint,
+            s3_kwargs=ctx.obj["s3_kwargs"],
+        )
     elif os.path.exists(object_path):
         obj = MODO(object_path)
     else:
@@ -120,7 +124,11 @@ def publish(
     """Export a modo as linked data. Turns all paths into URIs."""
     from modos.api import MODO
 
-    obj = MODO(object_path, endpoint=ctx.obj.endpoint)
+    obj = MODO(
+        object_path,
+        endpoint=ctx.obj["endpoint"],
+        s3_kwargs=ctx.obj["s3_kwargs"],
+    )
     print(
         obj.knowledge_graph(uri_prefix=base_uri).serialize(
             format=output_format
@@ -198,11 +206,11 @@ def create(
 
     typer.echo("Creating a digital object.", err=True)
 
-    endpoint = EndpointManager(ctx.obj.endpoint)
+    endpoint = EndpointManager(ctx.obj["endpoint"])
 
     # Initialize object's directory
     if endpoint.s3:
-        fs = connect_s3(endpoint.s3, {"anon": True})  # type: ignore
+        fs = connect_s3(endpoint.s3, ctx.obj["s3_kwargs"])  # type: ignore
         if fs.exists(object_path):
             raise ValueError(f"Remote directory already exists: {object_path}")
     elif Path(object_path).exists():
@@ -224,7 +232,12 @@ def create(
 
     attrs = obj.__dict__
     # Dump object to zarr metadata
-    MODO(path=object_path, endpoint=endpoint.modos, **attrs)
+    MODO(
+        path=object_path,
+        endpoint=endpoint.modos,
+        s3_kwargs=ctx.obj["s3_kwargs"],
+        **attrs,
+    )
 
 
 @cli.command(rich_help_panel="Write")
@@ -251,7 +264,11 @@ def remove(
     from modos.api import MODO
     import zarr
 
-    modo = MODO(object_path, endpoint=ctx.obj.endpoint)
+    modo = MODO(
+        object_path,
+        endpoint=ctx.obj["endpoint"],
+        s3_kwargs=ctx.obj["s3_kwargs"],
+    )
     if (element_id is None) or (element_id == modo.path.name):
         if force:
             modo.remove_object()
@@ -323,9 +340,13 @@ def add(
     from modos.remote import EndpointManager
 
     typer.echo(f"Updating {object_path}.", err=True)
-    modo = MODO(object_path, endpoint=ctx.obj.endpoint)
+    modo = MODO(
+        object_path,
+        endpoint=ctx.obj["endpoint"],
+        s3_kwargs=ctx.obj["s3_kwargs"],
+    )
     target_class = element_type.get_target_class()
-    endpoint = EndpointManager(ctx.obj.endpoint)
+    endpoint = EndpointManager(ctx.obj["endpoint"])
 
     if from_file and element:
         raise ValueError("Only one of --from-file or --element can be used.")
@@ -351,7 +372,11 @@ def enrich(
     import zarr
 
     typer.echo(f"Enriching metadata for {object_path}.", err=True)
-    modo = MODO(object_path, endpoint=ctx.obj.endpoint)
+    modo = MODO(
+        object_path,
+        endpoint=ctx.obj["endpoint"],
+        s3_kwargs=ctx.obj["s3_kwargs"],
+    )
     # Attempt to extract metadata from files
     modo.enrich_metadata()
     zarr.consolidate_metadata(modo.zarr.store)
@@ -383,12 +408,12 @@ def update(
     from modos.io import parse_attributes
 
     typer.echo(f"Updating {object_path}.", err=True)
-    endpoint = ctx.obj.endpoint
     if force:
         _ = MODO.from_file(
             config_path=config_file,
             object_path=object_path,
-            endpoint=endpoint,
+            endpoint=ctx.obj["endpoint"],
+            s3_kwargs=ctx.obj["s3_kwargs"],
             no_remove=False,
         )
     else:
@@ -397,7 +422,8 @@ def update(
         _ = MODO.from_file(
             config_path=config_file,
             object_path=object_path,
-            endpoint=endpoint,
+            endpoint=ctx.obj["endpoint"],
+            s3_kwargs=ctx.obj["s3_kwargs"],
             no_remove=True,
         )
         modo_id = _.zarr["/"].attrs["id"]
