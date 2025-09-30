@@ -193,9 +193,21 @@ class S3Storage(Storage):
         s3_endpoint: HttpUrl,
         s3_kwargs: Optional[dict[str, Any]] = None,
     ):
+        """S3 storage based on s3fs.
+
+        Parameters
+        ----------
+        path:
+            S3 path to the object (format: s3://bucket/name).
+        s3_endpoint:
+            URL to the S3 endpoint.
+        s3_kwargs:
+            Additional keyword arguments passed to s3fs.S3FileSystem.
+            To use public access buckets without authentification, pass {"anon": True}.
+        """
         self._path = S3Path(url=path)
         self.endpoint = s3_endpoint
-        s3_opts = s3_kwargs or {"anon": True}
+        s3_opts = s3_kwargs or {}
         fs = connect_s3(s3_endpoint, s3_opts)
         if fs.exists(str(self.path / ZARR_ROOT)):
             zarr_s3_opts = s3_opts | {"endpoint_url": str(s3_endpoint)}
