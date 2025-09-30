@@ -146,7 +146,7 @@ def callback(
         help="URL of modos server.",
     ),
     anon: Optional[bool] = typer.Option(
-        None,
+        False,
         "--anon",
         callback=anon_callback,
         envvar="MODOS_ANON",
