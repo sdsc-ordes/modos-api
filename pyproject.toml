@@ -7,7 +7,7 @@ authors = [
 license = { text = "Apache-2.0" }
 license-files = ["LICEN[CS]E*"]
 readme = "README.md"
-requires-python = ">=3.11,<3.14"
+requires-python = ">=3.12,<3.14"
 dynamic = ["version"]
 dependencies = [
     "calamus>=0.4.2,<0.5.0",
@@ -27,6 +27,7 @@ dependencies = [
     "typer[rich]>=0.7.0,<1.0.0",
     "click>=8.1.3,<8.2.0",
     "zarr>=2.16.1,<3.0.0",
+    "pyocli",
 ]
 
 [dependency-groups]
@@ -121,3 +122,6 @@ commit_preprocessors = [
     { pattern = 'Merged PR #[0-9]: (.*)', replace = "$1" },
     { pattern = " +", replace = " " },
 ]
+
+[tool.uv.sources]
+pyocli = { git = "ssh://gitlab.datascience.ch/codev/ocli.git", subdirectory = "src/pyocli", rev = "0.1.0" }
