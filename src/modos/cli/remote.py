@@ -10,6 +10,39 @@ remote = typer.Typer(add_completion=False)
 
 
 @remote.command()
+def login(
+    ctx: typer.Context,
+    client_id: Annotated[
+        str,
+        typer.Option(
+            "--client-id",
+            "-c",
+            help="OAuth Client ID to use for authentication.",
+            envvar="MODOS_OAUTH_CLIENT_ID",
+        ),
+    ],
+    auth_url: Annotated[
+        str,
+        typer.Option(
+            "--auth-url",
+            "-a",
+            help="OAuth Authorization URL to use for authentication.",
+            envvar="MODOS_OAUTH_AUTH_URL",
+        ),
+    ],
+):
+    """Oauth device flow to login into a remote endpoint."""
+    from pyocli import start_device_code_flow, finish_device_code_flow
+
+    data = start_device_code_flow(auth_url, client_id)
+    print(f"To authenticate, visit {data.verify_url_full()}.")
+    token = finish_device_code_flow(data)
+    print(
+        f"You are logged in with the following token: {token}"
+    )  # TODO: persist token
+
+
+@remote.command()
 def download(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
