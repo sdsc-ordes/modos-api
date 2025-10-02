@@ -267,7 +267,7 @@ class HtsgetConnection:
         # TODO: when above addressed, replace temporary file with
         # self.open() to stream directly from in-memory buffer.
         buffer = tempfile.NamedTemporaryFile(
-            "w+b", delete=False, suffix=self.path.suffix
+            "w+b", delete=False, suffix="".join(self.path.suffixes)
         ).name
 
         self.to_file(Path(buffer))

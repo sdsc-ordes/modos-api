@@ -76,7 +76,14 @@ def read_pysam(
         case _:
             raise ValueError("Unsupported output file type.")
 
-    pysam_handle = pysam_func(str(path), **kwargs)
+    try:
+        pysam_handle = pysam_func(str(path), **kwargs)
+    except TypeError as e:
+        if "unexpected keyword argument" in str(e):
+            pysam_handle = pysam_func(str(path))
+        else:
+            raise
+
     if region is None:
         stream = (rec for rec in pysam_handle)
     else:
