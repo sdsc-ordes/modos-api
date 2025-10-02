@@ -46,7 +46,7 @@ remo.get_s3_path("http://localhost", query="ex", exact_match=True)
 
 ## Instantiate a remote MODO locally
 
-Remotely stored `MODOs` can be instantiated by specifying their remote endpoint and then and worked with as if they were stored locally.
+Remotely stored `MODOs` can be instantiated by specifying their remote endpoint and then worked with as if they were stored locally.
 
 The example below assumes a public s3 bucket endpoint accessible anonymously (without credentials).
 
