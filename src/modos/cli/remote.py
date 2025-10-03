@@ -27,7 +27,11 @@ def download(
     """Download a modo from a remote endpoint."""
     from modos.api import MODO
 
-    modo = MODO(object_path, endpoint=ctx.obj.endpoint)
+    modo = MODO(
+        object_path,
+        endpoint=ctx.obj["endpoint"],
+        s3_kwargs=ctx.obj["s3_kwargs"],
+    )
     modo.download(target_path)
 
 
@@ -49,8 +53,8 @@ def upload(
     from modos.remote import EndpointManager
 
     modo = MODO(object_path)
-    endpoint = EndpointManager(ctx.obj.endpoint)
-    modo.upload(target_path, endpoint.s3)
+    endpoint = EndpointManager(ctx.obj["endpoint"])
+    modo.upload(target_path, endpoint.s3, s3_kwargs=ctx.obj["s3_kwargs"])
 
 
 @remote.command()
@@ -60,10 +64,10 @@ def list(
     """List remote modos on the endpoint."""
     from modos.remote import list_remote_items
 
-    if ctx.obj.endpoint is None:
+    if ctx.obj["endpoint"] is None:
         raise ValueError("Must provide an endpoint using modos --endpoint")
 
-    for item in list_remote_items(ctx.obj.endpoint):
+    for item in list_remote_items(ctx.obj["endpoint"]):
         print(item)
 
 
@@ -95,7 +99,7 @@ def stream(
 
     # NOTE: bucket is not included in htsget paths
     source = Path(*Path(file_path.removeprefix("s3://")).parts[1:])
-    endpoint = EndpointManager(ctx.obj.endpoint)
+    endpoint = EndpointManager(ctx.obj["endpoint"])
 
     if not endpoint:
         raise ValueError("Streaming requires a remote endpoint.")

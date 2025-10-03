@@ -36,6 +36,7 @@ dev = [
   "pyinstrument",
   "pytest",
   "testcontainers[minio]",
+  "pytest-httpserver>=1.1.3",
 ]
 docs = [
   "myst-parser>=2.0.0,<3.0",
