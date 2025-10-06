@@ -40,7 +40,7 @@ def search(
 
     matcher = get_slot_matcher(
         slot,
-        EndpointManager(ctx.obj.endpoint).fuzon,
+        EndpointManager(ctx.obj["endpoint"]).fuzon,
     )
     matcher.top = top
     if query:
