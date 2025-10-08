@@ -2,11 +2,47 @@ import sys
 from typing import Optional
 from pathlib import Path
 from typing_extensions import Annotated
+from loguru import logger
 import typer
 
+from modos.remote import JWT
 from modos.cli.common import OBJECT_PATH_ARG
 
 remote = typer.Typer(add_completion=False)
+
+
+@remote.command()
+def login(
+    ctx: typer.Context,
+    client_id: Annotated[
+        str,
+        typer.Option(
+            "--client-id",
+            "-c",
+            help="OAuth Client ID to use for authentication.",
+            envvar="MODOS_OAUTH_CLIENT_ID",
+        ),
+    ],
+    auth_url: Annotated[
+        str,
+        typer.Option(
+            "--auth-url",
+            "-a",
+            help="OAuth Authorization URL to use for authentication.",
+            envvar="MODOS_OAUTH_AUTH_URL",
+        ),
+    ],
+):
+    """Oauth device flow to login into a remote endpoint."""
+    from pyocli import start_device_code_flow, finish_device_code_flow
+
+    data = start_device_code_flow(auth_url, client_id, [])
+    print(f"To authenticate, visit {data.verify_url_full()}.")
+    token = finish_device_code_flow(data)
+
+    JWT(token.access_token).to_cache()  # TODO: Handle refresh token
+
+    logger.info("You are logged in")
 
 
 @remote.command()
