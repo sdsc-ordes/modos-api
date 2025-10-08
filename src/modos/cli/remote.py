@@ -1,7 +1,9 @@
+import os
 import sys
 from typing import Optional
 from pathlib import Path
 from typing_extensions import Annotated
+from loguru import logger
 import typer
 
 from modos.cli.common import OBJECT_PATH_ARG
@@ -33,13 +35,19 @@ def login(
 ):
     """Oauth device flow to login into a remote endpoint."""
     from pyocli import start_device_code_flow, finish_device_code_flow
+    from platformdirs import user_cache_dir
 
     data = start_device_code_flow(auth_url, client_id, [])
     print(f"To authenticate, visit {data.verify_url_full()}.")
     token = finish_device_code_flow(data)
-    print(
-        f"You are logged in with the following token: {token}"
-    )  # TODO: persist token
+
+    cache = user_cache_dir("modos", "sdsc", ensure_exists=True)
+    token_path = Path(cache) / "token.jwt"
+    with open(token_path, "w") as f:
+        _ = f.write(token.access_token)
+    os.chmod(token_path, 0o600)
+
+    logger.info("You are logged in")
 
 
 @remote.command()
