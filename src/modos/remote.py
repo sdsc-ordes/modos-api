@@ -1,6 +1,9 @@
 """Functions related to server storage handling"""
 
+from __future__ import annotations
 from dataclasses import field
+import os
+from pathlib import Path
 from typing import Mapping, Optional
 
 from pydantic import HttpUrl, validate_call
@@ -118,3 +121,36 @@ def get_s3_path(url: HttpUrl, query: str, exact_match: bool = False) -> list:
         url=f"{url}/get",
         params={"query": query, "exact_match": exact_match},
     ).json()
+
+
+@dataclass
+class JWT:
+    """Handles storage of JWT tokens for authentication."""
+
+    access_token: str
+
+    @staticmethod
+    def path() -> Path:
+        from platformdirs import user_cache_dir
+
+        cache = user_cache_dir("modos", "sdsc", ensure_exists=True)
+        return Path(cache) / "token.jwt"
+
+    def to_cache(self):
+        """Store JWT in cache directory."""
+        with open(JWT.path(), "w") as f:
+            _ = f.write(self.access_token)
+        os.chmod(JWT.path(), 0o600)
+
+    @classmethod
+    def from_cache(cls) -> JWT | None:
+        """Load JWT from cache directory if it exists."""
+
+        if not JWT.path().exists():
+            return None
+
+        with open(JWT.path(), "r") as f:
+            return cls(f.read().strip())
+
+    def decode(self) -> dict[str, str]:
+        raise NotImplementedError("JWT decoding not implemented yet")
