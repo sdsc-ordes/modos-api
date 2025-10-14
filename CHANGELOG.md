@@ -1,5 +1,25 @@
 Notable changes introduced in modos releases are documented in this file
 
+## [0.3.4] - 2025-10-14
+
+### Bug Fixes
+
+- *(api)* do not consolidate on read operations (#173)
+- *(api)* auto-attach assays to MODO (#176)
+- *(server)* explicit error message on missing bucket (#165)- vcf streaming to pysam (#180)
+
+
+### Documentation
+
+- *(tutorials)* fix obsolete api parameters (#168)
+- *(tutorials)* add advanced yaml example (#172)
+
+### Features
+
+- *(cli)* codes for sample processing (#178)
+- *(cli)* pass s3 credentials via env (#179)
+- *(fuzon)* cli fallback without autocomplete (#164)- schema upgrade (#177)
+
 ## [0.3.3] - 2025-08-22
 
 ### Bug Fixes
