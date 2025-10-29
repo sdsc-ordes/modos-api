@@ -1,7 +1,7 @@
 volumes:
   caddy-data:
   caddy-config:
-  minio-data:
+  garage-data:
     driver: local
 
 networks:
@@ -30,29 +30,31 @@ services:
       - REFGET_LOCAL_URL=${REFGET_LOCAL_URL:-http://refget:8080}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - MODOS_LOCAL_URL=${MODOS_LOCAL_URL:-http://modos-server:8000}
-      - S3_LOCAL_URL=${S3_LOCAL_URL:-http://minio:9000}
+      - S3_LOCAL_URL=${S3_LOCAL_URL:-http://garage:9000}
     networks:
       - modos-network
 
-  minio:
-    image: docker.io/bitnami/minio:2025.2.3
+
+  garage:
+    build: ./garage
+    restart: unless-stopped
+    post_start:
+      - command: bash /tmp/post-hook.sh
     profiles:
       - local
     ports:
-      - "9000:9000" # api
-      - "9001:9001" # console
+      - "9000:9000"
     volumes:
-      - minio-data:/bitnami/minio/data
+      - garage-data:/var/lib/garage/data
+      - ./garage/garage.toml.template:/etc/garage.toml.template:ro
+      - ./garage/post-hook.sh:/tmp/post-hook.sh:ro
     networks:
       - modos-network
     environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minio}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-miniosecret}
-      - MINIO_SERVER_ACCESS_KEY=${MINIO_SERVER_ACCESS_KEY:-user}
-      - MINIO_SERVER_SECRET_KEY=${MINIO_SERVER_SECRET_KEY:-pass}
-      - MINIO_DEFAULT_BUCKETS=${MINIO_DEFAULT_BUCKET:-modos-demo:public,genome-references:public}
-      - MINIO_REGION=us-east-1
-      - AWS_REQUEST_CHECKSUM_CALCULATION='WHEN_REQUIRED'
+      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN:-garage}
+      - GARAGE_S3_REGION=${GARAGE_S3_REGION:-us-east-1}
+      - CLIENT_ID=${AWS_ACCESS_KEY_ID:-garage}
+      - CLIENT_SECRET=${AWS_SECRET_ACCESS_KEY:-garage-secret}
 
 
   htsget:
@@ -70,9 +72,9 @@ services:
       - ENDPOINT=${S3_PUBLIC_URL:-http://localhost/s3}
       - BUCKET=${S3_BUCKET:-modos-demo}
       - S3_ADDRESSING_STYLE=${S3_ADDRESSING_STYLE:-auto}
-      - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minio}
-      - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-miniosecret}
-      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-garage}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-garage-secret}
+      - AWS_REGION=${GARAGE_S3_REGION:-us-east-1}
       - RUST_LOG=debug
 
 
@@ -97,6 +99,8 @@ services:
     environment:
       - ENDPOINT=${S3_PUBLIC_URL:-http://localhost/s3}
       - BUCKET=${REFERENCE_BUCKET:-reference-genomes}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-garage}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-garage-secret}
 
 
   modos-server:
@@ -110,8 +114,10 @@ services:
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
       - REFGET_PUBLIC_URL=${REFGET_PUBLIC_URL:-http://localhost/refget}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-garage}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-garage-secret}
       - S3_ADDRESSING_STYLE=${S3_ADDRESSING_STYLE:-auto}
       - S3_BUCKET=${S3_BUCKET:-modos-demo}
-      - S3_LOCAL_URL=${S3_LOCAL_URL:-http://minio:9000}
+      - S3_LOCAL_URL=${S3_LOCAL_URL:-http://garage:9000}
       - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3}
     command: uv run uvicorn --host 0.0.0.0 --port 8000 --reload server:app
