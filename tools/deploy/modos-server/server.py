@@ -28,7 +28,7 @@ SERVICES = {
 }
 
 app = FastAPI()
-minio = connect_s3(S3_LOCAL_URL, {"anon": True})  # type: ignore
+minio = connect_s3(S3_LOCAL_URL, {"anon": False})  # type: ignore
 setup_logging(
     level="INFO",
     time=True,
