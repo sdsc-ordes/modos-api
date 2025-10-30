@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 from typing import Mapping, Optional
+import warnings
 
 from pydantic import HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
@@ -26,7 +27,8 @@ class BearerAuth(AuthBase):
         if self.jwt:
             if self.jwt.is_expired():
                 self.jwt = self.jwt.refresh()
-            r.headers["Authorization"] = f"Bearer {self.jwt.access_token}"
+            if self.jwt:
+                r.headers["Authorization"] = f"Bearer {self.jwt.access_token}"
         return r
 
 
@@ -207,5 +209,6 @@ class JWT:
             self.expires_at - timedelta(seconds=skew)
         )
 
-    def refresh(self) -> JWT:
-        raise NotImplementedError("Token refresh is not yet implemented.")
+    def refresh(self) -> JWT | None:
+        warnings.warn("Token refresh is not yet implemented.")
+        return None
