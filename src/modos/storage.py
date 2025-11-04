@@ -8,17 +8,18 @@ import re
 import shutil
 from typing import Any, ClassVar, Generator, Optional
 
+import obstore as obs
+from obstore.store import S3Store
 from pydantic import Field, HttpUrl
 from pydantic.dataclasses import dataclass
-import s3fs
 import zarr
 import zarr.hierarchy as zh
+from zarr.storage import ObjectStore
 
 
 from modos.helpers.schema import ElementType
 
 ZARR_ROOT = Path("data.zarr")
-S3_ADDRESSING_STYLE = os.getenv("S3_ADDRESSING_STYLE", "auto")
 
 
 class Storage(ABC):
@@ -202,14 +203,14 @@ class S3Storage(Storage):
         s3_endpoint:
             URL to the S3 endpoint.
         s3_kwargs:
-            Additional keyword arguments passed to s3fs.S3FileSystem.
-            To use public access buckets without authentification, pass {"anon": True}.
+            Additional keyword arguments passed to obstore.S3Store.
+            To use public access buckets without authentification, pass {"skip_signature": True}.
         """
         self._path = S3Path(url=path)
         self.endpoint = s3_endpoint
         s3_opts = s3_kwargs or {}
-        fs = connect_s3(s3_endpoint, s3_opts)
-        if fs.exists(str(self.path / ZARR_ROOT)):
+        self.store = connect_s3(path, s3_endpoint, s3_opts)
+        if self.exists(str(self._path / ZARR_ROOT)):
             zarr_s3_opts = s3_opts | {"endpoint_url": str(s3_endpoint)}
 
             self._zarr = zarr.convenience.open(
@@ -217,11 +218,8 @@ class S3Storage(Storage):
                 storage_options=zarr_s3_opts,
             )
         else:
-            fs.mkdirs(self.path, exist_ok=True)
-            zarr_store = zarr.storage.FSStore(
-                str(self.path / ZARR_ROOT), fs=fs
-            )
-            self._zarr = init_zarr(zarr_store)
+            self.zarr_store = ObjectStore(store=self.store)
+            self._zarr = init_zarr(self.zarr_store)
 
     @property
     def path(self) -> Path:
@@ -232,42 +230,37 @@ class S3Storage(Storage):
         return self._zarr
 
     def exists(self, target: Path = ZARR_ROOT) -> bool:
-        fs = self.zarr.store.fs
-        return fs.exists(str(self.path / target))
+        try:
+            _ = obs.get(self.store, target)
+            return True
+        except FileNotFoundError:
+            return False
 
     def list(
         self, target: Optional[Path] = None
     ) -> Generator[Path, None, None]:
-        fs = self.zarr.store.fs
         path = self.path / (target or "")
-        for node in fs.glob(f"{path}/*"):
-            if fs.isdir(node):
-                for file in fs.find(node):
-                    yield Path(file)
-            else:
-                yield Path(node)
+        for key in self.store.list(f"{path}/"):
+            yield Path(key)
 
     def open(self, target: Path) -> io.BufferedReader:
-        return self.zarr.store.fs.open(str(self.path / target))
+        return obs.open_reader(self.store, path=str(self.path / target))
 
     def remove(self, target: Path):
-        if self.zarr.store.fs.exists(target):
-            self.zarr.store.fs.rm(str(target))
+        if self.exists(target):
+            self.store.delete(str(target))
             logger.info(
                 f"Permanently deleted {target} from remote filesystem."
             )
 
     def put(self, source: io.BufferedReader, target: Path):
         out_file = f"{self.path}/{target.as_posix()}"
-        with self.zarr.store.fs.open(out_file, "wb") as f:
-            while chunk := source.read(8192):
-                f.write(chunk)
-                f.flush()
+        self.store.put(
+            out_file, mode="wb", chunk_size=8192, use_multipart=True
+        )
 
     def move(self, rel_source: Path, target: Path):
-        self.zarr.store.fs.mv(
-            str(self.path / rel_source), str(self.path / target)
-        )
+        self.store.rename(str(self.path / rel_source), str(self.path / target))
 
 
 # Initialize object's directory given the metadata graph
@@ -282,11 +275,12 @@ def init_zarr(zarr_store: zarr.storage.Store) -> zh.Group:
 
 
 def connect_s3(
-    endpoint: HttpUrl, s3_kwargs: dict[str, Any]
-) -> s3fs.S3FileSystem:
-    return s3fs.S3FileSystem(
-        endpoint_url=str(endpoint),
-        config_kwargs={"s3": {"addressing_style": S3_ADDRESSING_STYLE}},
+    path: str, endpoint: HttpUrl, s3_kwargs: dict[str, Any]
+) -> S3Store:
+    return S3Store.from_url(
+        path,
+        endpoint=str(endpoint),
+        client_options={"allow_http": True},
         **s3_kwargs,
     )
 
