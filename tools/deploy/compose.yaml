@@ -52,7 +52,7 @@ services:
       - modos-network
     environment:
       - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN:-garage}
-      - GARAGE_S3_REGION=${GARAGE_S3_REGION:-us-east-1}
+      - GARAGE_S3_REGION=${AWS_DEFAULT_REGION:-us-east-1}
       - CLIENT_ID=${AWS_ACCESS_KEY_ID:-garage}
       - CLIENT_SECRET=${AWS_SECRET_ACCESS_KEY:-garage-secret}
 
