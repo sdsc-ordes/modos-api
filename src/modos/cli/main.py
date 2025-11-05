@@ -279,7 +279,7 @@ def remove(
     else:
         element = modo.zarr[element_id]
         rm_path = element.attrs.get("data_path", [])
-        if isinstance(element, zarr.hierarchy.Group) and len(rm_path) > 0:
+        if isinstance(element, zarr.Group) and len(rm_path) > 0:
             if not force:
                 delete = typer.confirm(
                     f"Removing {element_id} will permanently delete {rm_path}.\n Please confirm that you want to continue?"
@@ -426,7 +426,7 @@ def update(
             s3_kwargs=ctx.obj["s3_kwargs"],
             no_remove=True,
         )
-        modo_id = _.zarr["/"].attrs["id"]
+        modo_id = _.zarr.attrs["id"]
         meta_ids = {Path(id).name: id for id in _.metadata.keys()}
         old_ids = [
             id
