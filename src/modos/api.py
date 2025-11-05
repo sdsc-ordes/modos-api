@@ -15,7 +15,6 @@ import modos_schema.datamodel as model
 import numcodecs
 from pydantic import HttpUrl
 from pysam import AlignedSegment, VariantRecord
-import zarr.hierarchy
 import zarr
 
 from modos.rdf import attrs_to_graph
@@ -147,7 +146,7 @@ class MODO:
             zarr.consolidate_metadata(self.zarr.store)
 
     @property
-    def zarr(self) -> zarr.hierarchy.Group:
+    def zarr(self) -> zarr.Group:
         return self.storage.zarr
 
     @property
@@ -213,9 +212,7 @@ class MODO:
         meta_dir = Path(self.path / "data.zarr")
         return [fi for fi in self.storage.list() if meta_dir not in fi.parents]
 
-    def list_arrays(
-        self, element: Optional[str] = None
-    ) -> zarr.hierarchy.TreeViewer:
+    def list_arrays(self, element: Optional[str] = None) -> Any:
         """Views arrays in the archive recursively.
 
         Parameters
@@ -455,9 +452,7 @@ class MODO:
 
             # Add arrays if the parent is not an array already.
             parent = self.zarr[id]
-            if extracted.arrays is None or not isinstance(
-                parent, zarr.hierarchy.Group
-            ):
+            if extracted.arrays is None or not isinstance(parent, zarr.Group):
                 continue
 
             # Nest arrays directly in parent group

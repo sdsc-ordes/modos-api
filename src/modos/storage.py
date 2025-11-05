@@ -13,7 +13,6 @@ from obstore.store import S3Store
 from pydantic import Field, HttpUrl
 from pydantic.dataclasses import dataclass
 import zarr
-import zarr.hierarchy as zh
 from zarr.storage import ObjectStore
 
 
@@ -29,7 +28,7 @@ class Storage(ABC):
 
     @property
     @abstractmethod
-    def zarr(self) -> zh.Group: ...
+    def zarr(self) -> zarr.Group: ...
 
     @abstractmethod
     def exists(self, target: Path) -> bool: ...
@@ -95,7 +94,7 @@ class LocalStorage(Storage):
             self._zarr = init_zarr(zarr_store)
 
     @property
-    def zarr(self) -> zh.Group:
+    def zarr(self) -> zarr.Group:
         return self._zarr
 
     @property
@@ -226,7 +225,7 @@ class S3Storage(Storage):
         return Path(f"{self._path.bucket}/{self._path.key}")
 
     @property
-    def zarr(self) -> zh.Group:
+    def zarr(self) -> zarr.Group:
         return self._zarr
 
     def exists(self, target: Path = ZARR_ROOT) -> bool:
@@ -264,9 +263,9 @@ class S3Storage(Storage):
 
 
 # Initialize object's directory given the metadata graph
-def init_zarr(zarr_store: zarr.storage.Store) -> zh.Group:
+def init_zarr(zarr_store: zarr.storage.Store) -> zarr.Group:
     """Initialize object's directory and metadata structure."""
-    data = zh.group(store=zarr_store)
+    data = zarr.group(store=zarr_store)
     elem_types = [t.value for t in ElementType]
     for elem_type in elem_types:
         data.create_group(elem_type)
@@ -285,7 +284,7 @@ def connect_s3(
     )
 
 
-def add_metadata_group(parent_group: zh.Group, metadata: dict) -> None:
+def add_metadata_group(parent_group: zarr.Group, metadata: dict) -> None:
     """Add input metadata dictionary to an existing zarr group."""
     # zarr groups cannot have slashes in their names
     group_name = metadata["id"].replace("/", "_")
@@ -297,14 +296,14 @@ def add_metadata_group(parent_group: zh.Group, metadata: dict) -> None:
         parent_group[group_name].attrs[key] = value
 
 
-def add_data(group: zh.Group, data) -> None:
+def add_data(group: zarr.Group, data) -> None:
     """Add a numpy array to an existing zarr group."""
     group.create_dataset("data", data=data)
 
 
 def list_zarr_items(
-    group: zh.Group,
-) -> list[zh.Group | zarr.core.Array]:
+    group: zarr.Group,
+) -> list[zarr.Group | zarr.Array]:
     """Recursively list all zarr groups and arrays"""
     found = []
 
