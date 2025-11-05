@@ -279,7 +279,7 @@ class MODO:
         """Remove the complete modo object"""
         for fi in self.list_files():
             self.storage.remove(fi)
-        self.zarr.store.rmdir()
+        del self.zarr["/"]
         # NOTE: Locally remove the empty directory (does not affect remote).
         if self.path.exists():
             os.rmdir(self.path)
