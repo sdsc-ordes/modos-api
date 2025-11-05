@@ -159,9 +159,9 @@ class MODO:
 
     @property
     def metadata(self) -> dict:
-        root = zarr.convenience.open_consolidated(self.zarr.store)
+        root = zarr.open_consolidated(self.zarr.store)
 
-        if isinstance(root, zarr.core.Array):
+        if isinstance(root, zarr.Array):
             raise ValueError("Root must be a group. Empty archive?")
 
         # Get flat dictionary with all attrs, easier to search
@@ -221,7 +221,7 @@ class MODO:
             Element, or group of elements (e.g. data or data/element_id) to show.
             If not provided, shows the metadata of the entire MODO.
         """
-        root = zarr.convenience.open_consolidated(self.zarr.store)
+        root = zarr.open_consolidated(self.zarr.store)
         return root[element or "/"].tree()
 
     def query(self, query: str):
