@@ -301,12 +301,7 @@ def add_data(group: zarr.Group, data) -> None:
 
 def list_zarr_items(
     group: zarr.Group,
-) -> list[zarr.Group | zarr.Array]:
+) -> tuple[tuple[str, zarr.Group | zarr.Array], ...]:
     """Recursively list all zarr groups and arrays"""
-    found = []
 
-    def list_all(path: str, elem):
-        found.append((path, elem))
-
-    group.visititems(list_all)
-    return found
+    return group.members()
