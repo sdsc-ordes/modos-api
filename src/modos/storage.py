@@ -85,12 +85,10 @@ class LocalStorage(Storage):
     def __init__(self, path: Path):
         self._path = Path(path)
         if (self.path / ZARR_ROOT).exists():
-            self._zarr = zarr.convenience.open(str(self.path / ZARR_ROOT))
+            self._zarr = zarr.open(str(self.path / ZARR_ROOT))
         else:
             self.path.mkdir(exist_ok=True)
-            zarr_store = zarr.storage.DirectoryStore(
-                str(self.path / ZARR_ROOT)
-            )
+            zarr_store = zarr.storage.LocalStore(str(self.path / ZARR_ROOT))
             self._zarr = init_zarr(zarr_store)
 
     @property
@@ -212,7 +210,7 @@ class S3Storage(Storage):
         if self.exists(str(self._path / ZARR_ROOT)):
             zarr_s3_opts = s3_opts | {"endpoint_url": str(s3_endpoint)}
 
-            self._zarr = zarr.convenience.open(
+            self._zarr = zarr.open(
                 f"{self._path.url}/{ZARR_ROOT}",
                 storage_options=zarr_s3_opts,
             )
