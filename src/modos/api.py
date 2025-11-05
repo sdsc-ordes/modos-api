@@ -142,7 +142,7 @@ class MODO:
 
             for key, val in sanitized_fields.items():
                 if val:
-                    self.zarr["/"].attrs[key] = val
+                    self.zarr.attrs[key] = val
             zarr.consolidate_metadata(self.zarr.store)
 
     @property
@@ -167,8 +167,8 @@ class MODO:
         # Get flat dictionary with all attrs, easier to search
         group_attrs = dict()
         # Document object itself
-        root_id = root["/"].attrs["id"]
-        group_attrs[root_id] = dict(root["/"].attrs)
+        root_id = root.attrs["id"]
+        group_attrs[root_id] = dict(root.attrs)
         for subgroup in root.groups():
             group_type = subgroup[0]
             for name, value in list_zarr_items(subgroup[1]):
@@ -222,7 +222,7 @@ class MODO:
             If not provided, shows the metadata of the entire MODO.
         """
         root = zarr.open_consolidated(self.zarr.store)
-        return root[element or "/"].tree()
+        return root[element].tree() if element else root.tree()
 
     def query(self, query: str):
         """Use SPARQL to query the metadata graph"""
@@ -549,7 +549,7 @@ class MODO:
                 modo.add_element(inst, **args)
         if no_remove:
             return modo
-        modo_id = modo.zarr["/"].attrs["id"]
+        modo_id = modo.zarr.attrs["id"]
         old_ids = [
             id for id in modo_ids.keys() if id not in ids and id != modo_id
         ]
