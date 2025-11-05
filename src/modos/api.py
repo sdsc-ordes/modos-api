@@ -4,6 +4,7 @@ from datetime import date
 import json
 import os
 from pathlib import Path
+import shutil
 import sys
 from typing import Any, List, Optional, Union, Iterator
 import yaml
@@ -279,10 +280,8 @@ class MODO:
         """Remove the complete modo object"""
         for fi in self.list_files():
             self.storage.remove(fi)
-        del self.zarr["/"]
         # NOTE: Locally remove the empty directory (does not affect remote).
-        if self.path.exists():
-            os.rmdir(self.path)
+        shutil.rmtree(self.path)
         logger.info(f"Permanently deleted {self.path}.")
 
     def add_element(
@@ -577,7 +576,7 @@ class MODO:
         delete: bool = True,
     ):
         """Encrypt genomic data files including index files in a modo using crypt4gh"""
-        for id, group in self.zarr.data.items():
+        for id, group in self.zarr["data"].members():
             meta = group.attrs.asdict()
             meta["id"] = id
             data = DataElement(dict_to_instance(meta), self.storage)
@@ -597,7 +596,7 @@ class MODO:
         passphrase: Optional[str] = None,
     ):
         """Decrypt all c4gh encrypted data files in modo"""
-        for id, group in self.zarr.data.items():
+        for id, group in self.zarr["data"].members():
             meta = group.attrs.asdict()
             meta["id"] = id
             data = DataElement(dict_to_instance(meta), self.storage)
