@@ -356,13 +356,11 @@ class MODO:
         element_path = f"{type_name}/{element.id}"
 
         # Assays are always bound to the MODO itself.
-        if type_name == "assay":
-            part_of = "/"
-
-        if part_of is not None:
-            partof_group = self.zarr[part_of]
+        if type_name == "assay" or part_of is not None:
             set_haspart_relationship(
-                element.__class__.__name__, element_path, partof_group
+                element.__class__.__name__,
+                element_path,
+                self.zarr[part_of] if part_of else self.zarr,
             )
 
         # Update haspart relationship
@@ -410,9 +408,8 @@ class MODO:
         element_path = f"{type_name}/{new.id}"
 
         if part_of is not None:
-            partof_group = self.zarr[part_of]
             set_haspart_relationship(
-                new.__class__.__name__, element_path, partof_group
+                new.__class__.__name__, element_path, self.zarr[part_of]
             )
 
         new = update_haspart_id(new)
