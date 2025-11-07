@@ -13,6 +13,7 @@ from obstore.store import S3Store
 from pydantic import Field, HttpUrl
 from pydantic.dataclasses import dataclass
 import zarr
+import zarr.storage
 from zarr.storage import ObjectStore
 
 
@@ -169,6 +170,12 @@ class S3Path:
         max_length=1023,
     )
 
+    def __truediv__(self, other):
+        return S3Path(f"{self.url}/{other}")
+
+    def __str__(self):
+        return str(self.url)
+
     def s3_url_parts(self):
         path_parts = self.url[5:].split("/")
         bucket = path_parts.pop(0)
@@ -191,7 +198,7 @@ class S3Storage(Storage):
         s3_endpoint: HttpUrl,
         s3_kwargs: Optional[dict[str, Any]] = None,
     ):
-        """S3 storage based on s3fs.
+        """S3 storage based on obstore.
 
         Parameters
         ----------
