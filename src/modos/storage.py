@@ -208,21 +208,18 @@ class S3Storage(Storage):
             URL to the S3 endpoint.
         s3_kwargs:
             Additional keyword arguments passed to obstore.S3Store.
-            To use public access buckets without authentification, pass {"skip_signature": True}.
+            To use public access buckets without authentication, pass {"skip_signature": True}.
         """
         self._path = S3Path(url=path)
         self.endpoint = s3_endpoint
         s3_opts = s3_kwargs or {}
         self.store = connect_s3(path, s3_endpoint, s3_opts)
-        if self.exists(str(self._path / ZARR_ROOT)):
-            zarr_s3_opts = s3_opts | {"endpoint_url": str(s3_endpoint)}
-
-            self._zarr = zarr.open(
-                f"{self._path.url}/{ZARR_ROOT}",
-                storage_options=zarr_s3_opts,
-            )
+        self.zarr_store = ObjectStore(
+            store=connect_s3(str(self._path / ZARR_ROOT), s3_endpoint, s3_opts)
+        )
+        if self.exists(ZARR_ROOT):
+            self._zarr = zarr.open(store=self.zarr_store)
         else:
-            self.zarr_store = ObjectStore(store=self.store)
             self._zarr = init_zarr(self.zarr_store)
 
     @property
@@ -234,8 +231,14 @@ class S3Storage(Storage):
         return self._zarr
 
     def exists(self, target: Path = ZARR_ROOT) -> bool:
+        """Checks whether target, or objects with target prefix (directory) exist in the store."""
+
+        # Objects exist with input prefix
+        if len(list(self.store.list(str(target)))) > 0:
+            return True
+
         try:
-            _ = obs.get(self.store, target)
+            _ = obs.get(self.store, str(target))
             return True
         except FileNotFoundError:
             return False
@@ -243,9 +246,9 @@ class S3Storage(Storage):
     def list(
         self, target: Optional[Path] = None
     ) -> Generator[Path, None, None]:
-        path = self.path / (target or "")
-        for key in self.store.list(f"{path}/"):
-            yield Path(key)
+        for batch in self.store.list(f"{target or ''}/"):
+            for key in batch:
+                yield Path(key["path"])
 
     def open(self, target: Path) -> io.BufferedReader:
         return obs.open_reader(self.store, path=str(self.path / target))
@@ -259,16 +262,14 @@ class S3Storage(Storage):
 
     def put(self, source: io.BufferedReader, target: Path):
         out_file = f"{self.path}/{target.as_posix()}"
-        self.store.put(
-            out_file, mode="wb", chunk_size=8192, use_multipart=True
-        )
+        self.store.put(out_file, source)
 
     def move(self, rel_source: Path, target: Path):
         self.store.rename(str(self.path / rel_source), str(self.path / target))
 
 
 # Initialize object's directory given the metadata graph
-def init_zarr(zarr_store: zarr.storage.Store) -> zarr.Group:
+def init_zarr(zarr_store: zarr.storage.StoreLike) -> zarr.Group:
     """Initialize object's directory and metadata structure."""
     data = zarr.group(store=zarr_store)
     elem_types = [t.value for t in ElementType]
@@ -279,8 +280,12 @@ def init_zarr(zarr_store: zarr.storage.Store) -> zarr.Group:
 
 
 def connect_s3(
-    path: str, endpoint: HttpUrl, s3_kwargs: dict[str, Any]
+    path: str,
+    endpoint: HttpUrl,
+    s3_kwargs: dict[str, Any] | None = None,
 ) -> S3Store:
+    if s3_kwargs is None:
+        s3_kwargs = {}
     return S3Store.from_url(
         path,
         endpoint=str(endpoint),
