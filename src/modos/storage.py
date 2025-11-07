@@ -287,11 +287,13 @@ def add_metadata_group(parent_group: zarr.Group, metadata: dict) -> None:
     # zarr groups cannot have slashes in their names
     group_name = metadata["id"].replace("/", "_")
     parent_group.create_group(group_name)
+    # NOTE: hack to force reloading the store; sometimes the new group is not picked up
+    tmp = zarr.open(parent_group.store_path)
     # Fill attrs in the subject group for each predicate
     for key, value in metadata.items():
         if key == "id":
             continue
-        parent_group[group_name].attrs[key] = value
+        tmp[group_name].attrs[key] = value
 
 
 def add_data(group: zarr.Group, data) -> None:
