@@ -388,7 +388,10 @@ class MODO:
         new
             Element containing the enriched metadata.
         """
-        group = self.zarr[element_id]
+        try:
+            group = self.zarr[element_id]
+        except KeyError:
+            group = self.zarr.create_group(element_id)
         attr_dict = group.attrs.asdict()
         element = dict_to_instance(attr_dict | {"id": element_id})
 
@@ -532,7 +535,7 @@ class MODO:
             path=object_path,
             endpoint=endpoint,
             services=services,
-            s3_kwargs=s3_kwargs or {"anon": True},
+            s3_kwargs=s3_kwargs,
             **modo_dict.get("meta", {}),
             **modo_dict.get("args", {}),
         )

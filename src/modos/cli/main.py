@@ -51,7 +51,9 @@ def version_callback(value: bool):
 def anon_callback(ctx: typer.Context, anon: bool):
     """Validates modos server url"""
     ctx.ensure_object(dict)
-    ctx.obj.setdefault("s3_kwargs", {})["anon"] = anon
+    ctx.obj.setdefault("s3_kwargs", {})
+    if anon:
+        ctx.obj["s3_kwargs"]["skip_signature"] = True
     return anon
 
 
@@ -149,7 +151,7 @@ def callback(
         False,
         "--anon",
         callback=anon_callback,
-        envvar="MODOS_ANON",
+        envvar="AWS_SKIP_SIGNATURE",
         help="Use anonymous access for S3 connections.",
     ),
     version: Optional[bool] = typer.Option(
@@ -202,7 +204,7 @@ def create(
     from modos.api import MODO
     from modos.prompt import SlotPrompter
     from modos.remote import EndpointManager
-    from modos.storage import connect_s3
+    from modos.storage import S3Storage
 
     typer.echo("Creating a digital object.", err=True)
 
@@ -210,7 +212,11 @@ def create(
 
     # Initialize object's directory
     if endpoint.s3:
-        fs = connect_s3(endpoint.s3, ctx.obj["s3_kwargs"])  # type: ignore
+        fs = S3Storage(
+            object_path,
+            s3_endpoint=endpoint.s3,
+            s3_kwargs=ctx.obj["s3_kwargs"],
+        )
         if fs.exists(object_path):
             raise ValueError(f"Remote directory already exists: {object_path}")
     elif Path(object_path).exists():
