@@ -1,5 +1,12 @@
 Notable changes introduced in modos releases are documented in this file
 
+## [0.3.5] - 2025-11-17
+
+### Features
+
+- *(cli)* oauth device code flow support (#183)
+- _(deploy)_ switch from minio to garage for S3 deployment (#183)
+
 ## [0.3.4] - 2025-10-14
 
 ### Bug Fixes
