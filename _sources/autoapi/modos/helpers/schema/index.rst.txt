@@ -1,0 +1,315 @@
+modos.helpers.schema
+====================
+
+.. py:module:: modos.helpers.schema
+
+.. autoapi-nested-parse::
+
+   Introspection utilities for the MODO schema.
+
+   This module provides helpers for accessing the schema structure
+   and for converting instances to different representations.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   modos.helpers.schema.SCHEMA_PATH
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.helpers.schema.DataElement
+   modos.helpers.schema.UserElementType
+   modos.helpers.schema.ElementType
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.helpers.schema.class_from_name
+   modos.helpers.schema.dict_to_instance
+   modos.helpers.schema.update_metadata_from_model
+   modos.helpers.schema.is_full_id
+   modos.helpers.schema.set_haspart_relationship
+   modos.helpers.schema.update_haspart_id
+   modos.helpers.schema.set_data_path
+   modos.helpers.schema.compute_checksum
+   modos.helpers.schema.is_uri
+   modos.helpers.schema.load_schema
+   modos.helpers.schema.load_prefixmap
+   modos.helpers.schema.get_slots
+   modos.helpers.schema.instance_to_graph
+   modos.helpers.schema.get_slot_range
+   modos.helpers.schema.get_enum_values
+   modos.helpers.schema.get_haspart_property
+
+
+Module Contents
+---------------
+
+.. py:data:: SCHEMA_PATH
+
+.. py:function:: class_from_name(name)
+
+.. py:function:: dict_to_instance(element)
+
+.. py:function:: update_metadata_from_model(group, element)
+
+   Update the metadata of a zarr group with the metadata of a model element.
+
+
+.. py:function:: is_full_id(element_id)
+
+   Checks if an element_id contains the element type as prefix.
+
+   .. rubric:: Examples
+
+   >>> is_full_id("sample1")
+   False
+   >>> is_full_id("data/test")
+   True
+   >>> is_full_id("/assay/test_assay")
+   True
+
+
+.. py:function:: set_haspart_relationship(child_class, child_path, parent_group)
+
+   Add element to the hasPart attribute of a parent zarr group
+
+
+.. py:function:: update_haspart_id(element)
+
+   update the id of the has_part property of an element to use the full id including its type
+
+
+.. py:function:: set_data_path(element, source_file = None)
+
+   Set the data_path attribute, if it is not specified to the modo root.
+
+
+.. py:class:: DataElement(model, storage)
+
+   Facade class to wrap model DataEntity to facilitate file handling (including index files).
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: storage
+
+
+   .. py:method:: _set_metadata(**kwargs)
+
+
+   .. py:method:: _update_checksum(source_path)
+
+
+   .. py:property:: is_genomic
+      :type: bool
+
+
+      Check if the data element is genomic.
+
+
+   .. py:method:: add_file(source_path, target_path)
+
+      Add a file to target_path to the storage.
+      If existing also add the index file and update data_path and checksum in metadata
+
+
+
+   .. py:method:: move_file(target_path)
+
+      Move a file from the path specified in metadata to the target_path.
+      If existing also move the index file.
+
+
+
+   .. py:method:: remove_file(rm_path)
+
+      Remove a file and its related index from the storage.
+
+
+
+   .. py:method:: update_file(new_path, source_file = None)
+
+      Update file, its corresponding index file and metadata, based on new data_path and source_file.
+
+      There are four cases:
+      1. Neither path nor contents changed --> do nothing.
+      2. Only contents changed --> overwrite the file(s).
+      3. Only path changed -> move file(s).
+      4. Both path and contents changed -> add new file(s) and remove old ones.
+
+      :param new_path: Path to where the file should be placed.
+      :param source_file: Path to the file that shall be added. If None the file already associated to the DataElement will be used.
+
+
+
+   .. py:method:: encrypt(recipient_pubkeys, seckey_path = None, passphrase = None, delete = True)
+
+      Encrypt data path linked to the DataElement.
+      Works for genomic files and their index files.
+
+
+
+   .. py:method:: decrypt(seckey_path, sender_pubkey = None, passphrase = None)
+
+      Decrypt data path linked to the DataElement.
+      Works for genomic files and their index files.
+
+
+
+.. py:function:: compute_checksum(file_obj)
+
+   Generate the BLAKE2b checksum of the file_obj digest.
+
+
+.. py:class:: UserElementType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Enumeration of element types exposed to the user.
+
+
+   .. py:attribute:: SAMPLE
+      :value: 'sample'
+
+
+
+   .. py:attribute:: ASSAY
+      :value: 'assay'
+
+
+
+   .. py:attribute:: DATA_ENTITY
+      :value: 'data'
+
+
+
+   .. py:attribute:: REFERENCE_GENOME
+      :value: 'reference'
+
+
+
+   .. py:method:: get_target_class()
+
+      Return the target class for the element type.
+
+
+
+   .. py:method:: from_object(obj)
+      :classmethod:
+
+
+      Return the element type from an object.
+
+
+
+.. py:class:: ElementType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Enumeration of all element types.
+
+
+   .. py:attribute:: SAMPLE
+      :value: 'sample'
+
+
+
+   .. py:attribute:: ASSAY
+      :value: 'assay'
+
+
+
+   .. py:attribute:: DATA_ENTITY
+      :value: 'data'
+
+
+
+   .. py:attribute:: REFERENCE_GENOME
+      :value: 'reference'
+
+
+
+   .. py:attribute:: REFERENCE_SEQUENCE
+      :value: 'sequence'
+
+
+
+   .. py:method:: get_target_class()
+
+      Return the target class for the element type.
+
+
+
+   .. py:method:: from_object(obj)
+      :classmethod:
+
+
+      Return the element type from an object.
+
+
+
+   .. py:method:: from_model_name(name)
+      :classmethod:
+
+
+      Return the element type from an object name.
+
+
+
+.. py:function:: is_uri(text)
+
+   Checks if input is a valid URI.
+
+
+.. py:function:: load_schema()
+
+   Return a view over the schema structure.
+
+
+.. py:function:: load_prefixmap()
+
+   Load the prefixmap.
+
+
+.. py:function:: get_slots(target_class, required_only=False)
+
+   Return a list of required slots for a class.
+
+
+.. py:function:: instance_to_graph(instance)
+
+.. py:function:: get_slot_range(slot_name)
+
+   Return the class-independent range of a slot.
+
+
+.. py:function:: get_enum_values(enum_name)
+
+.. py:function:: get_haspart_property(child_class)
+
+   Return the name of the "has_part" property for a target class.
+   If no such property is in the schema, return None.
+
+   .. rubric:: Examples
+
+   >>> get_haspart_property('AlignmentSet')
+   'has_data'
+   >>> get_haspart_property('Assay')
+   'has_assay'
+
+
