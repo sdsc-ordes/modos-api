@@ -204,7 +204,7 @@ def create(
     from modos.api import MODO
     from modos.prompt import SlotPrompter
     from modos.remote import EndpointManager
-    from modos.storage import S3Storage
+    from modos.storage import S3Storage, connect_s3
 
     typer.echo("Creating a digital object.", err=True)
 
@@ -212,12 +212,14 @@ def create(
 
     # Initialize object's directory
     if endpoint.s3:
+        fs = connect_s3(object_path, endpoint.s3, ctx.obj["s3_kwargs"])
+        prefix = object_path.removeprefix(f"s3://{fs.config['bucket']}")
         fs = S3Storage(
             object_path,
             s3_endpoint=endpoint.s3,
             s3_kwargs=ctx.obj["s3_kwargs"],
         )
-        if fs.exists(object_path):
+        if fs.exists(Path(prefix)):
             raise ValueError(f"Remote directory already exists: {object_path}")
     elif Path(object_path).exists():
         raise ValueError(f"Directory already exists: {object_path}")
