@@ -283,10 +283,11 @@ class MODO:
 
     def remove_object(self):
         """Remove the complete modo object"""
-        for fi in self.list_files():
+        for fi in self.storage.list():
             self.storage.remove(fi)
-        # NOTE: Locally remove the empty directory (does not affect remote).
-        shutil.rmtree(self.path)
+        # Locally remove the empty directory (does not affect remote).
+        if not self.is_remote:
+            shutil.rmtree(self.path)
         logger.info(f"Permanently deleted {self.path}.")
 
     def add_element(
