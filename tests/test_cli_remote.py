@@ -21,7 +21,7 @@ def test_create_modo_auth(setup, httpserver: HTTPServer):
             "create",
             "-m",
             '{"id":"test", "creation_date": "2024-05-14", "last_update_date": "2024-05-14"}',
-            "s3://test/ex",
+            "s3://test/ex_create",
         ],
         env={
             "AWS_ACCESS_KEY_ID": "minioadmin",

@@ -11,7 +11,10 @@ import pytest
 @pytest.mark.slow
 def test_multi_modos(setup):
     minio_endpoint = setup["minio"].get_config()["endpoint"]
-    minio_creds = {"secret": "minioadmin", "key": "minioadmin"}
+    minio_creds = {
+        "secret_access_key": "minioadmin",
+        "access_key_id": "minioadmin",
+    }
     for _ in range(3):
         MODO(
             "s3://test/ex",
@@ -56,7 +59,10 @@ def test_remove_modo(setup):
     # in following tests.
     minio_client = setup["minio"].get_client()
     minio_endpoint = setup["minio"].get_config()["endpoint"]
-    minio_creds = {"secret": "minioadmin", "key": "minioadmin"}
+    minio_creds = {
+        "secret_access_key": "minioadmin",
+        "access_key_id": "minioadmin",
+    }
     modo = MODO(
         "s3://test/remove_ex",
         services={"s3": f"http://{minio_endpoint}"},
@@ -130,7 +136,10 @@ def test_update_source_file_and_data_path(remote_modo):
 def test_upload_modo(setup, test_modo):
     minio_client = setup["minio"].get_client()
     minio_endpoint = setup["minio"].get_config()["endpoint"]
-    minio_creds = {"secret": "minioadmin", "key": "minioadmin"}
+    minio_creds = {
+        "secret_access_key": "minioadmin",
+        "access_key_id": "minioadmin",
+    }
     test_modo.upload(
         "s3://test/upload_ex", f"http://{minio_endpoint}", minio_creds
     )

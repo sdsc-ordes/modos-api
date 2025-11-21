@@ -96,7 +96,10 @@ def setup(request):
 @pytest.fixture()
 def remote_modo(setup):
     minio_endpoint = setup["minio"].get_config()["endpoint"]
-    minio_creds = {"secret": "minioadmin", "key": "minioadmin"}
+    minio_creds = {
+        "secret_access_key": "minioadmin",
+        "access_key_id": "minioadmin",
+    }
     return MODO(
         "s3://test/ex",
         services={"s3": f"http://{minio_endpoint}"},
