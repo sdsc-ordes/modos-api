@@ -148,7 +148,9 @@ class MODO:
 
     @property
     def zarr(self) -> zarr.Group:
-        return self.storage.zarr
+        # NOTE: re-open every time to pick up changes
+        # sometimes new groups are not picked up in zarr v3
+        return zarr.open(self.storage.zarr.store_path)
 
     @property
     def is_remote(self) -> bool:
