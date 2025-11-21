@@ -253,10 +253,8 @@ class MODO:
         try:
             attrs = self.zarr[element_id].attrs
         except KeyError as err:
-            keys = []
-            self.zarr.visit(lambda k: keys.append(k))
             logger.warning(f"Element {element_id} not found in the archive.")
-            logger.info(f"Available elements are {keys}")
+            logger.info(f"Available elements are {list(self.metadata.keys())}")
             raise err
 
         # Remove data file
