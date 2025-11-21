@@ -259,7 +259,12 @@ class MODO:
 
         # Remove data file
         if "data_path" in attrs.keys():
-            data_file = self.path / attrs["data_path"]
+            try:
+                data_file = self.path / attrs["data_path"]
+            except TypeError:
+                raise TypeError(
+                    f"data_path must be a valid path, found: {attrs['data_path']}"
+                )
             self.storage.remove(data_file)
 
         # Remove element group
