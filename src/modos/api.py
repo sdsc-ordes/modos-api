@@ -210,10 +210,13 @@ class MODO:
 
         return yaml.dump(data, sort_keys=False)
 
-    def list_files(self) -> List[Path]:
+    def list_files(self) -> list[Path]:
         """Lists files in the archive recursively (except for the zarr file)."""
-        meta_dir = Path(self.path / "data.zarr")
-        return [fi for fi in self.storage.list() if meta_dir not in fi.parents]
+        return [
+            file
+            for file in self.storage.list()
+            if file.parts[0] != "data.zarr"
+        ]
 
     def list_arrays(self, element: Optional[str] = None) -> Any:
         """Views arrays in the archive recursively.

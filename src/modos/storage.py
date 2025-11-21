@@ -110,12 +110,9 @@ class LocalStorage(Storage):
         self, target: Optional[Path] = None
     ) -> Generator[Path, None, None]:
         path = self.path / (target or "")
-        for path in path.glob("*"):
+        for path in path.rglob("*"):
             if path.is_file():
                 yield path.relative_to(self.path)
-            for file in path.rglob("*"):
-                if file.is_file():
-                    yield path.relative_to(self.path)
 
     def move(self, rel_source: Path, target: Path):
         shutil.move(self.path / rel_source, self.path / target)
