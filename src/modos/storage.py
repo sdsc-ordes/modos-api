@@ -23,6 +23,10 @@ ZARR_ROOT = Path("data.zarr")
 
 
 class Storage(ABC):
+    """Abstract base class for modos storage backends.
+    Paths in a Storage are always interpreted relative to self.path.
+    """
+
     @property
     @abstractmethod
     def path(self) -> Path: ...
@@ -73,10 +77,9 @@ class Storage(ABC):
 
     def transfer(self, other: Storage):
         """Transfer all contents of one storage to another one."""
-        for path in self.list():
-            item = path.relative_to(self.path)
-            with self.open(item) as src:
-                other.put(src, item)
+        for item in self.list():
+            src = self.open(item)
+            other.put(src, item)
 
     def empty(self) -> bool:
         return len(self.zarr.attrs.keys()) == 0
@@ -109,10 +112,10 @@ class LocalStorage(Storage):
         path = self.path / (target or "")
         for path in path.glob("*"):
             if path.is_file():
-                yield path
+                yield path.relative_to(self.path)
             for file in path.rglob("*"):
                 if file.is_file():
-                    yield file
+                    yield path.relative_to(self.path)
 
     def move(self, rel_source: Path, target: Path):
         shutil.move(self.path / rel_source, self.path / target)
@@ -128,9 +131,10 @@ class LocalStorage(Storage):
                 f.write(chunk)
 
     def remove(self, target: Path):
-        if target.exists():
-            target.unlink()
-            logger.info(f"Permanently deleted {target} from filesystem.")
+        target_full = self.path / target
+        if target_full.exists():
+            target_full.unlink()
+            logger.info(f"Permanently deleted {target_full} from filesystem.")
 
 
 @dataclass
@@ -230,28 +234,30 @@ class S3Storage(Storage):
     def zarr(self) -> zarr.Group:
         return self._zarr
 
-    def exists(self, target: Path = ZARR_ROOT) -> bool:
-        """Checks whether target, or objects with target prefix (directory) exist in the store."""
+    def exists(self, target: Path) -> bool:
+        """Checks whether target, or objects in target directory exist in the store.
+        The target should be relative to self.path."""
 
         # Objects exist with input prefix
         if len(list(self.store.list(str(target)))) > 0:
             return True
 
         try:
-            _ = obs.get(self.store, str(target))
+            _ = self.store.get(str(target))
             return True
         except FileNotFoundError:
             return False
 
-    def list(
-        self, target: Optional[Path] = None
-    ) -> Generator[Path, None, None]:
-        for batch in self.store.list(f"{target or ''}/"):
+    def list(self, target: Path | None = None) -> Generator[Path, None, None]:
+        """Lists objects in target directory.
+        The target should be relative to self.path."""
+
+        for batch in self.store.list(f"{target or ''}"):
             for key in batch:
                 yield Path(key["path"])
 
     def open(self, target: Path) -> io.BufferedReader:
-        return obs.open_reader(self.store, path=str(self.path / target))
+        return obs.open_reader(self.store, path=str(target))
 
     def remove(self, target: Path):
         if self.exists(target):
@@ -261,11 +267,10 @@ class S3Storage(Storage):
             )
 
     def put(self, source: io.BufferedReader, target: Path):
-        out_file = f"{self.path}/{target.as_posix()}"
-        self.store.put(out_file, source)
+        self.store.put(str(target), source)
 
     def move(self, rel_source: Path, target: Path):
-        self.store.rename(str(self.path / rel_source), str(self.path / target))
+        self.store.rename(str(rel_source), str(target))
 
 
 # Initialize object's directory given the metadata graph
@@ -286,6 +291,7 @@ def connect_s3(
 ) -> S3Store:
     if s3_kwargs is None:
         s3_kwargs = {}
+
     return S3Store.from_url(
         path,
         endpoint=str(endpoint),
