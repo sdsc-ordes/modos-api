@@ -8,7 +8,7 @@ import pytest
 ## Instantiate multiple MODOs
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_multi_modos(setup):
     minio_endpoint = setup["minio"].get_config()["endpoint"]
     minio_creds = {
@@ -26,13 +26,13 @@ def test_multi_modos(setup):
 ## Add element
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_add_element(assay, remote_modo):
     remote_modo.add_element(assay)
     assert "assay/test_assay" in remote_modo.metadata.keys()
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_add_data(data_entity, remote_modo):
     remote_modo.add_element(data_entity, source_file="data/ex/demo1.cram")
     assert "demo1.cram" in [fi.name for fi in remote_modo.list_files()]
@@ -42,7 +42,7 @@ def test_add_data(data_entity, remote_modo):
 ## Remove element
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_remove_element(sample, remote_modo):
     remote_modo.add_element(sample)
     assert "sample/test_sample" in remote_modo.list_samples()
@@ -53,7 +53,7 @@ def test_remove_element(sample, remote_modo):
 ## Remove modo
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_remove_modo(setup):
     # NOTE: We build a new modo to prevent remote_modo from being deleted
     # in following tests.
@@ -78,7 +78,7 @@ def test_remove_modo(setup):
 ## Update element
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_update_element(sample, remote_modo):
     remote_modo.add_element(sample)
     test_sample = model.Sample(
@@ -91,7 +91,7 @@ def test_update_element(sample, remote_modo):
     )
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_update_data_path_move(remote_modo, data_entity):
     data1 = model.DataEntity(
         id="data/test_data", data_format="CRAM", data_path="demo2.cram"
@@ -102,7 +102,7 @@ def test_update_data_path_move(remote_modo, data_entity):
     assert not remote_modo.storage.exists("demo1.cram")
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_update_source_file(remote_modo):
     data1 = model.DataEntity(
         id="data/test_data", data_format="CRAM", data_path="demo2.cram"
@@ -119,7 +119,7 @@ def test_update_source_file(remote_modo):
     assert new_checksum != old_checksum
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_update_source_file_and_data_path(remote_modo):
     data_old = model.DataEntity(
         id="usfd", data_format="CRAM", data_path="demo_old.cram"
@@ -136,7 +136,7 @@ def test_update_source_file_and_data_path(remote_modo):
 
 
 # Upload/download entire modo
-@pytest.mark.slow
+@pytest.mark.remote
 def test_upload_modo(setup, test_modo):
     minio_client = setup["minio"].get_client()
     minio_endpoint = setup["minio"].get_config()["endpoint"]
@@ -151,7 +151,7 @@ def test_upload_modo(setup, test_modo):
     assert "upload_ex/" in [o.object_name for o in objects]
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_download_modo(remote_modo, tmp_path):
     remote_modo.download(tmp_path / "download_ex")
     assert (tmp_path / "download_ex").exists()
