@@ -499,13 +499,13 @@ class MODO:
         if self.endpoint.s3 and self.endpoint.htsget:
             con = HtsgetConnection(
                 self.endpoint.htsget,
-                Path(*Path(file_path).parts[1:]),
+                Path(*self.path.parts[1:]) / file_path,
                 region=_region,
             )
             stream = con.to_pysam(reference_filename=reference_filename)
         else:
             stream = read_pysam(
-                Path(file_path),
+                self.path / file_path,
                 reference_filename=reference_filename,
                 region=_region,
             )
