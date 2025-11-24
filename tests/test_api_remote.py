@@ -121,14 +121,18 @@ def test_update_source_file(remote_modo):
 
 @pytest.mark.slow
 def test_update_source_file_and_data_path(remote_modo):
-    data2 = model.DataEntity(
-        id="data/test_data", data_format="CRAM", data_path="demo1.cram"
+    data_old = model.DataEntity(
+        id="usfd", data_format="CRAM", data_path="demo_old.cram"
+    )
+    remote_modo.add_element(data_old, source_file="data/ex/demo1.cram")
+    data_new = model.DataEntity(
+        id="usfd", data_format="CRAM", data_path="demo_new.cram"
     )
     remote_modo.update_element(
-        "data/test_data", data2, source_file="data/ex/demo1.cram"
+        "data/usfd", data_new, source_file="data/ex/demo1.cram"
     )
-    assert remote_modo.storage.exists("demo1.cram")
-    assert not remote_modo.storage.exists("demo2.cram")
+    assert remote_modo.storage.exists("demo_new.cram")
+    assert not remote_modo.storage.exists("demo_old.cram")
 
 
 # Upload/download entire modo
