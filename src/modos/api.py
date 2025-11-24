@@ -1,4 +1,5 @@
 from __future__ import annotations
+from collections.abc import Iterator
 from dataclasses import asdict
 from datetime import date
 import json
@@ -6,7 +7,7 @@ import os
 from pathlib import Path
 import shutil
 import sys
-from typing import Any, List, Optional, Union, Iterator
+from typing import Any
 import yaml
 
 from linkml_runtime.dumpers import json_dumper
@@ -96,17 +97,17 @@ class MODO:
 
     def __init__(
         self,
-        path: Union[Path, str],
-        id: Optional[str] = None,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
+        path: Path | str,
+        id: str | None = None,
+        name: str | None = None,
+        description: str | None = None,
         creation_date: date = date.today(),
         last_update_date: date = date.today(),
-        has_assay: List[str] = [],
-        source_uri: Optional[str] = None,
-        endpoint: Optional[HttpUrl] = None,
-        s3_kwargs: Optional[dict[str, Any]] = None,
-        services: Optional[dict[str, HttpUrl]] = None,
+        has_assay: list[str] = [],
+        source_uri: str | None = None,
+        endpoint: HttpUrl | None = None,
+        s3_kwargs: dict[str, Any] | None = None,
+        services: dict[str, HttpUrl] | None = None,
     ):
         self.endpoint = EndpointManager(endpoint, services or {})
         if is_s3_path(str(path)):
@@ -161,7 +162,7 @@ class MODO:
         return self.storage.path
 
     @property
-    def metadata(self) -> dict:
+    def metadata(self) -> dict[str, Any]:
         root = zarr.open_consolidated(self.zarr.store)
 
         if isinstance(root, zarr.Array):
@@ -178,9 +179,7 @@ class MODO:
                 group_attrs[f"{group_type}/{name}"] = dict(value.attrs)
         return group_attrs
 
-    def knowledge_graph(
-        self, uri_prefix: Optional[str] = None
-    ) -> rdflib.Graph:
+    def knowledge_graph(self, uri_prefix: str | None = None) -> rdflib.Graph:
         """Return an RDF graph of the metadata. All identifiers
         are converted to valid URIs if needed."""
         if uri_prefix is None:
@@ -188,7 +187,7 @@ class MODO:
         kg = attrs_to_graph(self.metadata, uri_prefix=uri_prefix)
         return kg
 
-    def show_contents(self, element: Optional[str] = None) -> str:
+    def show_contents(self, element: str | None = None) -> str:
         """Produces a YAML document of the object's contents.
 
         Parameters
@@ -218,7 +217,7 @@ class MODO:
             if file.parts[0] != "data.zarr"
         ]
 
-    def list_arrays(self, element: Optional[str] = None) -> Any:
+    def list_arrays(self, element: str | None = None) -> Any:
         """Views arrays in the archive recursively.
 
         Parameters
@@ -301,8 +300,8 @@ class MODO:
             | model.Assay
             | model.ReferenceGenome
         ),
-        source_file: Optional[Path] = None,
-        part_of: Optional[str] = None,
+        source_file: Path | None = None,
+        part_of: str | None = None,
     ):
         """Add an element to the archive.
         If a data file is provided, it will be added to the archive.
@@ -333,8 +332,8 @@ class MODO:
             | model.ReferenceSequence
             | model.ReferenceGenome
         ),
-        source_file: Optional[Path] = None,
-        part_of: Optional[str] = None,
+        source_file: Path | None = None,
+        part_of: str | None = None,
         allowed_elements: type = ElementType,
     ):
         """Add an element of any type to the storage. This is meant to be called internally to add elements automatically."""
@@ -384,8 +383,8 @@ class MODO:
         self,
         element_id: str,
         new: model.DataEntity | model.Sample | model.Assay | model.MODO,
-        source_file: Optional[Path] = None,
-        part_of: Optional[str] = None,
+        source_file: Path | None = None,
+        part_of: str | None = None,
         allowed_elements: type = UserElementType,
     ):
         """Update element metadata in place by adding new values from model object.
@@ -472,11 +471,25 @@ class MODO:
     def stream_genomics(
         self,
         file_path: str,
-        region: Optional[str] = None,
-        reference_filename: Optional[str] = None,
+        region: str | None = None,
+        reference_filename: str | None = None,
     ) -> Iterator[AlignedSegment | VariantRecord]:
         """Slices both local and remote CRAM, VCF (.vcf.gz), and BCF
-        files returning an iterator over records."""
+        files returning an iterator over records.
+
+        Parameters
+        ----------
+        file_path
+            Path to the genomics file within the MODO.
+        region
+            Genomic region in UCSC format (e.g. chr1:1000-200
+        reference_filename
+            Path to the reference genome file.
+
+        Returns
+        -------
+        Iterator over pysam AlignedSegment or VariantRecord objects.
+        """
 
         _region = Region.from_ucsc(region) if region else None
         # check requested genomics file exists in MODO
@@ -504,9 +517,9 @@ class MODO:
         cls,
         config_path: Path,
         object_path: str,
-        endpoint: Optional[HttpUrl] = None,
-        s3_kwargs: Optional[dict] = None,
-        services: Optional[dict[str, HttpUrl]] = None,
+        endpoint: HttpUrl | None = None,
+        s3_kwargs: dict[str, Any] | None = None,
+        services: dict[str, HttpUrl] | None = None,
         no_remove: bool = False,
     ) -> MODO:
         """build a modo from a yaml or json file"""
@@ -575,16 +588,16 @@ class MODO:
         self,
         target_path: Path,
         s3_endpoint: HttpUrl,
-        s3_kwargs: Optional[dict[str, Any]] = None,
+        s3_kwargs: dict[str, Any] | None = None,
     ):
         """Upload a local MODO to a target_path on a remote endpoint."""
         self.storage.transfer(S3Storage(target_path, s3_endpoint, s3_kwargs))
 
     def encrypt(
         self,
-        recipient_pubkeys: List[os.PathLike] | os.PathLike,
-        seckey_path: Optional[os.PathLike] = None,
-        passphrase: Optional[str] = None,
+        recipient_pubkeys: list[os.PathLike] | os.PathLike,
+        seckey_path: os.PathLike | None = None,
+        passphrase: str | None = None,
         delete: bool = True,
     ):
         """Encrypt genomic data files including index files in a modo using crypt4gh"""
@@ -604,8 +617,8 @@ class MODO:
     def decrypt(
         self,
         seckey_path: os.PathLike,
-        sender_pubkey: Optional[os.PathLike] = None,
-        passphrase: Optional[str] = None,
+        sender_pubkey: os.PathLike | None = None,
+        passphrase: str | None = None,
     ):
         """Decrypt all c4gh encrypted data files in modo"""
         for id, group in self.zarr["data"].members():
