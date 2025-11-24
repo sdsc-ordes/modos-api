@@ -51,7 +51,9 @@ def version_callback(value: bool):
 def anon_callback(ctx: typer.Context, anon: bool):
     """Validates modos server url"""
     ctx.ensure_object(dict)
-    ctx.obj.setdefault("s3_kwargs", {})["anon"] = anon
+    ctx.obj.setdefault("s3_kwargs", {})
+    if anon:
+        ctx.obj["s3_kwargs"]["skip_signature"] = True
     return anon
 
 
@@ -149,7 +151,7 @@ def callback(
         False,
         "--anon",
         callback=anon_callback,
-        envvar="MODOS_ANON",
+        envvar="AWS_SKIP_SIGNATURE",
         help="Use anonymous access for S3 connections.",
     ),
     version: Optional[bool] = typer.Option(
@@ -202,7 +204,7 @@ def create(
     from modos.api import MODO
     from modos.prompt import SlotPrompter
     from modos.remote import EndpointManager
-    from modos.storage import connect_s3
+    from modos.storage import S3Storage, S3Path
 
     typer.echo("Creating a digital object.", err=True)
 
@@ -210,8 +212,13 @@ def create(
 
     # Initialize object's directory
     if endpoint.s3:
-        fs = connect_s3(endpoint.s3, ctx.obj["s3_kwargs"])  # type: ignore
-        if fs.exists(object_path):
+        prefix = object_path.removeprefix(f"s3://{S3Path(object_path).bucket}")
+        fs = S3Storage(
+            object_path,
+            s3_endpoint=endpoint.s3,
+            s3_kwargs=ctx.obj["s3_kwargs"],
+        )
+        if fs.exists(Path(prefix)):
             raise ValueError(f"Remote directory already exists: {object_path}")
     elif Path(object_path).exists():
         raise ValueError(f"Directory already exists: {object_path}")
@@ -279,7 +286,7 @@ def remove(
     else:
         element = modo.zarr[element_id]
         rm_path = element.attrs.get("data_path", [])
-        if isinstance(element, zarr.hierarchy.Group) and len(rm_path) > 0:
+        if isinstance(element, zarr.Group) and len(rm_path) > 0:
             if not force:
                 delete = typer.confirm(
                     f"Removing {element_id} will permanently delete {rm_path}.\n Please confirm that you want to continue?"
@@ -426,7 +433,7 @@ def update(
             s3_kwargs=ctx.obj["s3_kwargs"],
             no_remove=True,
         )
-        modo_id = _.zarr["/"].attrs["id"]
+        modo_id = _.zarr.attrs["id"]
         meta_ids = {Path(id).name: id for id in _.metadata.keys()}
         old_ids = [
             id

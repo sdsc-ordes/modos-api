@@ -1,5 +1,6 @@
 """Tests for the local use of multi-omics digital object (modo) CLI"""
 
+from pathlib import Path
 from typer.testing import CliRunner
 
 from linkml_runtime.dumpers import json_dumper
@@ -59,8 +60,8 @@ def test_add_data(tmp_path, data_entity):
         ],
     )
     assert result.exit_code == 0
-    assert (tmp_path / "demo1.cram") in modo.list_files()
-    assert (tmp_path / "demo1.cram.crai") in modo.list_files()
+    assert Path("demo1.cram") in modo.list_files()
+    assert Path("demo1.cram.crai") in modo.list_files()
 
 
 def test_add_to_parent(tmp_path, test_modo, sample):

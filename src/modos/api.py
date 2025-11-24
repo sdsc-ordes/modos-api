@@ -1,11 +1,13 @@
 from __future__ import annotations
+from collections.abc import Iterator
 from dataclasses import asdict
 from datetime import date
 import json
 import os
 from pathlib import Path
+import shutil
 import sys
-from typing import Any, List, Optional, Union, Iterator
+from typing import Any
 import yaml
 
 from linkml_runtime.dumpers import json_dumper
@@ -15,7 +17,6 @@ import modos_schema.datamodel as model
 import numcodecs
 from pydantic import HttpUrl
 from pysam import AlignedSegment, VariantRecord
-import zarr.hierarchy
 import zarr
 
 from modos.rdf import attrs_to_graph
@@ -96,17 +97,17 @@ class MODO:
 
     def __init__(
         self,
-        path: Union[Path, str],
-        id: Optional[str] = None,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
+        path: Path | str,
+        id: str | None = None,
+        name: str | None = None,
+        description: str | None = None,
         creation_date: date = date.today(),
         last_update_date: date = date.today(),
-        has_assay: List[str] = [],
-        source_uri: Optional[str] = None,
-        endpoint: Optional[HttpUrl] = None,
-        s3_kwargs: Optional[dict[str, Any]] = None,
-        services: Optional[dict[str, HttpUrl]] = None,
+        has_assay: list[str] = [],
+        source_uri: str | None = None,
+        endpoint: HttpUrl | None = None,
+        s3_kwargs: dict[str, Any] | None = None,
+        services: dict[str, HttpUrl] | None = None,
     ):
         self.endpoint = EndpointManager(endpoint, services or {})
         if is_s3_path(str(path)):
@@ -143,12 +144,14 @@ class MODO:
 
             for key, val in sanitized_fields.items():
                 if val:
-                    self.zarr["/"].attrs[key] = val
+                    self.zarr.attrs[key] = val
             zarr.consolidate_metadata(self.zarr.store)
 
     @property
-    def zarr(self) -> zarr.hierarchy.Group:
-        return self.storage.zarr
+    def zarr(self) -> zarr.Group:
+        # NOTE: re-open every time to pick up changes
+        # sometimes new groups are not picked up in zarr v3
+        return zarr.open(self.storage.zarr.store_path)
 
     @property
     def is_remote(self) -> bool:
@@ -159,26 +162,24 @@ class MODO:
         return self.storage.path
 
     @property
-    def metadata(self) -> dict:
-        root = zarr.convenience.open_consolidated(self.zarr.store)
+    def metadata(self) -> dict[str, Any]:
+        root = zarr.open_consolidated(self.zarr.store)
 
-        if isinstance(root, zarr.core.Array):
+        if isinstance(root, zarr.Array):
             raise ValueError("Root must be a group. Empty archive?")
 
         # Get flat dictionary with all attrs, easier to search
         group_attrs = dict()
         # Document object itself
-        root_id = root["/"].attrs["id"]
-        group_attrs[root_id] = dict(root["/"].attrs)
+        root_id = root.attrs["id"]
+        group_attrs[root_id] = dict(root.attrs)
         for subgroup in root.groups():
             group_type = subgroup[0]
             for name, value in list_zarr_items(subgroup[1]):
                 group_attrs[f"{group_type}/{name}"] = dict(value.attrs)
         return group_attrs
 
-    def knowledge_graph(
-        self, uri_prefix: Optional[str] = None
-    ) -> rdflib.Graph:
+    def knowledge_graph(self, uri_prefix: str | None = None) -> rdflib.Graph:
         """Return an RDF graph of the metadata. All identifiers
         are converted to valid URIs if needed."""
         if uri_prefix is None:
@@ -186,7 +187,7 @@ class MODO:
         kg = attrs_to_graph(self.metadata, uri_prefix=uri_prefix)
         return kg
 
-    def show_contents(self, element: Optional[str] = None) -> str:
+    def show_contents(self, element: str | None = None) -> str:
         """Produces a YAML document of the object's contents.
 
         Parameters
@@ -208,14 +209,15 @@ class MODO:
 
         return yaml.dump(data, sort_keys=False)
 
-    def list_files(self) -> List[Path]:
+    def list_files(self) -> list[Path]:
         """Lists files in the archive recursively (except for the zarr file)."""
-        meta_dir = Path(self.path / "data.zarr")
-        return [fi for fi in self.storage.list() if meta_dir not in fi.parents]
+        return [
+            file
+            for file in self.storage.list()
+            if file.parts[0] != "data.zarr"
+        ]
 
-    def list_arrays(
-        self, element: Optional[str] = None
-    ) -> zarr.hierarchy.TreeViewer:
+    def list_arrays(self, element: str | None = None) -> Any:
         """Views arrays in the archive recursively.
 
         Parameters
@@ -224,8 +226,8 @@ class MODO:
             Element, or group of elements (e.g. data or data/element_id) to show.
             If not provided, shows the metadata of the entire MODO.
         """
-        root = zarr.convenience.open_consolidated(self.zarr.store)
-        return root[element or "/"].tree()
+        root = zarr.open_consolidated(self.zarr.store)
+        return root[element].tree() if element else root.tree()
 
     def query(self, query: str):
         """Use SPARQL to query the metadata graph"""
@@ -253,15 +255,18 @@ class MODO:
         try:
             attrs = self.zarr[element_id].attrs
         except KeyError as err:
-            keys = []
-            self.zarr.visit(lambda k: keys.append(k))
             logger.warning(f"Element {element_id} not found in the archive.")
-            logger.info(f"Available elements are {keys}")
+            logger.info(f"Available elements are {list(self.metadata.keys())}")
             raise err
 
         # Remove data file
         if "data_path" in attrs.keys():
-            data_file = self.path / attrs["data_path"]
+            try:
+                data_file = self.path / attrs["data_path"]
+            except TypeError:
+                raise TypeError(
+                    f"data_path must be a valid path, found: {attrs['data_path']}"
+                )
             self.storage.remove(data_file)
 
         # Remove element group
@@ -280,12 +285,11 @@ class MODO:
 
     def remove_object(self):
         """Remove the complete modo object"""
-        for fi in self.list_files():
+        for fi in self.storage.list():
             self.storage.remove(fi)
-        self.zarr.store.rmdir()
-        # NOTE: Locally remove the empty directory (does not affect remote).
-        if self.path.exists():
-            os.rmdir(self.path)
+        # Locally remove the empty directory (does not affect remote).
+        if not self.is_remote:
+            shutil.rmtree(self.path)
         logger.info(f"Permanently deleted {self.path}.")
 
     def add_element(
@@ -296,8 +300,8 @@ class MODO:
             | model.Assay
             | model.ReferenceGenome
         ),
-        source_file: Optional[Path] = None,
-        part_of: Optional[str] = None,
+        source_file: Path | None = None,
+        part_of: str | None = None,
     ):
         """Add an element to the archive.
         If a data file is provided, it will be added to the archive.
@@ -328,8 +332,8 @@ class MODO:
             | model.ReferenceSequence
             | model.ReferenceGenome
         ),
-        source_file: Optional[Path] = None,
-        part_of: Optional[str] = None,
+        source_file: Path | None = None,
+        part_of: str | None = None,
         allowed_elements: type = ElementType,
     ):
         """Add an element of any type to the storage. This is meant to be called internally to add elements automatically."""
@@ -359,13 +363,11 @@ class MODO:
         element_path = f"{type_name}/{element.id}"
 
         # Assays are always bound to the MODO itself.
-        if type_name == "assay":
-            part_of = "/"
-
-        if part_of is not None:
-            partof_group = self.zarr[part_of]
+        if type_name == "assay" or part_of is not None:
             set_haspart_relationship(
-                element.__class__.__name__, element_path, partof_group
+                element.__class__.__name__,
+                element_path,
+                self.zarr[part_of] if part_of else self.zarr,
             )
 
         # Update haspart relationship
@@ -381,8 +383,8 @@ class MODO:
         self,
         element_id: str,
         new: model.DataEntity | model.Sample | model.Assay | model.MODO,
-        source_file: Optional[Path] = None,
-        part_of: Optional[str] = None,
+        source_file: Path | None = None,
+        part_of: str | None = None,
         allowed_elements: type = UserElementType,
     ):
         """Update element metadata in place by adding new values from model object.
@@ -394,7 +396,10 @@ class MODO:
         new
             Element containing the enriched metadata.
         """
-        group = self.zarr[element_id]
+        try:
+            group = self.zarr[element_id]
+        except KeyError:
+            group = self.zarr.create_group(element_id)
         attr_dict = group.attrs.asdict()
         element = dict_to_instance(attr_dict | {"id": element_id})
 
@@ -413,9 +418,8 @@ class MODO:
         element_path = f"{type_name}/{new.id}"
 
         if part_of is not None:
-            partof_group = self.zarr[part_of]
             set_haspart_relationship(
-                new.__class__.__name__, element_path, partof_group
+                new.__class__.__name__, element_path, self.zarr[part_of]
             )
 
         new = update_haspart_id(new)
@@ -455,9 +459,7 @@ class MODO:
 
             # Add arrays if the parent is not an array already.
             parent = self.zarr[id]
-            if extracted.arrays is None or not isinstance(
-                parent, zarr.hierarchy.Group
-            ):
+            if extracted.arrays is None or not isinstance(parent, zarr.Group):
                 continue
 
             # Nest arrays directly in parent group
@@ -469,11 +471,25 @@ class MODO:
     def stream_genomics(
         self,
         file_path: str,
-        region: Optional[str] = None,
-        reference_filename: Optional[str] = None,
+        region: str | None = None,
+        reference_filename: str | None = None,
     ) -> Iterator[AlignedSegment | VariantRecord]:
         """Slices both local and remote CRAM, VCF (.vcf.gz), and BCF
-        files returning an iterator over records."""
+        files returning an iterator over records.
+
+        Parameters
+        ----------
+        file_path
+            Path to the genomics file within the MODO.
+        region
+            Genomic region in UCSC format (e.g. chr1:1000-200
+        reference_filename
+            Path to the reference genome file.
+
+        Returns
+        -------
+        Iterator over pysam AlignedSegment or VariantRecord objects.
+        """
 
         _region = Region.from_ucsc(region) if region else None
         # check requested genomics file exists in MODO
@@ -483,13 +499,13 @@ class MODO:
         if self.endpoint.s3 and self.endpoint.htsget:
             con = HtsgetConnection(
                 self.endpoint.htsget,
-                Path(*Path(file_path).parts[1:]),
+                Path(*self.path.parts[1:]) / file_path,
                 region=_region,
             )
             stream = con.to_pysam(reference_filename=reference_filename)
         else:
             stream = read_pysam(
-                Path(file_path),
+                self.path / file_path,
                 reference_filename=reference_filename,
                 region=_region,
             )
@@ -501,9 +517,9 @@ class MODO:
         cls,
         config_path: Path,
         object_path: str,
-        endpoint: Optional[HttpUrl] = None,
-        s3_kwargs: Optional[dict] = None,
-        services: Optional[dict[str, HttpUrl]] = None,
+        endpoint: HttpUrl | None = None,
+        s3_kwargs: dict[str, Any] | None = None,
+        services: dict[str, HttpUrl] | None = None,
         no_remove: bool = False,
     ) -> MODO:
         """build a modo from a yaml or json file"""
@@ -541,7 +557,7 @@ class MODO:
             path=object_path,
             endpoint=endpoint,
             services=services,
-            s3_kwargs=s3_kwargs or {"anon": True},
+            s3_kwargs=s3_kwargs,
             **modo_dict.get("meta", {}),
             **modo_dict.get("args", {}),
         )
@@ -554,7 +570,7 @@ class MODO:
                 modo.add_element(inst, **args)
         if no_remove:
             return modo
-        modo_id = modo.zarr["/"].attrs["id"]
+        modo_id = modo.zarr.attrs["id"]
         old_ids = [
             id for id in modo_ids.keys() if id not in ids and id != modo_id
         ]
@@ -572,20 +588,20 @@ class MODO:
         self,
         target_path: Path,
         s3_endpoint: HttpUrl,
-        s3_kwargs: Optional[dict[str, Any]] = None,
+        s3_kwargs: dict[str, Any] | None = None,
     ):
         """Upload a local MODO to a target_path on a remote endpoint."""
         self.storage.transfer(S3Storage(target_path, s3_endpoint, s3_kwargs))
 
     def encrypt(
         self,
-        recipient_pubkeys: List[os.PathLike] | os.PathLike,
-        seckey_path: Optional[os.PathLike] = None,
-        passphrase: Optional[str] = None,
+        recipient_pubkeys: list[os.PathLike] | os.PathLike,
+        seckey_path: os.PathLike | None = None,
+        passphrase: str | None = None,
         delete: bool = True,
     ):
         """Encrypt genomic data files including index files in a modo using crypt4gh"""
-        for id, group in self.zarr.data.items():
+        for id, group in self.zarr["data"].members():
             meta = group.attrs.asdict()
             meta["id"] = id
             data = DataElement(dict_to_instance(meta), self.storage)
@@ -601,11 +617,11 @@ class MODO:
     def decrypt(
         self,
         seckey_path: os.PathLike,
-        sender_pubkey: Optional[os.PathLike] = None,
-        passphrase: Optional[str] = None,
+        sender_pubkey: os.PathLike | None = None,
+        passphrase: str | None = None,
     ):
         """Decrypt all c4gh encrypted data files in modo"""
-        for id, group in self.zarr.data.items():
+        for id, group in self.zarr["data"].members():
             meta = group.attrs.asdict()
             meta["id"] = id
             data = DataElement(dict_to_instance(meta), self.storage)

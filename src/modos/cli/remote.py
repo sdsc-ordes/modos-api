@@ -1,5 +1,4 @@
 import sys
-from typing import Optional
 from pathlib import Path
 from typing_extensions import Annotated
 from loguru import logger
@@ -110,15 +109,16 @@ def list(
 @remote.command()
 def stream(
     ctx: typer.Context,
+    object_path: OBJECT_PATH_ARG,
     file_path: Annotated[
         str,
         typer.Argument(
             ...,
-            help="The s3 path of the file to stream . Use modos show --files to check it.",
+            help="The path of the file to stream, within the modo. Use modos show --files to check it.",
         ),
     ],
     region: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "--region",
             "-r",
@@ -134,7 +134,9 @@ def stream(
     _region = Region.from_ucsc(region) if region else None
 
     # NOTE: bucket is not included in htsget paths
-    source = Path(*Path(file_path.removeprefix("s3://")).parts[1:])
+    source = Path(
+        *Path(object_path.removeprefix("s3://")).parts[1:], file_path
+    )
     endpoint = EndpointManager(ctx.obj["endpoint"])
 
     if not endpoint:
