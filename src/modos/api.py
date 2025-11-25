@@ -117,7 +117,12 @@ class MODO:
                 f"Using remote endpoint {endpoint} for {path}.",
                 file=sys.stderr,
             )
-            self.storage = S3Storage(str(path), self.endpoint.s3, s3_kwargs)
+            self.storage = S3Storage(
+                str(path),
+                self.endpoint.s3,
+                s3_kwargs,
+                jwt=self.endpoint.session.auth.jwt,
+            )
         else:
             # log to stderr
             logger.info(f"Using local storage for {path}")
