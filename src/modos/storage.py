@@ -200,7 +200,8 @@ class S3Storage(Storage):
         self,
         path: str,
         s3_endpoint: HttpUrl,
-        s3_kwargs: Optional[dict[str, Any]] = None,
+        s3_kwargs: dict[str, Any] | None = None,
+        jwt: str | None = None,
     ):
         """S3 storage based on obstore.
 
@@ -213,11 +214,18 @@ class S3Storage(Storage):
         s3_kwargs:
             Additional keyword arguments passed to obstore.S3Store.
             To use public access buckets without authentication, pass {"skip_signature": True}.
+        jwt: a jwt to inject into the S3 client for authentication (if needed).
         """
         self._path = S3Path(url=path)
         self.endpoint = s3_endpoint
         s3_opts = s3_kwargs or {}
         self.store = connect_s3(path, s3_endpoint, s3_opts)
+
+        if jwt is not None:
+            s3_opts["client_options"] = obs.store.ClientConfig(
+                default_headers={"Authorization": f"Bearer {jwt}"},
+            )
+
         self.zarr_store = ObjectStore(
             store=connect_s3(str(self._path / ZARR_ROOT), s3_endpoint, s3_opts)
         )
