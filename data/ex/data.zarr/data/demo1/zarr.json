@@ -1,13 +1,17 @@
 {
+  "attributes": {
     "@type": "DataEntity",
     "data_format": "CRAM",
     "data_path": "demo1.cram",
     "description": "Demo CRAM file for tests.",
     "has_sample": [
-        "sample/sample1"
+      "sample/sample1"
     ],
     "has_reference": [
-        "reference/reference1"
+      "reference/reference1"
     ],
     "name": "Demo 1"
+  },
+  "zarr_format": 3,
+  "node_type": "group"
 }

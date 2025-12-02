@@ -1,8 +1,12 @@
 {
+  "attributes": {
     "@type": "Assay",
     "description": "Example assay for tests",
     "name": "Assay 1",
     "omics_type": [
-        "GENOMICS"
+      "GENOMICS"
     ]
+  },
+  "zarr_format": 3,
+  "node_type": "group"
 }
