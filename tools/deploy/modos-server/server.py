@@ -55,7 +55,7 @@ def gather_metadata():
     meta = {}
 
     try:
-        for modo in minio.ls(BUCKET, refresh=True):
+        for modo in minio.list():
             meta[modo] = MODO(path=f"s3://{modo}", services=SERVICES).metadata  # type: ignore
     except PermissionError:
         raise HTTPException(
@@ -73,7 +73,7 @@ def str_similarity(s1: str, s2: str) -> float:
 @app.get("/get")
 def get_s3_path(query: str, exact_match: bool = False):
     """Receive the S3 path of all modos matching the query"""
-    modos = minio.ls(BUCKET, refresh=True)
+    modos = minio.list()
     paths = [modo.removeprefix(BUCKET) for modo in modos]
 
     if exact_match:
