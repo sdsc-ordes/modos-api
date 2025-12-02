@@ -28,11 +28,8 @@ SERVICES = {
 }
 
 app = FastAPI()
-AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
-AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
 
-s3_kwargs = {"access_key_id": AWS_ACCESS_KEY_ID, "secret_access_key": AWS_SECRET_KEY}
-minio = connect_s3(f"s3://{BUCKET}", S3_LOCAL_URL, s3_kwargs)  
+minio = connect_s3(f"s3://{BUCKET}", S3_LOCAL_URL)
 setup_logging(
     level="INFO",
     time=True,
@@ -43,7 +40,7 @@ setup_logging(
 def list_modos() -> dict[str, list[str]]:
     """List MODO entries in bucket."""
     try:
-        modos = minio.ls(BUCKET, refresh=True)
+        modos = minio.list()
     except PermissionError:
         raise HTTPException(
             status_code=500, detail=f"Cannot access S3 bucket: {BUCKET}"
