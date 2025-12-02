@@ -28,7 +28,11 @@ SERVICES = {
 }
 
 app = FastAPI()
-minio = connect_s3(S3_LOCAL_URL, {"skip_signature": True})  # type: ignore
+AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_KEY = os.environ["AWS_SECRET_KEY"]
+
+s3_kwargs = {"access_key_id": AWS_ACCESS_KEY_ID, "secret_access_key": AWS_SECRET_KEY}
+minio = connect_s3(f"s3://{BUCKET}", S3_LOCAL_URL, s3_kwargs)  
 setup_logging(
     level="INFO",
     time=True,
