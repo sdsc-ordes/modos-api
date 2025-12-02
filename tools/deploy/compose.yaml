@@ -112,6 +112,7 @@ services:
       - REFGET_PUBLIC_URL=${REFGET_PUBLIC_URL:-http://localhost/refget}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-garage}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-garage-secret}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
       - S3_ADDRESSING_STYLE=${S3_ADDRESSING_STYLE:-auto}
       - S3_BUCKET=${S3_BUCKET:-modos-demo}
       - S3_LOCAL_URL=${S3_LOCAL_URL:-http://garage:9000}
