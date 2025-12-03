@@ -73,7 +73,7 @@ services:
       - S3_ADDRESSING_STYLE=${S3_ADDRESSING_STYLE:-auto}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-garage}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-garage-secret}
-      - AWS_REGION=${GARAGE_S3_REGION:-us-east-1}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
       - RUST_LOG=debug
 
   fuzon:
