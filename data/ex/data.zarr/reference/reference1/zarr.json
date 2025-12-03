@@ -1,5 +1,9 @@
 {
+  "attributes": {
     "@type": "ReferenceGenome",
     "data_path": "reference.fa",
     "name": "Reference 1"
+  },
+  "zarr_format": 3,
+  "node_type": "group"
 }

@@ -9,7 +9,7 @@ from pytest_httpserver import HTTPServer
 runner = CliRunner()
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_create_modo_auth(setup, httpserver: HTTPServer):
     minio_endpoint = setup["minio"].get_config()["endpoint"]
     httpserver.expect_request("/").respond_with_json(
@@ -21,7 +21,7 @@ def test_create_modo_auth(setup, httpserver: HTTPServer):
             "create",
             "-m",
             '{"id":"test", "creation_date": "2024-05-14", "last_update_date": "2024-05-14"}',
-            "s3://test/ex",
+            "s3://test/ex_create",
         ],
         env={
             "AWS_ACCESS_KEY_ID": "minioadmin",
@@ -32,10 +32,10 @@ def test_create_modo_auth(setup, httpserver: HTTPServer):
     assert result.exit_code == 0
 
 
-@pytest.mark.slow
+@pytest.mark.remote
 def test_list_modo(httpserver: HTTPServer):
     httpserver.expect_request("/list").respond_with_json(
-        {"modos": ["s3://test/ex"]}
+        {"data": ["s3://test/ex"]}
     )
     result = runner.invoke(
         cli,

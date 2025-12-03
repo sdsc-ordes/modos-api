@@ -8,27 +8,32 @@ import re
 import shutil
 from typing import Any, ClassVar, Generator, Optional
 
+import obstore as obs
+from obstore.store import S3Store
 from pydantic import Field, HttpUrl
 from pydantic.dataclasses import dataclass
-import s3fs
 import zarr
-import zarr.hierarchy as zh
+import zarr.storage
+from zarr.storage import ObjectStore
 
 
 from modos.helpers.schema import ElementType
 
 ZARR_ROOT = Path("data.zarr")
-S3_ADDRESSING_STYLE = os.getenv("S3_ADDRESSING_STYLE", "auto")
 
 
 class Storage(ABC):
+    """Abstract base class for modos storage backends.
+    Paths in a Storage are always interpreted relative to self.path.
+    """
+
     @property
     @abstractmethod
     def path(self) -> Path: ...
 
     @property
     @abstractmethod
-    def zarr(self) -> zh.Group: ...
+    def zarr(self) -> zarr.Group: ...
 
     @abstractmethod
     def exists(self, target: Path) -> bool: ...
@@ -72,10 +77,9 @@ class Storage(ABC):
 
     def transfer(self, other: Storage):
         """Transfer all contents of one storage to another one."""
-        for path in self.list():
-            item = path.relative_to(self.path)
-            with self.open(item) as src:
-                other.put(src, item)
+        for item in self.list():
+            src = self.open(item)
+            other.put(src, item)
 
     def empty(self) -> bool:
         return len(self.zarr.attrs.keys()) == 0
@@ -85,16 +89,14 @@ class LocalStorage(Storage):
     def __init__(self, path: Path):
         self._path = Path(path)
         if (self.path / ZARR_ROOT).exists():
-            self._zarr = zarr.convenience.open(str(self.path / ZARR_ROOT))
+            self._zarr = zarr.open(str(self.path / ZARR_ROOT))
         else:
             self.path.mkdir(exist_ok=True)
-            zarr_store = zarr.storage.DirectoryStore(
-                str(self.path / ZARR_ROOT)
-            )
+            zarr_store = zarr.storage.LocalStore(str(self.path / ZARR_ROOT))
             self._zarr = init_zarr(zarr_store)
 
     @property
-    def zarr(self) -> zh.Group:
+    def zarr(self) -> zarr.Group:
         return self._zarr
 
     @property
@@ -108,12 +110,9 @@ class LocalStorage(Storage):
         self, target: Optional[Path] = None
     ) -> Generator[Path, None, None]:
         path = self.path / (target or "")
-        for path in path.glob("*"):
+        for path in path.rglob("*"):
             if path.is_file():
-                yield path
-            for file in path.rglob("*"):
-                if file.is_file():
-                    yield file
+                yield path.relative_to(self.path)
 
     def move(self, rel_source: Path, target: Path):
         shutil.move(self.path / rel_source, self.path / target)
@@ -125,13 +124,17 @@ class LocalStorage(Storage):
         os.makedirs(self.path / target.parent, exist_ok=True)
 
         with open(self.path / target, "wb") as f:
-            while chunk := source.read(8192):
-                f.write(chunk)
+            try:
+                while chunk := source.read(8192):
+                    _ = f.write(chunk)
+            except OSError:
+                _ = f.write(source.read())
 
     def remove(self, target: Path):
-        if target.exists():
-            target.unlink()
-            logger.info(f"Permanently deleted {target} from filesystem.")
+        target_full = self.path / target
+        if target_full.exists():
+            target_full.unlink()
+            logger.info(f"Permanently deleted {target_full} from filesystem.")
 
 
 @dataclass
@@ -171,6 +174,12 @@ class S3Path:
         max_length=1023,
     )
 
+    def __truediv__(self, other):
+        return S3Path(f"{self.url}/{other}")
+
+    def __str__(self):
+        return str(self.url)
+
     def s3_url_parts(self):
         path_parts = self.url[5:].split("/")
         bucket = path_parts.pop(0)
@@ -193,7 +202,7 @@ class S3Storage(Storage):
         s3_endpoint: HttpUrl,
         s3_kwargs: Optional[dict[str, Any]] = None,
     ):
-        """S3 storage based on s3fs.
+        """S3 storage based on obstore.
 
         Parameters
         ----------
@@ -202,78 +211,72 @@ class S3Storage(Storage):
         s3_endpoint:
             URL to the S3 endpoint.
         s3_kwargs:
-            Additional keyword arguments passed to s3fs.S3FileSystem.
-            To use public access buckets without authentification, pass {"anon": True}.
+            Additional keyword arguments passed to obstore.S3Store.
+            To use public access buckets without authentication, pass {"skip_signature": True}.
         """
         self._path = S3Path(url=path)
         self.endpoint = s3_endpoint
         s3_opts = s3_kwargs or {}
-        fs = connect_s3(s3_endpoint, s3_opts)
-        if fs.exists(str(self.path / ZARR_ROOT)):
-            zarr_s3_opts = s3_opts | {"endpoint_url": str(s3_endpoint)}
-
-            self._zarr = zarr.convenience.open(
-                f"{self._path.url}/{ZARR_ROOT}",
-                storage_options=zarr_s3_opts,
-            )
+        self.store = connect_s3(path, s3_endpoint, s3_opts)
+        self.zarr_store = ObjectStore(
+            store=connect_s3(str(self._path / ZARR_ROOT), s3_endpoint, s3_opts)
+        )
+        if self.exists(ZARR_ROOT):
+            self._zarr = zarr.open(store=self.zarr_store)
         else:
-            fs.mkdirs(self.path, exist_ok=True)
-            zarr_store = zarr.storage.FSStore(
-                str(self.path / ZARR_ROOT), fs=fs
-            )
-            self._zarr = init_zarr(zarr_store)
+            self._zarr = init_zarr(self.zarr_store)
 
     @property
     def path(self) -> Path:
         return Path(f"{self._path.bucket}/{self._path.key}")
 
     @property
-    def zarr(self) -> zh.Group:
+    def zarr(self) -> zarr.Group:
         return self._zarr
 
-    def exists(self, target: Path = ZARR_ROOT) -> bool:
-        fs = self.zarr.store.fs
-        return fs.exists(str(self.path / target))
+    def exists(self, target: Path) -> bool:
+        """Checks whether target, or objects in target directory exist in the store.
+        The target should be relative to self.path."""
 
-    def list(
-        self, target: Optional[Path] = None
-    ) -> Generator[Path, None, None]:
-        fs = self.zarr.store.fs
-        path = self.path / (target or "")
-        for node in fs.glob(f"{path}/*"):
-            if fs.isdir(node):
-                for file in fs.find(node):
-                    yield Path(file)
-            else:
-                yield Path(node)
+        # Objects exist with input prefix
+        if len(list(self.store.list(str(target)))) > 0:
+            return True
+
+        try:
+            _ = self.store.get(str(target))
+            return True
+        except FileNotFoundError:
+            return False
+
+    def list(self, target: Path | None = None) -> Generator[Path, None, None]:
+        """Lists objects in target directory.
+        The target should be relative to self.path."""
+
+        for batch in self.store.list(f"{target or ''}"):
+            for key in batch:
+                yield Path(key["path"])
 
     def open(self, target: Path) -> io.BufferedReader:
-        return self.zarr.store.fs.open(str(self.path / target))
+        return obs.open_reader(self.store, path=str(target))
 
     def remove(self, target: Path):
-        if self.zarr.store.fs.exists(target):
-            self.zarr.store.fs.rm(str(target))
+        if self.exists(target):
+            self.store.delete(str(target))
             logger.info(
                 f"Permanently deleted {target} from remote filesystem."
             )
 
     def put(self, source: io.BufferedReader, target: Path):
-        out_file = f"{self.path}/{target.as_posix()}"
-        with self.zarr.store.fs.open(out_file, "wb") as f:
-            while chunk := source.read(8192):
-                f.write(chunk)
-                f.flush()
+        self.store.put(str(target), source)
 
     def move(self, rel_source: Path, target: Path):
-        self.zarr.store.fs.mv(
-            str(self.path / rel_source), str(self.path / target)
-        )
+        self.store.rename(str(rel_source), str(target))
 
 
 # Initialize object's directory given the metadata graph
-def init_zarr(zarr_store: zarr.storage.Store) -> zh.Group:
+def init_zarr(zarr_store: zarr.storage.StoreLike) -> zarr.Group:
     """Initialize object's directory and metadata structure."""
-    data = zh.group(store=zarr_store)
+    data = zarr.group(store=zarr_store)
     elem_types = [t.value for t in ElementType]
     for elem_type in elem_types:
         data.create_group(elem_type)
@@ -282,40 +285,43 @@ def init_zarr(zarr_store: zarr.storage.Store) -> zh.Group:
 
 
 def connect_s3(
-    endpoint: HttpUrl, s3_kwargs: dict[str, Any]
-) -> s3fs.S3FileSystem:
-    return s3fs.S3FileSystem(
-        endpoint_url=str(endpoint),
-        config_kwargs={"s3": {"addressing_style": S3_ADDRESSING_STYLE}},
+    path: str,
+    endpoint: HttpUrl,
+    s3_kwargs: dict[str, Any] | None = None,
+) -> S3Store:
+    if s3_kwargs is None:
+        s3_kwargs = {}
+
+    return S3Store.from_url(
+        path,
+        endpoint=str(endpoint),
+        client_options={"allow_http": True},
         **s3_kwargs,
     )
 
 
-def add_metadata_group(parent_group: zh.Group, metadata: dict) -> None:
+def add_metadata_group(parent_group: zarr.Group, metadata: dict) -> None:
     """Add input metadata dictionary to an existing zarr group."""
     # zarr groups cannot have slashes in their names
     group_name = metadata["id"].replace("/", "_")
     parent_group.create_group(group_name)
+    # NOTE: hack to force reloading the store; sometimes the new group is not picked up
+    tmp = zarr.open(parent_group.store_path)
     # Fill attrs in the subject group for each predicate
     for key, value in metadata.items():
         if key == "id":
             continue
-        parent_group[group_name].attrs[key] = value
+        tmp[group_name].attrs[key] = value
 
 
-def add_data(group: zh.Group, data) -> None:
+def add_data(group: zarr.Group, data) -> None:
     """Add a numpy array to an existing zarr group."""
     group.create_dataset("data", data=data)
 
 
 def list_zarr_items(
-    group: zh.Group,
-) -> list[zh.Group | zarr.core.Array]:
+    group: zarr.Group,
+) -> tuple[tuple[str, zarr.Group | zarr.Array], ...]:
     """Recursively list all zarr groups and arrays"""
-    found = []
 
-    def list_all(path: str, elem):
-        found.append((path, elem))
-
-    group.visititems(list_all)
-    return found
+    return group.members()

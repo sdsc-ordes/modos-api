@@ -1,4 +1,4 @@
-FROM ghcr.io/sdsc-ordes/modos-api:0.3.2
+FROM ghcr.io/sdsc-ordes/modos-api:0.3.5
 
 USER modos_user
 WORKDIR /app

@@ -1,0 +1,153 @@
+{
+  "attributes": {
+    "@type": "MODO",
+    "creation_date": "2024-01-17T00:00:00",
+    "description": "Example modo for tests",
+    "has_assay": "assay1",
+    "id": "ex",
+    "last_update_date": "2024-10-15"
+  },
+  "zarr_format": 3,
+  "consolidated_metadata": {
+    "kind": "inline",
+    "must_understand": false,
+    "metadata": {
+      "assay": {
+        "attributes": {},
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      },
+      "data": {
+        "attributes": {},
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      },
+      "reference": {
+        "attributes": {},
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      },
+      "sample": {
+        "attributes": {},
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      },
+      "sequence": {
+        "attributes": {},
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      },
+      "assay/assay1": {
+        "attributes": {
+          "@type": "Assay",
+          "description": "Example assay for tests",
+          "name": "Assay 1",
+          "omics_type": [
+            "GENOMICS"
+          ]
+        },
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      },
+      "data/demo1": {
+        "attributes": {
+          "@type": "DataEntity",
+          "data_format": "CRAM",
+          "data_path": "demo1.cram",
+          "description": "Demo CRAM file for tests.",
+          "has_sample": [
+            "sample/sample1"
+          ],
+          "has_reference": [
+            "reference/reference1"
+          ],
+          "name": "Demo 1"
+        },
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      },
+      "reference/reference1": {
+        "attributes": {
+          "@type": "ReferenceGenome",
+          "data_path": "reference.fa",
+          "name": "Reference 1"
+        },
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      },
+      "sample/sample1": {
+        "attributes": {
+          "@type": "Sample",
+          "cell_type": "http://purl.obolibrary.org/obo/CL_0002627",
+          "description": "Dummy sample for tests",
+          "name": "Sample 1",
+          "sex": "Male",
+          "source_material": "http://purl.obolibrary.org/obo/UBERON_0002316"
+        },
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      },
+      "sequence/BA000007.3_bd7522": {
+        "attributes": {
+          "@type": "ReferenceSequence",
+          "name": "BA000007.3",
+          "sequence_md5": "bd75228f94e634734bc6038e15bac220",
+          "source_uri": "/data/genomic/ecoli/ecoli_subset.fa"
+        },
+        "zarr_format": 3,
+        "consolidated_metadata": {
+          "kind": "inline",
+          "must_understand": false,
+          "metadata": {}
+        },
+        "node_type": "group"
+      }
+    }
+  },
+  "node_type": "group"
+}

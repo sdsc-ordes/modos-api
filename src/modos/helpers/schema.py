@@ -14,7 +14,6 @@ from pathlib import Path
 from typing import Any, Mapping, Optional, Union
 from urllib.parse import urlparse
 
-import zarr
 from linkml_runtime.dumpers import rdflib_dumper, json_dumper
 from linkml_runtime.utils.schemaview import SchemaView
 from rdflib import Graph
@@ -22,7 +21,7 @@ from rdflib.term import URIRef
 
 import modos_schema.datamodel as model
 import modos_schema.schema as schema
-import zarr.hierarchy
+import zarr
 
 from modos.genomics.formats import (
     GenomicFileSuffix,
@@ -52,7 +51,7 @@ def dict_to_instance(element: Mapping[str, Any]) -> Any:
 
 
 def update_metadata_from_model(
-    group: zarr.hierarchy.group,
+    group: zarr.Group,
     element: model.DataEntity
     | model.Sample
     | model.Assay
@@ -96,7 +95,7 @@ def is_full_id(element_id: str) -> bool:
 def set_haspart_relationship(
     child_class: str,
     child_path: str,
-    parent_group: zarr.hierarchy.Group,
+    parent_group: zarr.Group,
 ):
     """Add element to the hasPart attribute of a parent zarr group"""
     parent_type = getattr(

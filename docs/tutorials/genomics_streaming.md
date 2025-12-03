@@ -26,7 +26,7 @@ modo.stream_genomics(file_path = "demo1.cram", region = "BA000007.3")
 :sync: cli
 ```{code-block} console
 # Stream chromosome BA000007.3 from modos-demo/ex/demo1.cram
-modos --endpoint http://localhost stream --region BA000007.3 s3://modos-demo/ex/demo1.cram
+modos --endpoint http://localhost stream --region BA000007.3 s3://modos-demo/ex demo1.cram
 ```
 :::
 

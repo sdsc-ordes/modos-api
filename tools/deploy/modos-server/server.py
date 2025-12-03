@@ -28,7 +28,8 @@ SERVICES = {
 }
 
 app = FastAPI()
-minio = connect_s3(S3_LOCAL_URL, {"anon": False})  # type: ignore
+
+storage = connect_s3(f"s3://{BUCKET}", S3_LOCAL_URL)
 setup_logging(
     level="INFO",
     time=True,
@@ -39,29 +40,35 @@ setup_logging(
 def list_modos() -> dict[str, list[str]]:
     """List MODO entries in bucket."""
     try:
-        modos = minio.ls(BUCKET, refresh=True)
+        modos = storage.list_with_delimiter()["common_prefixes"]
     except PermissionError:
         raise HTTPException(
             status_code=500, detail=f"Cannot access S3 bucket: {BUCKET}"
         )
     # NOTE: modo contains bucket name
-    return {"modos": [f"s3://{modo}" for modo in modos]}
+    return {"data": [f"s3://{BUCKET}/{modo}" for modo in modos]}
 
 
 @app.get("/meta")
 def gather_metadata():
     """gather metadata from all MODOs."""
-    meta = {}
+    resp = {"data": []}
 
     try:
-        for modo in minio.ls(BUCKET, refresh=True):
-            meta[modo] = MODO(path=f"s3://{modo}", services=SERVICES).metadata  # type: ignore
+        for modo in storage.list_with_delimiter()["common_prefixes"]:
+            path = f"s3://{BUCKET}/{modo}"
+            resp["data"].append(
+                {
+                    "meta": MODO(path=path, services=SERVICES).metadata,  # type: ignore
+                    "path": path,
+                }
+            )
     except PermissionError:
         raise HTTPException(
             status_code=500, detail=f"Cannot access S3 bucket: {BUCKET}"
         )
 
-    return meta
+    return resp
 
 
 def str_similarity(s1: str, s2: str) -> float:
@@ -70,28 +77,32 @@ def str_similarity(s1: str, s2: str) -> float:
 
 
 @app.get("/get")
-def get_s3_path(query: str, exact_match: bool = False):
-    """Receive the S3 path of all modos matching the query"""
-    modos = minio.ls(BUCKET, refresh=True)
-    paths = [modo.removeprefix(BUCKET) for modo in modos]
+def get_s3_path(query: str, fuzzy: bool = False):
+    """Receive the S3 path of all modos matching the query.
+    Can optionally use fuzzy matching to find similar names."""
+    paths = storage.list_with_delimiter()["common_prefixes"]
 
-    if exact_match:
-        res = [modo for (modo, path) in zip(modos, paths) if query == path]
+    if not fuzzy:
+        results = [path for path in paths if query == path]
 
     else:
         sims = [str_similarity(query, path) for path in paths]
-        pairs = filter(lambda p: p[1] > 0.7, zip(modos, sims))
+        pairs = filter(lambda p: p[1] > 0.7, zip(paths, sims))
         pairs = sorted(pairs, key=lambda p: p[1], reverse=True)
-        res = [p[0] for p in pairs]
-    return [
+        results = [p[0] for p in pairs]
+
+    resp = {"data": []}
+    resp["data"] = [
         {
             f"{modo}": {
                 "s3_endpoint": S3_PUBLIC_URL,
-                "modo_path": f"s3://{modo}",
+                "modo_path": f"s3://{BUCKET}/{modo}",
             }
         }
-        for modo in res
+        for modo in results
     ]
+
+    return resp
 
 
 @app.get("/")

@@ -35,13 +35,14 @@ References
 """
 
 import base64
+from collections.abc import Buffer, Iterator
 from collections import deque
 from functools import cached_property
 import io
 from pathlib import Path
 import re
 import tempfile
-from typing import Optional, Iterator
+from typing import Any
 from urllib.parse import urlparse, parse_qs
 
 from pydantic import HttpUrl, validate_call
@@ -54,9 +55,7 @@ from modos.genomics.formats import GenomicFileSuffix, read_pysam
 
 
 @validate_call
-def build_htsget_url(
-    host: HttpUrl, path: Path, region: Optional[Region]
-) -> str:
+def build_htsget_url(host: HttpUrl, path: Path, region: Region | None) -> str:
     """Build an htsget URL from a host, path, and region.
 
     Examples
@@ -83,7 +82,7 @@ def build_htsget_url(
 
 
 @validate_call
-def parse_htsget_url(url: HttpUrl) -> tuple[str, Path, Optional[Region]]:
+def parse_htsget_url(url: HttpUrl) -> tuple[str, Path, Region | None]:
     """Given a URL to an htsget resource, extract the host, path, and region."""
     parsed = urlparse(str(url))
     query = parse_qs(parsed.query)
@@ -119,7 +118,12 @@ class _HtsgetBlockIter:
     b'123456789'
     """
 
-    def __init__(self, blocks: list[dict], chunk_size=65536, timeout=60):
+    def __init__(
+        self,
+        blocks: list[dict[str, str]],
+        chunk_size: int = 65536,
+        timeout: int = 60,
+    ):
         # the queue of block is consumed in order of appearance
         self._blocks = deque(blocks)
         self._source = self._consume_block()
@@ -185,14 +189,14 @@ class HtsgetStream(io.RawIOBase):
     b'1234'
     """
 
-    def __init__(self, blocks: list[dict]):
+    def __init__(self, blocks: list[dict[str, str]]):
         self._iterator = _HtsgetBlockIter(blocks)
         self._leftover = b""
 
     def readable(self) -> bool:
         return True
 
-    def readinto(self, b) -> int:
+    def readinto(self, b: Buffer) -> int:
         """
         Read up to len(b) bytes into a writable buffer bytes
         and return the number of bytes read.
@@ -225,7 +229,7 @@ class HtsgetConnection:
 
     host: HttpUrl
     path: Path
-    region: Optional[Region]
+    region: Region | None
 
     @property
     def url(self) -> str:
@@ -233,7 +237,7 @@ class HtsgetConnection:
         return build_htsget_url(self.host, Path(self.path), self.region)
 
     @cached_property
-    def ticket(self) -> dict:
+    def ticket(self) -> dict[str, Any]:
         """Ticket containing the URLs to fetch the data."""
         return requests.get(self.url).json()
 
@@ -257,7 +261,7 @@ class HtsgetConnection:
         return cls(host, path, region=region)
 
     def to_pysam(
-        self, reference_filename: Optional[str] = None
+        self, reference_filename: str | None = None
     ) -> Iterator[pysam.AlignedSegment | pysam.VariantRecord]:
         """Convert the stream to a pysam object."""
 
