@@ -35,7 +35,7 @@ def test_create_modo_auth(setup, httpserver: HTTPServer):
 @pytest.mark.remote
 def test_list_modo(httpserver: HTTPServer):
     httpserver.expect_request("/list").respond_with_json(
-        {"modos": ["s3://test/ex"]}
+        {"data": ["s3://test/ex"]}
     )
     result = runner.invoke(
         cli,
