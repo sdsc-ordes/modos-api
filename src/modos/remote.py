@@ -105,7 +105,7 @@ class EndpointManager:
 @validate_call
 def list_remote_items(url: HttpUrl) -> list[HttpUrl]:
     session = get_session()
-    return session.get(url=f"{url}/list").json()["modos"]
+    return session.get(url=f"{url}/list").json()["data"]
 
 
 @validate_call
