@@ -66,6 +66,7 @@ line-length = 79
 [tool.pytest.ini_options]
 addopts = ["--doctest-modules"]
 testpaths = ["modos", "tests"]
+markers = ["remote: marks remote tests (select with '-m \"remote\"')",]
 
 [build-system]
 requires = ["hatchling"]
