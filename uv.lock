@@ -1101,6 +1101,7 @@ dependencies = [
     { name = "prompt-toolkit" },
     { name = "pydantic" },
     { name = "pyfuzon", marker = "sys_platform != 'win32'" },
+    { name = "pyjwt" },
     { name = "pyocli" },
     { name = "pysam" },
     { name = "pyteomics" },
@@ -1143,6 +1144,7 @@ requires-dist = [
     { name = "prompt-toolkit", specifier = ">=3.0.48,<4.0.0" },
     { name = "pydantic", specifier = ">=2.8.2,<3.0.0" },
     { name = "pyfuzon", marker = "sys_platform != 'win32'", specifier = ">=0.4,<0.5" },
+    { name = "pyjwt", specifier = ">=2.10.1" },
     { name = "pyocli", specifier = ">=0.1.0,<1.0.0" },
     { name = "pysam", specifier = ">=0.22.0,<0.24.0" },
     { name = "pyteomics", specifier = ">=4.7.4,<5.0.0" },
@@ -1708,6 +1710,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/8a/4d/1e43cecf2bcf4a3dd1100f4fc7a3da6438a65d0b95ca7b8ab5d094ea7c0b/pyinstrument-5.1.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:4d9bbc00d2e258edbefeb39b61ad4636099b08acd1effdd40d76883a13e7bf5a", size = 146668, upload-time = "2025-08-12T11:34:59.401Z" },
     { url = "https://files.pythonhosted.org/packages/34/48/00322b48e7adb665d04303b487454eb0c13a76ec0af8da20f452098fcc12/pyinstrument-5.1.1-cp313-cp313-win32.whl", hash = "sha256:cf2d8933e2aeaa02d4cb6279d83ef11ee882fb243fff96e3378153a730aadd6e", size = 124288, upload-time = "2025-08-12T11:35:00.514Z" },
     { url = "https://files.pythonhosted.org/packages/f5/14/d56515a110f74799aefc7489c1578ce4d99a4d731309559a427f954e7abc/pyinstrument-5.1.1-cp313-cp313-win_amd64.whl", hash = "sha256:2402683a92617066b13a6d48f904396dcd15938016875b392534df027660eed4", size = 125041, upload-time = "2025-08-12T11:35:01.913Z" },
+]
+
+[[package]]
+name = "pyjwt"
+version = "2.10.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/46/bd74733ff231675599650d3e47f361794b22ef3e3770998dda30d3b63726/pyjwt-2.10.1.tar.gz", hash = "sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953", size = 87785, upload-time = "2024-11-28T03:43:29.933Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/ad/689f02752eeec26aed679477e80e632ef1b682313be70793d798c1d5fc8f/PyJWT-2.10.1-py3-none-any.whl", hash = "sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb", size = 22997, upload-time = "2024-11-28T03:43:27.893Z" },
 ]
 
 [[package]]

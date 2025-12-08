@@ -1,16 +1,15 @@
 """Functions related to server storage handling"""
 
 from __future__ import annotations
-import base64
 from dataclasses import field
 from datetime import datetime, timedelta, timezone
 from functools import lru_cache
-import json
 import os
 from pathlib import Path
 from typing import Mapping, Optional
 import warnings
 
+import jwt
 from pydantic import HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
 import requests
@@ -168,7 +167,7 @@ class JWT:
     @property
     def expires_at(self):
         if not self._expires_at:
-            payload = self.decode()
+            payload = jwt.decode(self, options={"verify_signature": False})
             self._expires_at = datetime.fromtimestamp(
                 float(payload["exp"]), tz=timezone.utc
             )
@@ -196,13 +195,6 @@ class JWT:
 
         with open(JWT.path(), "r") as f:
             return cls(f.read().strip())
-
-    def decode(self) -> dict[str, str]:
-        # Question: Do we also need header and signature?
-        header, payload, signature = self.access_token.split(".")
-        padded_payload = payload + "=" * (-len(payload) % 4)
-        decoded_bytes = base64.urlsafe_b64decode(padded_payload)
-        return json.loads(decoded_bytes)
 
     def is_expired(self, skew: int = 30) -> bool:
         return datetime.now(timezone.utc) >= (
