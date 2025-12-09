@@ -20,6 +20,7 @@ dependencies = [
     "pydantic>=2.8.2,<3.0.0",
     "pyocli>=0.1.0,<1.0.0",
     "pyfuzon>=0.4,<0.5; sys_platform != 'win32'",
+    "pyjwt>=2.10.1",
     "pysam>=0.22.0,<0.24.0",
     "pyteomics>=4.7.4,<5.0.0",
     "pyyaml>=6.0.1,<7.0.0",
