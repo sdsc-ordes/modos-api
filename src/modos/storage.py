@@ -222,9 +222,9 @@ class S3Storage(Storage):
         self.store = connect_s3(path, s3_endpoint, s3_opts)
 
         if jwt is not None:
-            s3_opts["client_options"] = obs.store.ClientConfig(
-                default_headers={"Authorization": f"Bearer {jwt}"},
-            )
+            s3_opts["client_options"] = {
+                "default_headers": {"Authorization": f"Bearer {jwt}"},
+            }
 
         self.zarr_store = ObjectStore(
             store=connect_s3(str(self._path / ZARR_ROOT), s3_endpoint, s3_opts)
@@ -300,10 +300,13 @@ def connect_s3(
     if s3_kwargs is None:
         s3_kwargs = {}
 
+    if "client_options" in s3_kwargs:
+        s3_kwargs["client_options"]["allow_http"] = True
+    else:
+        s3_kwargs["client_options"] = {"allow_http": True}
     return S3Store.from_url(
         path,
         endpoint=str(endpoint),
-        client_options={"allow_http": True},
         **s3_kwargs,
     )
 
