@@ -1,0 +1,15 @@
+modos.metabolomics
+==================
+
+.. py:module:: modos.metabolomics
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/modos/metabolomics/mztab/index
+
+
