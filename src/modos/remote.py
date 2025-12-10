@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 import os
 from pathlib import Path
-from typing import Mapping, Optional
+from typing import Any
 import warnings
 
 import jwt
@@ -24,7 +24,7 @@ class BearerAuth(AuthBase):
         self, r: requests.PreparedRequest
     ) -> requests.PreparedRequest:
         if self.jwt:
-            if self.jwt.is_expired():
+            if self.jwt.is_expired:
                 self.jwt = self.jwt.refresh()
             if self.jwt:
                 r.headers["Authorization"] = f"Bearer {self.jwt.access_token}"
@@ -68,7 +68,7 @@ class EndpointManager:
 
     """
 
-    modos: Optional[HttpUrl] = None
+    modos: HttpUrl | None = None
     services: dict[str, HttpUrl] = field(default_factory=dict)
 
     @property
@@ -85,19 +85,19 @@ class EndpointManager:
             return {}
 
     @property
-    def s3(self) -> Optional[HttpUrl]:
+    def s3(self) -> HttpUrl | None:
         return self.list().get("s3")
 
     @property
-    def fuzon(self) -> Optional[HttpUrl]:
+    def fuzon(self) -> HttpUrl | None:
         return self.list().get("fuzon")
 
     @property
-    def htsget(self) -> Optional[HttpUrl]:
+    def htsget(self) -> HttpUrl | None:
         return self.list().get("htsget")
 
     @property
-    def refget(self) -> Optional[HttpUrl]:
+    def refget(self) -> HttpUrl | None:
         return self.list().get("refget")
 
 
@@ -109,8 +109,8 @@ def list_remote_items(url: HttpUrl) -> list[HttpUrl]:
 
 @validate_call
 def get_metadata_from_remote(
-    url: HttpUrl, modo_id: Optional[str] = None
-) -> Mapping:
+    url: HttpUrl, modo_id: str | None = None
+) -> dict[str, Any]:
     """Function to access metadata from one specific or all modos on a remote server
 
     Parameters
@@ -139,7 +139,9 @@ def is_s3_path(path: str):
 
 
 @validate_call
-def get_s3_path(url: HttpUrl, query: str, exact_match: bool = False) -> list:
+def get_s3_path(
+    url: HttpUrl, query: str, exact_match: bool = False
+) -> dict[str, Any]:
     """Request public S3 path of a specific modo or all modos matching the query string
     Parameters
     ----------
@@ -159,22 +161,35 @@ def get_s3_path(url: HttpUrl, query: str, exact_match: bool = False) -> list:
 
 @dataclass
 class JWT:
-    """Handles storage of JWT tokens for authentication."""
+    """Handles storage of JWT tokens for authentication.
+
+    Examples
+    --------
+    >>> token = JWT(access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzI5MjU2MDB9.DummySignature")
+    >>> token.is_expired
+    True
+    >>> token.to_cache()
+    >>> loaded_jwt = JWT.from_cache()
+    >>> loaded_jwt.access_token == token.access_token
+    True
+    """
 
     access_token: str
-    _expires_at: Optional[datetime] = None
+    _expires_at: datetime | None = None
 
     @property
     def expires_at(self):
         if not self._expires_at:
-            payload = jwt.decode(self, options={"verify_signature": False})
+            payload = jwt.decode(
+                self.access_token, options={"verify_signature": False}
+            )
             self._expires_at = datetime.fromtimestamp(
                 float(payload["exp"]), tz=timezone.utc
             )
         return self._expires_at
 
     @staticmethod
-    def path() -> Path:
+    def get_cache_path() -> Path:
         from platformdirs import user_cache_dir
 
         cache = user_cache_dir("modos", "sdsc", ensure_exists=True)
@@ -182,20 +197,21 @@ class JWT:
 
     def to_cache(self):
         """Store JWT in cache directory."""
-        with open(JWT.path(), "w") as f:
+        with open(JWT.get_cache_path(), "w") as f:
             _ = f.write(self.access_token)
-        os.chmod(JWT.path(), 0o600)
+        os.chmod(JWT.get_cache_path(), 0o600)
 
     @classmethod
     def from_cache(cls) -> JWT | None:
         """Load JWT from cache directory if it exists."""
 
-        if not JWT.path().exists():
+        if not JWT.get_cache_path().exists():
             return None
 
-        with open(JWT.path(), "r") as f:
+        with open(JWT.get_cache_path(), "r") as f:
             return cls(f.read().strip())
 
+    @property
     def is_expired(self, skew: int = 30) -> bool:
         return datetime.now(timezone.utc) >= (
             self.expires_at - timedelta(seconds=skew)

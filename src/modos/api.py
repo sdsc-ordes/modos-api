@@ -91,8 +91,8 @@ class MODO:
 
     # List files in the archive
     >>> files = [str(x) for x in demo.list_files()]
-    >>> assert 'data/ex/demo1.cram' in files
-    >>> assert 'data/ex/reference.fa' in files
+    >>> assert 'demo1.cram' in files
+    >>> assert 'reference.fa' in files
     """
 
     def __init__(
