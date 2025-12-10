@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 import os
 from pathlib import Path
-from typing import Mapping, Optional
+from typing import Any
 import warnings
 
 import jwt
@@ -68,7 +68,7 @@ class EndpointManager:
 
     """
 
-    modos: Optional[HttpUrl] = None
+    modos: HttpUrl | None = None
     services: dict[str, HttpUrl] = field(default_factory=dict)
 
     @property
@@ -85,19 +85,19 @@ class EndpointManager:
             return {}
 
     @property
-    def s3(self) -> Optional[HttpUrl]:
+    def s3(self) -> HttpUrl | None:
         return self.list().get("s3")
 
     @property
-    def fuzon(self) -> Optional[HttpUrl]:
+    def fuzon(self) -> HttpUrl | None:
         return self.list().get("fuzon")
 
     @property
-    def htsget(self) -> Optional[HttpUrl]:
+    def htsget(self) -> HttpUrl | None:
         return self.list().get("htsget")
 
     @property
-    def refget(self) -> Optional[HttpUrl]:
+    def refget(self) -> HttpUrl | None:
         return self.list().get("refget")
 
 
@@ -109,8 +109,8 @@ def list_remote_items(url: HttpUrl) -> list[HttpUrl]:
 
 @validate_call
 def get_metadata_from_remote(
-    url: HttpUrl, modo_id: Optional[str] = None
-) -> Mapping:
+    url: HttpUrl, modo_id: str | None = None
+) -> dict[str, Any]:
     """Function to access metadata from one specific or all modos on a remote server
 
     Parameters
@@ -139,7 +139,9 @@ def is_s3_path(path: str):
 
 
 @validate_call
-def get_s3_path(url: HttpUrl, query: str, exact_match: bool = False) -> list:
+def get_s3_path(
+    url: HttpUrl, query: str, exact_match: bool = False
+) -> dict[str, Any]:
     """Request public S3 path of a specific modo or all modos matching the query string
     Parameters
     ----------
@@ -162,7 +164,7 @@ class JWT:
     """Handles storage of JWT tokens for authentication."""
 
     access_token: str
-    _expires_at: Optional[datetime] = None
+    _expires_at: datetime | None = None
 
     @property
     def expires_at(self):
