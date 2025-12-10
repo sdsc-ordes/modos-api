@@ -161,7 +161,18 @@ def get_s3_path(
 
 @dataclass
 class JWT:
-    """Handles storage of JWT tokens for authentication."""
+    """Handles storage of JWT tokens for authentication.
+
+    Examples
+    --------
+    >>> token = JWT(access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzI5MjU2MDB9.DummySignature")
+    >>> token.is_expired
+    True
+    >>> token.to_cache()
+    >>> loaded_jwt = JWT.from_cache()
+    >>> loaded_jwt.access_token == token.access_token
+    True
+    """
 
     access_token: str
     _expires_at: datetime | None = None
@@ -169,7 +180,9 @@ class JWT:
     @property
     def expires_at(self):
         if not self._expires_at:
-            payload = jwt.decode(self.access_token, options={"verify_signature": False})
+            payload = jwt.decode(
+                self.access_token, options={"verify_signature": False}
+            )
             self._expires_at = datetime.fromtimestamp(
                 float(payload["exp"]), tz=timezone.utc
             )
