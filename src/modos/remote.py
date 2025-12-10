@@ -24,7 +24,7 @@ class BearerAuth(AuthBase):
         self, r: requests.PreparedRequest
     ) -> requests.PreparedRequest:
         if self.jwt:
-            if self.jwt.is_expired():
+            if self.jwt.is_expired:
                 self.jwt = self.jwt.refresh()
             if self.jwt:
                 r.headers["Authorization"] = f"Bearer {self.jwt.access_token}"
@@ -169,14 +169,14 @@ class JWT:
     @property
     def expires_at(self):
         if not self._expires_at:
-            payload = jwt.decode(self, options={"verify_signature": False})
+            payload = jwt.decode(self.access_token, options={"verify_signature": False})
             self._expires_at = datetime.fromtimestamp(
                 float(payload["exp"]), tz=timezone.utc
             )
         return self._expires_at
 
     @staticmethod
-    def path() -> Path:
+    def get_cache_path() -> Path:
         from platformdirs import user_cache_dir
 
         cache = user_cache_dir("modos", "sdsc", ensure_exists=True)
@@ -184,20 +184,21 @@ class JWT:
 
     def to_cache(self):
         """Store JWT in cache directory."""
-        with open(JWT.path(), "w") as f:
+        with open(JWT.get_cache_path(), "w") as f:
             _ = f.write(self.access_token)
-        os.chmod(JWT.path(), 0o600)
+        os.chmod(JWT.get_cache_path(), 0o600)
 
     @classmethod
     def from_cache(cls) -> JWT | None:
         """Load JWT from cache directory if it exists."""
 
-        if not JWT.path().exists():
+        if not JWT.get_cache_path().exists():
             return None
 
-        with open(JWT.path(), "r") as f:
+        with open(JWT.get_cache_path(), "r") as f:
             return cls(f.read().strip())
 
+    @property
     def is_expired(self, skew: int = 30) -> bool:
         return datetime.now(timezone.utc) >= (
             self.expires_at - timedelta(seconds=skew)
