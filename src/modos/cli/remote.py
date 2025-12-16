@@ -35,7 +35,7 @@ def login(
     """Oauth device flow to login into a remote endpoint."""
     from pyocli import start_device_code_flow, finish_device_code_flow
 
-    data = start_device_code_flow(auth_url, client_id, [])
+    data = start_device_code_flow(auth_url, client_id, scopes=["profile"])
     print(f"To authenticate, visit {data.verify_url_full()}.")
     token = finish_device_code_flow(data)
 
