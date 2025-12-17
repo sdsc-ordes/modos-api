@@ -56,6 +56,18 @@ services:
       - CLIENT_ID=${AWS_ACCESS_KEY_ID:-garage}
       - CLIENT_SECRET=${AWS_SECRET_ACCESS_KEY:-garage-secret}
 
+  kms:
+    build: ./kms
+    restart: unless-stopped
+    profiles:
+      - auth
+    networks:
+      - modos-network
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-garage}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-garage-secret}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+
   htsget:
     build: ./htsget
     ports:
