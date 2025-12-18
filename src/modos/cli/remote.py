@@ -36,7 +36,9 @@ def login(
     from pyocli import start_device_code_flow, finish_device_code_flow
 
     data = start_device_code_flow(
-        auth_url, client_id, scopes=["profile", "offline_access"]
+        auth_url,
+        client_id,
+        scopes=["profile", "offline_access", "permissions"],
     )
     print(f"To authenticate, visit {data.verify_url_full()}.")
     token = finish_device_code_flow(data)
