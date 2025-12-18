@@ -10,7 +10,6 @@ from typing import Any
 import warnings
 
 import jwt
-from jwt.exceptions import ExpiredSignatureError
 from pydantic import HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
 import requests
@@ -221,16 +220,3 @@ class JWT:
     def refresh(self) -> JWT | None:
         warnings.warn("Token refresh is not yet implemented.")
         return None
-
-    def decode(
-        self, client_secret: str, audience: str
-    ) -> dict[str, Any] | None:
-        try:
-            jwt.decode(
-                self.access_token,
-                client_secret,
-                algorithms="HS256",
-                audience=audience,
-            )
-        except ExpiredSignatureError:
-            self.refresh()
