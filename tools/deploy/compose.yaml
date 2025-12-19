@@ -30,6 +30,7 @@ services:
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - MODOS_LOCAL_URL=${MODOS_LOCAL_URL:-http://modos-server:8000}
       - S3_LOCAL_URL=${S3_LOCAL_URL:-http://garage:9000}
+      - KMS_LOCAL_URL=${KMS_LOCAL_URL:-http://kms:8000}
     networks:
       - modos-network
 
@@ -49,7 +50,7 @@ services:
     networks:
       - modos-network
     environment:
-      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN:-garage}
+      - GARAGE_ADMIN_TOKEN=${S3_API_TOKEN:-garage}
       - GARAGE_S3_REGION=${AWS_DEFAULT_REGION:-us-east-1}
       - S3_BUCKET=${S3_BUCKET:-modos-demo}
       - REFERENCE_BUCKET=${REFERENCE_BUCKET:-reference-genomes}
@@ -64,9 +65,13 @@ services:
     networks:
       - modos-network
     environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-garage}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-garage-secret}
+      - AUTH_URL=${AUTH_URL:-http://auth.example.org}
+      - AUTH_TOKEN=${AUTH_TOKEN:-auth-token}
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+      - S3_BUCKET=${S3_BUCKET:-modos-demo}
+      - S3_API_URL=${S3_API_URL:-http://garage:3900}
+      - S3_API_TOKEN=${S3_API_TOKEN:-garage_token}
+    command: uv run uvicorn --host 0.0.0.0 --port 8000 --reload kms.kms:app
 
   htsget:
     build: ./htsget
@@ -121,6 +126,7 @@ services:
       - FUZON_PUBLIC_URL=${FUZON_PUBLIC_URL:-http://localhost/fuzon}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
+      - KMS_PUBLIC_URL=${KMS_PUBLIC_URL:-http://localhost/kms}
       - REFGET_PUBLIC_URL=${REFGET_PUBLIC_URL:-http://localhost/refget}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-garage}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-garage-secret}
