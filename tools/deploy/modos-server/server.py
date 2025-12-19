@@ -22,6 +22,7 @@ BUCKET = os.environ["S3_BUCKET"]
 HTSGET_LOCAL_URL = os.environ["HTSGET_LOCAL_URL"]
 HTSGET_PUBLIC_URL = os.environ["HTSGET_PUBLIC_URL"]
 REFGET_PUBLIC_URL = os.environ["REFGET_PUBLIC_URL"]
+KMS_PUBLIC_URL = os.environ["KMS_PUBLIC_URL"]
 SERVICES = {
     "s3": S3_LOCAL_URL,
     "htsget": HTSGET_LOCAL_URL,
@@ -112,5 +113,6 @@ def get_endpoints():
         "s3": S3_PUBLIC_URL,
         "htsget": HTSGET_PUBLIC_URL,
         "fuzon": FUZON_PUBLIC_URL,
+        "kms": KMS_PUBLIC_URL,
         "refget": REFGET_PUBLIC_URL,
     }
