@@ -49,10 +49,17 @@ def get_client_credentials() -> tuple[str, str]:
     """
 
     # NOTE: We assume there is only one reverse proxy provider.
-    outpost_data = requests.get(
+
+    resp = requests.get(
         f"{AUTH_URL}/api/v3/outposts/proxy/",
-        headers={"Authorization": f"bearer  {AUTH_TOKEN}"},
-    ).json()["results"][0]
+        headers={"Authorization": f"Bearer {AUTH_TOKEN}"},
+    )
+    try:
+        resp.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        raise HTTPException(status_code=resp.status_code, detail=str(err))
+
+    outpost_data = resp.json()["results"][0]
 
     return (outpost_data["client_id"], outpost_data["client_secret"])
 
@@ -137,22 +144,21 @@ class Key:
     @classmethod
     def from_spec(cls, spec: KeySpec) -> Self:
         """Request a new S3 Key with the correct expiration from garage S3 API."""
+        resp = requests.post(
+            f"{S3_API_URL}/v2/CreateKey",
+            headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
+            json={
+                "name": spec.name,
+                "expiration": spec.expiration.isoformat(),
+            },
+        ).json()
 
-        key_resp = models.KeyInfoResponse.model_validate(
-            requests.post(
-                f"{S3_API_URL}/v2/CreateKey",
-                headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
-                json={
-                    "name": spec.name,
-                    "expiration": spec.expiration.timestamp(),
-                },
-            ).json()
-        )
+        key_info = models.KeyInfoResponse.model_validate(resp)
 
         return cls(
             spec=spec,
-            access_key_id=key_resp.access_key_id,
-            secret_access_key=key_resp.secret_access_key,
+            access_key_id=key_info.access_key_id,
+            secret_access_key=key_info.secret_access_key,
         )
 
     def set_permissions(self) -> None:
