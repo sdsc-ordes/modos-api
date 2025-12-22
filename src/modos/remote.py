@@ -57,14 +57,14 @@ class EndpointManager:
     >>> ex = EndpointManager(modos="http://modos.example.org") # doctest: +SKIP
     >>> ex.list() # doctest: +SKIP
     {
-      's3: Url('http://s3.example.org/'),
-      'htsget': Url('http://htsget.example.org/')
+      's3: 'http://s3.example.org/',
+      'htsget': 'http://htsget.example.org/'
     }
     >>> ex.htsget # doctest: +SKIP
-    HttpUrl('http://htsget.example.org/')
+    'http://htsget.example.org'
     >>> ex = EndpointManager(services={"s3": "http://s3.example.org"})
     >>> ex.s3
-    HttpUrl('http://s3.example.org/')
+    'http://s3.example.org'
 
     """
 
