@@ -69,13 +69,13 @@ class EndpointManager:
     """
 
     modos: HttpUrl | None = None
-    services: dict[str, HttpUrl] = field(default_factory=dict)
+    services: dict[str, Any] = field(default_factory=dict)
 
     @property
     def session(self):
         return get_session()
 
-    def list(self) -> dict[str, HttpUrl]:
+    def list(self) -> dict[str, Any]:
         """List available endpoints."""
         if self.modos:
             return self.session.get(url=str(self.modos)).json()
@@ -83,6 +83,14 @@ class EndpointManager:
             return self.services
         else:
             return {}
+
+    @property
+    def auth(self) -> dict[str, str | HttpUrl] | None:
+        return self.list().get("auth")
+
+    @property
+    def kms(self) -> HttpUrl | None:
+        return self.list().get("kms")
 
     @property
     def s3(self) -> HttpUrl | None:
@@ -159,6 +167,14 @@ def get_s3_path(
     ).json()
 
 
+@lru_cache
+def get_cache_dir() -> Path:
+    from platformdirs import user_cache_dir
+
+    cache = user_cache_dir("modos", "sdsc", ensure_exists=True)
+    return Path(cache)
+
+
 @dataclass
 class JWT:
     """Handles storage of JWT tokens for authentication.
@@ -190,10 +206,7 @@ class JWT:
 
     @staticmethod
     def get_cache_path() -> Path:
-        from platformdirs import user_cache_dir
-
-        cache = user_cache_dir("modos", "sdsc", ensure_exists=True)
-        return Path(cache) / "token.jwt"
+        return get_cache_dir() / "token.jwt"
 
     def to_cache(self):
         """Store JWT in cache directory."""

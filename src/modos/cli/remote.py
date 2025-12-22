@@ -4,7 +4,7 @@ from typing_extensions import Annotated
 from loguru import logger
 import typer
 
-from modos.remote import JWT
+from modos.remote import JWT, get_cache_dir
 from modos.cli.common import OBJECT_PATH_ARG
 
 remote = typer.Typer(add_completion=False)
@@ -14,34 +14,74 @@ remote = typer.Typer(add_completion=False)
 def login(
     ctx: typer.Context,
     client_id: Annotated[
-        str,
+        str | None,
         typer.Option(
             "--client-id",
             "-c",
-            help="OAuth Client ID to use for authentication.",
+            help="Specify OAuth Client ID explicitely.",
             envvar="MODOS_OAUTH_CLIENT_ID",
         ),
-    ],
+    ] = None,
     auth_url: Annotated[
-        str,
+        str | None,
         typer.Option(
             "--auth-url",
             "-a",
-            help="OAuth Authorization URL to use for authentication.",
+            help="Specify OAuth Authorization URL explicitely.",
             envvar="MODOS_OAUTH_AUTH_URL",
         ),
-    ],
+    ] = None,
 ):
-    """Oauth device flow to login into a remote endpoint."""
-    from pyocli import start_device_code_flow, finish_device_code_flow
+    """Oauth device flow to login into a remote endpoint.
 
+    Once the flow is completed, the JWT token is cached locally for future requests.
+    The JWT is then used to request temporary S3 credentials from the remote endpoint.
+    """
+    from pyocli import start_device_code_flow, finish_device_code_flow
+    import requests
+
+    from modos.remote import EndpointManager
+
+    endpoint = EndpointManager(ctx.obj["endpoint"])
+
+    if endpoint is None:
+        raise ValueError("Must provide an endpoint using modos --endpoint")
+
+    # Try to get auth parameters from command line options
+    if client_id and auth_url:
+        pass
+    elif endpoint.auth is None:
+        raise ValueError(
+            "The provided endpoint does not support authentication. Login not required."
+        )
+    else:
+        auth_url = str(endpoint.auth["url"])
+        client_id = str(endpoint.auth["client_id"])
+
+    # Oauth device flow
     data = start_device_code_flow(auth_url, client_id, [])
     print(f"To authenticate, visit {data.verify_url_full()}.")
     token = finish_device_code_flow(data)
 
     JWT(token.access_token).to_cache()  # TODO: Handle refresh token
 
+    # Request temporary S3 credentials to test login
+    resp = requests.get(
+        url=f"{endpoint.kms}/create",
+        headers={"Authorization": f"Bearer {token.access_token}"},
+    )
+    resp.raise_for_status()
+
+    spec = resp.json()["spec"]
+    access_key_id = resp.json()["access_key_id"]
+    secret_access_key = resp.json()["secret_access_key"]
+    with open(get_cache_dir() / "s3.env", "w") as f:
+        _ = f.write(f"AWS_ACCESS_KEY_ID={access_key_id}\n")
+        _ = f.write(f"AWS_SECRET_ACCESS_KEY={secret_access_key}\n")
+    perm = ",".join([k for k, v in spec["permissions"].items() if v])
     logger.info("You are logged in")
+    logger.info(f"S3 credentials valid until: {spec['expiration']}.")
+    logger.info(f"{perm} access on s3://{spec['bucket']}.")
 
 
 @remote.command()
