@@ -15,14 +15,20 @@ from modos.api import MODO
 from modos.logging import setup_logging
 from modos.storage import connect_s3
 
-FUZON_PUBLIC_URL = os.environ["FUZON_PUBLIC_URL"]
+# Required
 S3_LOCAL_URL = os.environ["S3_LOCAL_URL"]
 S3_PUBLIC_URL = os.environ["S3_PUBLIC_URL"]
 BUCKET = os.environ["S3_BUCKET"]
 HTSGET_LOCAL_URL = os.environ["HTSGET_LOCAL_URL"]
-HTSGET_PUBLIC_URL = os.environ["HTSGET_PUBLIC_URL"]
-REFGET_PUBLIC_URL = os.environ["REFGET_PUBLIC_URL"]
-KMS_PUBLIC_URL = os.environ["KMS_PUBLIC_URL"]
+
+# Optional
+OIDC_ISSUER_URL = os.environ.get("OIDC_ISSUER_URL", None)
+AUTH_CLIENT_ID = os.environ.get("AUTH_CLIENT_ID", None)
+FUZON_PUBLIC_URL = os.environ.get("FUZON_PUBLIC_URL", None)
+HTSGET_PUBLIC_URL = os.environ.get("HTSGET_PUBLIC_URL", None)
+REFGET_PUBLIC_URL = os.environ.get("REFGET_PUBLIC_URL", None)
+KMS_PUBLIC_URL = os.environ.get("KMS_PUBLIC_URL", None)
+
 SERVICES = {
     "s3": S3_LOCAL_URL,
     "htsget": HTSGET_LOCAL_URL,
@@ -108,11 +114,18 @@ def get_s3_path(query: str, fuzzy: bool = False):
 
 @app.get("/")
 def get_endpoints():
-    return {
+    endpoints = {
         "status": "success",
+        "auth": None,
         "s3": S3_PUBLIC_URL,
         "htsget": HTSGET_PUBLIC_URL,
         "fuzon": FUZON_PUBLIC_URL,
         "kms": KMS_PUBLIC_URL,
         "refget": REFGET_PUBLIC_URL,
     }
+    if OIDC_ISSUER_URL and AUTH_CLIENT_ID:
+        endpoints["auth"] = {
+            "url": OIDC_ISSUER_URL,
+            "client_id": AUTH_CLIENT_ID,
+        }
+    return endpoints
