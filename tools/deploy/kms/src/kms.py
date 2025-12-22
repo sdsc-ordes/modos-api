@@ -5,17 +5,16 @@ It is only compatible with Garage S3 and Authentik, and assumes a reverse proxy 
 """
 
 # TODO: group scope -> s3 prefix
-# TODO: custom scope (e.g. write: bool) for read/write
 
 from __future__ import annotations
 from dataclasses import dataclass
 import datetime
 from functools import lru_cache
 import os
-from typing import cast, Self
+from typing import Annotated, cast, Self
 import uuid
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException
 import jwt
 from modos.logging import setup_logging
 from pydantic import BaseModel
@@ -24,6 +23,7 @@ import requests
 from . import models
 
 AUTH_TOKEN = os.environ["AUTH_TOKEN"]  # NOTE: Authentik bootstrap token
+AUTH_CLIENT_ID = os.environ["AUTH_CLIENT_ID"]
 AUTH_URL = os.environ["AUTH_URL"]
 S3_BUCKET = os.environ["S3_BUCKET"]
 S3_API_URL = os.environ["S3_API_URL"]
@@ -48,8 +48,6 @@ def get_client_credentials() -> tuple[str, str]:
 
     """
 
-    # NOTE: We assume there is only one reverse proxy provider.
-
     resp = requests.get(
         f"{AUTH_URL}/api/v3/outposts/proxy/",
         headers={"Authorization": f"Bearer {AUTH_TOKEN}"},
@@ -59,15 +57,26 @@ def get_client_credentials() -> tuple[str, str]:
     except requests.exceptions.HTTPError as err:
         raise HTTPException(status_code=resp.status_code, detail=str(err))
 
-    outpost_data = resp.json()["results"][0]
+    # Find the proxy matching modos client id
+    results = resp.json()["results"]
+    proxies = [o for o in results if o["client_id"] == AUTH_CLIENT_ID]
 
-    return (outpost_data["client_id"], outpost_data["client_secret"])
+    if len(proxies) > 1:
+        raise ValueError("Multiple proxy providers matched client id")
+    data = proxies[0]
+
+    return (data["client_id"], data["client_secret"])
 
 
 def decode_token(token: str) -> dict[str, str | list[str]]:
     """Decodes a JWT token with symmetric encryption.
     The decryption secret is fetched from the S3 server
+
+    Parameters
+    ----------
     """
+    # NOTE: only symmetric HS256 is supported with authentik proxy providers
+    # hence the need for client_secret
     client_id, client_secret = get_client_credentials()
     try:
         decoded = jwt.decode(
@@ -103,13 +112,13 @@ class KeySpec:
     name: str | None = None
 
     @classmethod
-    def from_token(cls, token: Token) -> Self:
+    def from_token(cls, token: str) -> Self:
         """S3 key specifications are extracted from a JWT token with the following assumptions:
         - 'exp' claim specifies the expiration time.
         - 'roles' claim (optional) specifies the allowed prefixes.
         - 'write' claim (optional) specifies if write access is granted.
         """
-        data = decode_token(token.jwt)
+        data = decode_token(token)
 
         permissions: Permissions = Permissions.default()
         if str(data.get("permissions", "read")) == "write":
@@ -144,13 +153,17 @@ class Key:
     @classmethod
     def from_spec(cls, spec: KeySpec) -> Self:
         """Request a new S3 Key with the correct expiration from garage S3 API."""
+        payload = {
+            "allow": None,
+            "deny": None,
+            "neverExpires": False,
+            "name": spec.name,
+            "expiration": f"{spec.expiration.isoformat()}Z",
+        }
         resp = requests.post(
             f"{S3_API_URL}/v2/CreateKey",
             headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
-            json={
-                "name": spec.name,
-                "expiration": spec.expiration.isoformat(),
-            },
+            json=payload,
         ).json()
 
         key_info = models.KeyInfoResponse.model_validate(resp)
@@ -164,23 +177,30 @@ class Key:
     def set_permissions(self) -> None:
         """Configure the right permissions for this key on the S3 server"""
 
+        # Retrieve internal bucket id from global alias (name)
+        resp = requests.get(
+            f"{S3_API_URL}/v2/GetBucketInfo?globalAlias={S3_BUCKET}",
+            headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
+        )
+        resp.raise_for_status()
+        bucket_id = resp.json()["id"]
+
+        # Apply permissions for existing key
         _ = requests.post(
             f"{S3_API_URL}/v2/AllowBucketKey",
             headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
             json={
                 "accessKeyId": self.access_key_id,
-                "bucketId": S3_BUCKET,
+                "bucketId": bucket_id,
                 "permissions": self.spec.permissions.model_dump(),
             },
         )
 
 
-class Token(BaseModel):
-    jwt: str
-
-
-@app.post("/create")
-def create(token: Token) -> Key:
+@app.get("/create")
+def create(
+    authorization: Annotated[str, Header(..., alias="Authorization")],
+) -> Key:
     """List MODO entries in bucket.
 
     Parameters
@@ -193,6 +213,7 @@ def create(token: Token) -> Key:
     Key
         The generated S3 key with appropriate permissions.
     """
+    token = authorization.split(" ")[-1]
     key_spec = KeySpec.from_token(token)
     key = Key.from_spec(key_spec)
     key.set_permissions()
