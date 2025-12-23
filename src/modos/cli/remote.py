@@ -59,7 +59,12 @@ def login(
         client_id = str(endpoint.auth["client_id"])
 
     # Oauth device flow
-    data = start_device_code_flow(auth_url, client_id, [])
+    data = start_device_code_flow(
+        auth_url,
+        client_id,
+        scopes=["profile", "offline_access", "permissions"],
+    )
+
     print(f"To authenticate, visit {data.verify_url_full()}.")
     token = finish_device_code_flow(data)
 
