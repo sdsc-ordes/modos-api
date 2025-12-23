@@ -4,7 +4,6 @@ from typing_extensions import Annotated
 from loguru import logger
 import typer
 
-from modos.remote import JWT, get_cache_dir
 from modos.cli.common import OBJECT_PATH_ARG
 
 remote = typer.Typer(add_completion=False)
@@ -40,7 +39,7 @@ def login(
     from pyocli import start_device_code_flow, finish_device_code_flow
     import requests
 
-    from modos.remote import EndpointManager
+    from modos.remote import EndpointManager, get_cache_dir, JWT, S3Key
 
     endpoint = EndpointManager(ctx.obj["endpoint"])
 
@@ -77,16 +76,15 @@ def login(
     )
     resp.raise_for_status()
 
-    spec = resp.json()["spec"]
-    access_key_id = resp.json()["access_key_id"]
-    secret_access_key = resp.json()["secret_access_key"]
+    key = S3Key.model_validate(resp.json())
+
     with open(get_cache_dir() / "s3.env", "w") as f:
-        _ = f.write(f"AWS_ACCESS_KEY_ID={access_key_id}\n")
-        _ = f.write(f"AWS_SECRET_ACCESS_KEY={secret_access_key}\n")
-    perm = ",".join([k for k, v in spec["permissions"].items() if v])
-    logger.info("You are logged in")
-    logger.info(f"S3 credentials valid until: {spec['expiration']}.")
-    logger.info(f"{perm} access on s3://{spec['bucket']}.")
+        _ = f.write(f"AWS_ACCESS_KEY_ID={key.access_key_id}\n")
+        _ = f.write(f"AWS_SECRET_ACCESS_KEY={key.secret_access_key}\n")
+
+    logger.info("You are logged in.")
+    logger.info(f"S3 credentials valid until: {key.spec.expiration}.")
+    logger.info(f"{key.spec.permissions} access on {key.valid_paths()}.")
 
 
 @remote.command()

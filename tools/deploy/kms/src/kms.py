@@ -7,17 +7,16 @@ It is only compatible with Garage S3 and Authentik, and assumes a reverse proxy 
 # TODO: group scope -> s3 prefix
 
 from __future__ import annotations
-from dataclasses import dataclass
 import datetime
 from functools import lru_cache
 import os
-from typing import Annotated, cast, Self
+from typing import Annotated, cast
 import uuid
 
 from fastapi import FastAPI, Header, HTTPException
 import jwt
 from modos.logging import setup_logging
-from pydantic import BaseModel
+from modos.remote import Permissions, S3Key, S3KeySpec
 import requests
 
 from . import models
@@ -93,114 +92,92 @@ def decode_token(token: str) -> dict[str, str | list[str]]:
     return decoded
 
 
-class Permissions(BaseModel):
-    read: bool
-    write: bool
-    owner: bool
+def extract_spec(token: str) -> S3KeySpec:
+    """S3 key specifications are extracted from a JWT token with the following assumptions:
+    - 'exp' claim specifies the expiration time.
+    - 'roles' claim (optional) specifies the allowed prefixes.
+    - 'write' claim (optional) specifies if write access is granted.
+    """
+    data = decode_token(token)
 
-    @classmethod
-    def default(cls) -> Self:
-        return cls(read=True, write=False, owner=False)
+    permissions: Permissions = Permissions.default()
+    if str(data.get("permissions", "read")) == "write":
+        permissions.write = True
 
+    exp = cast(str, data["exp"])
+    try:
+        timestamp = float(exp)
+    except (ValueError, TypeError):
+        raise ValueError(f"exp field was not a POSIX timestamp: {exp}")
+    expiration = timestamp
 
-@dataclass
-class KeySpec:
-    bucket: str
-    expiration: datetime.datetime
-    prefixes: list[str] | None
-    permissions: Permissions
-    name: str | None = None
+    groups = data.get("groups", [])
+    if not isinstance(groups, list):
+        groups = [groups]
 
-    @classmethod
-    def from_token(cls, token: str) -> Self:
-        """S3 key specifications are extracted from a JWT token with the following assumptions:
-        - 'exp' claim specifies the expiration time.
-        - 'roles' claim (optional) specifies the allowed prefixes.
-        - 'write' claim (optional) specifies if write access is granted.
-        """
-        data = decode_token(token)
-
-        permissions: Permissions = Permissions.default()
-        if str(data.get("permissions", "read")) == "write":
-            permissions.write = True
-
-        exp = cast(str, data["exp"])
-        try:
-            timestamp = float(exp)
-        except (ValueError, TypeError):
-            raise ValueError(f"exp field was not a POSIX timestamp: {exp}")
-        expiration = timestamp
-
-        roles = data.get("roles", None)
-        if not isinstance(roles, list) and roles is not None:
-            roles = [roles]
-
-        return cls(
-            bucket=S3_BUCKET,
-            name=str(uuid.uuid4()),
-            expiration=datetime.datetime.fromtimestamp(expiration),
-            prefixes=roles,
-            permissions=permissions,
-        )
+    return S3KeySpec(
+        bucket=S3_BUCKET,
+        name=str(uuid.uuid4()),
+        expiration=datetime.datetime.fromtimestamp(expiration),
+        prefixes=groups,
+        permissions=permissions,
+    )
 
 
-@dataclass
-class Key:
-    spec: KeySpec
-    access_key_id: str
-    secret_access_key: str | None
+def create_key(spec: S3KeySpec) -> S3Key:
+    """Request a new S3 Key with the correct expiration from garage S3 API."""
+    payload = {
+        "allow": None,
+        "deny": None,
+        "neverExpires": False,
+        "name": spec.name,
+        "expiration": f"{spec.expiration.isoformat()}Z",
+    }
+    resp = requests.post(
+        f"{S3_API_URL}/v2/CreateKey",
+        headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
+        json=payload,
+    ).json()
 
-    @classmethod
-    def from_spec(cls, spec: KeySpec) -> Self:
-        """Request a new S3 Key with the correct expiration from garage S3 API."""
-        payload = {
-            "allow": None,
-            "deny": None,
-            "neverExpires": False,
-            "name": spec.name,
-            "expiration": f"{spec.expiration.isoformat()}Z",
-        }
-        resp = requests.post(
-            f"{S3_API_URL}/v2/CreateKey",
-            headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
-            json=payload,
-        ).json()
+    key_info = models.KeyInfoResponse.model_validate(resp)
 
-        key_info = models.KeyInfoResponse.model_validate(resp)
+    return S3Key(
+        spec=spec,
+        access_key_id=key_info.access_key_id,
+        secret_access_key=key_info.secret_access_key,
+    )
 
-        return cls(
-            spec=spec,
-            access_key_id=key_info.access_key_id,
-            secret_access_key=key_info.secret_access_key,
-        )
 
-    def set_permissions(self) -> None:
-        """Configure the right permissions for this key on the S3 server"""
+def set_key_permissions(key: S3Key) -> None:
+    """Configure the right permissions for this key on the S3 server"""
 
-        # Retrieve internal bucket id from global alias (name)
-        resp = requests.get(
-            f"{S3_API_URL}/v2/GetBucketInfo?globalAlias={S3_BUCKET}",
-            headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
-        )
-        resp.raise_for_status()
-        bucket_id = resp.json()["id"]
+    # Retrieve internal bucket id from global alias (name)
+    resp = requests.get(
+        f"{S3_API_URL}/v2/GetBucketInfo?globalAlias={S3_BUCKET}",
+        headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
+    )
+    resp.raise_for_status()
+    print(resp.json())
+    bucket_id = resp.json()["id"]
 
-        # Apply permissions for existing key
-        _ = requests.post(
-            f"{S3_API_URL}/v2/AllowBucketKey",
-            headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
-            json={
-                "accessKeyId": self.access_key_id,
-                "bucketId": bucket_id,
-                "permissions": self.spec.permissions.model_dump(),
-            },
-        )
+    # Apply permissions for existing key
+    _ = requests.post(
+        f"{S3_API_URL}/v2/AllowBucketKey",
+        headers={"Authorization": f"Bearer {S3_API_TOKEN}"},
+        json={
+            "accessKeyId": key.access_key_id,
+            "bucketId": bucket_id,
+            "permissions": key.spec.permissions.model_dump(),
+        },
+    )
+
+    print(_.json())
 
 
 @app.get("/create")
 def create(
     authorization: Annotated[str, Header(..., alias="Authorization")],
-) -> Key:
+) -> S3Key:
     """List MODO entries in bucket.
 
     Parameters
@@ -214,8 +191,8 @@ def create(
         The generated S3 key with appropriate permissions.
     """
     token = authorization.split(" ")[-1]
-    key_spec = KeySpec.from_token(token)
-    key = Key.from_spec(key_spec)
-    key.set_permissions()
+    spec = extract_spec(token)
+    key = create_key(spec)
+    set_key_permissions(key)
 
     return key

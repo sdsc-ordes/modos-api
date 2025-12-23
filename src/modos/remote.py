@@ -6,11 +6,11 @@ from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 import warnings
 
 import jwt
-from pydantic import HttpUrl, validate_call
+from pydantic import BaseModel, HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
 import requests
 from requests.auth import AuthBase
@@ -233,3 +233,39 @@ class JWT:
     def refresh(self) -> JWT | None:
         warnings.warn("Token refresh is not yet implemented.")
         return None
+
+
+class Permissions(BaseModel):
+    read: bool
+    write: bool
+    owner: bool
+
+    @classmethod
+    def default(cls) -> Self:
+        return cls(read=True, write=False, owner=False)
+
+    def __str__(self):
+        return ",".join([k for (k, v) in self.model_dump().items() if v])
+
+
+class S3KeySpec(BaseModel):
+    bucket: str
+    expiration: datetime
+    prefixes: list[str] | None
+    permissions: Permissions
+    name: str | None = None
+
+
+class S3Key(BaseModel):
+    spec: S3KeySpec
+    access_key_id: str
+    secret_access_key: str | None
+
+    def valid_paths(self) -> str:
+        """Prints the valid S3 paths for this key."""
+        prefixes = self.spec.prefixes or []
+        if len(prefixes) == 1:
+            prefix = prefixes[0]
+        else:
+            prefix = "{" + ",".join(prefixes) + "}"
+        return f"s3://{self.spec.bucket}/{prefix}"
