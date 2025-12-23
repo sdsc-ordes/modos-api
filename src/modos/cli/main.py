@@ -64,6 +64,28 @@ def endpoint_callback(ctx: typer.Context, url: HttpUrl):
     return url
 
 
+def s3_env_callback(ctx: typer.Context):
+    """Sources environment files in cache."""
+    from dotenv import dotenv_values
+    from modos.remote import get_cache_dir
+
+    ctx.ensure_object(dict)
+
+    env_file = get_cache_dir() / "s3.env"
+    cache = dotenv_values(dotenv_path=env_file)
+
+    s3_vars = {
+        "AWS_ACCESS_KEY_ID": "access_key_id",
+        "AWS_SECRET_ACCESS_KEY": "secret_access_key",
+    }
+    # If S3 credentials set in environment, ignore cache
+    if all(k in os.environ for k in s3_vars.keys()):
+        return
+
+    for var_name, kwarg in s3_vars.items():
+        ctx.obj["s3_kwargs"][kwarg] = cache.get(var_name)
+
+
 @cli.command(rich_help_panel="Read")
 def show(
     ctx: typer.Context,
@@ -121,7 +143,7 @@ def publish(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     output_format: Annotated[RdfFormat, typer.Option(...)] = RdfFormat.TURTLE,
-    base_uri: Annotated[Optional[str], typer.Option(...)] = None,
+    base_uri: Annotated[str | None, typer.Option(...)] = None,
 ):
     """Export a modo as linked data. Turns all paths into URIs."""
     from modos.api import MODO
@@ -141,26 +163,26 @@ def publish(
 @cli.callback()
 def callback(
     ctx: typer.Context,
-    endpoint: Optional[str] = typer.Option(
+    endpoint: str | None = typer.Option(
         None,
         callback=endpoint_callback,
         envvar="MODOS_ENDPOINT",
         help="URL of modos server.",
     ),
-    anon: Optional[bool] = typer.Option(
+    anon: bool | None = typer.Option(
         False,
         "--anon",
         callback=anon_callback,
         envvar="AWS_SKIP_SIGNATURE",
         help="Use anonymous access for S3 connections.",
     ),
-    version: Optional[bool] = typer.Option(
+    version: bool | None = typer.Option(
         None,
         "--version",
         callback=version_callback,
         help="Print version of modos client.",
     ),
-    debug: Optional[bool] = typer.Option(
+    debug: bool | None = typer.Option(
         None,
         "--debug",
         help="Enable debug logging.",
@@ -168,6 +190,8 @@ def callback(
 ):
     """Multi-Omics Digital Objects command line interface."""
     from modos.logging import setup_logging
+
+    s3_env_callback(ctx)
 
     if debug:
         setup_logging(level="DEBUG", diagnose=True, backtrace=True, time=True)
@@ -181,7 +205,7 @@ def create(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     from_file: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option(
             "--from-file",
             "-f",
@@ -189,7 +213,7 @@ def create(
         ),
     ] = None,
     meta: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "--meta",
             "-m",
