@@ -4,7 +4,6 @@
 
 import os
 from pathlib import Path
-from typing import Optional
 from typing_extensions import Annotated
 
 from loguru import logger
@@ -91,7 +90,7 @@ def show(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     element_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Argument(
             ...,
             help="The identifier within the modo. Use modos show to check it.",
@@ -276,7 +275,7 @@ def remove(
     ctx: typer.Context,
     object_path: OBJECT_PATH_ARG,
     element_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Argument(
             ...,
             help="The identifier within the modo. Use modos show to check it. Leave empty to remove the whole object.",
@@ -333,13 +332,13 @@ def add(
         ),
     ],
     parent: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "--parent", "-p", help="Parent object in the zarr store."
         ),
     ] = None,
     element: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "--element",
             "-e",
@@ -347,7 +346,7 @@ def add(
         ),
     ] = None,
     from_file: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option(
             "--from-file",
             "-f",
@@ -355,7 +354,7 @@ def add(
         ),
     ] = None,
     source_file: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option(
             "--source-file",
             "-s",
