@@ -114,12 +114,11 @@ LOCAL addresses default to the service names, while PUBLIC addresses point to th
 - Ensure Docker and Docker Compose are installed.
 
 ### 2. Start the Stack
-
 ```sh
 just deploy
 ```
 
-This will build and start all services for local development. Caddy will listen on ports 80 (HTTP) and 443 (HTTPS, if configured).
+This will build and start all services for local development (using the `local` compose profile). Caddy will listen on ports 80 (HTTP) and 443 (HTTPS, if configured).
 
 ### 3. Upload MODOs
 
