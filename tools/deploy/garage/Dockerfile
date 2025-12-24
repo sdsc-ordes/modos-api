@@ -1,5 +1,6 @@
 FROM alpine:edge
 
+RUN apk update
 RUN apk add --no-cache bash curl garage gettext
 
 COPY docker-entrypoint.sh /

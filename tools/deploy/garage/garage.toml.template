@@ -14,3 +14,7 @@ rpc_secret = "710441e005c2d83e30234d3f13a922ca3142e2a8a389652f65194f8f9b61efcd"
 [s3_api]
 s3_region = "${GARAGE_S3_REGION}"
 api_bind_addr = "[::]:9000"
+
+[admin]
+api_bind_addr = "0.0.0.0:3900"
+admin_token = "${S3_API_TOKEN}"
