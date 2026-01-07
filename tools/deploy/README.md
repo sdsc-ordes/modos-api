@@ -97,7 +97,7 @@ cp .example.env .env
 # Edit .env to set secrets, bucket names, endpoints, etc.
 ```
 
-Variables with `LOCAL` (e.g. `FUZONLOCAL_URL`) represent addresses used by services to communicate with each other. Variables with `PUBLIC` (e.g. `FUZON_PUBLIC_URL`) represent addresses used by clients to communicate with services.
+Variables with `LOCAL` (e.g. `FUZON_LOCAL_URL`) represent addresses used by services to communicate with each other. Variables with `PUBLIC` (e.g. `FUZON_PUBLIC_URL`) represent addresses used by clients to communicate with services.
 
 > One exception to this is the htsget service, which access S3 via its public address.
 
