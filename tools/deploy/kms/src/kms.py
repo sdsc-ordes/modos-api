@@ -84,6 +84,7 @@ def decode_token(token: str) -> dict[str, str | list[str]]:
             algorithms="HS256",
             audience=client_id,
             verify_audience=True,
+            require = ["exp", "iat", "iss", "aud"],
         )
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token has expired")
