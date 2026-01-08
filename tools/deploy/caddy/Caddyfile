@@ -32,6 +32,11 @@ http:// {
 
   }
 
+  # request S3 access keys
+  handle_path /kms/* {
+    reverse_proxy {$KMS_LOCAL_URL}
+  }
+
   handle /* {
       reverse_proxy {$MODOS_LOCAL_URL}
   }

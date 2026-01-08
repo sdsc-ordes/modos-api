@@ -1,103 +1,154 @@
-# Server deployment
+# MODOs Deployment Stack
 
-> [!WARNING]
-> This is a work in progress and not production-ready yet.
+This directory contains instructions for serving and managing a modos deployment stack. The stack is modular, secure, and designed for both local development and production deployments.
 
-## Context
+---
 
-This directory contains the necessary files to deploy a multi-omics digital objects (MODOs) server.
+## Overview
 
-The modos-server is meant to provide remote access to the MODOs. Currently, it can:
+The deployment uses Docker Compose to orchestrate the following core services. For each service, a link with additional documentation is available:
 
-- [x] list available MODO
-- [x] return their metadata
-- [x] expose a MODO directly as a client-accessible S3 bucket / folder
-- [x] stream CRAM slices using htsget
-- [x] give hash-based access to reference sequences using refget
-- [ ] manage authentication and access control
+- [**Caddy**](caddy/README.md): Reverse proxy and gateway, routing HTTP(S) traffic to services.
+- [**Garage**](garage/README.md): S3-compatible object storage for MODOs and reference data.
+- [**modos-server**](modos-server/README.md): FastAPI application providing REST endpoints for listing, querying, and retrieving MODO metadata.
+- [**htsget**](htsget/README.md): Genomic data streaming server (e.g., for CRAM/BAM/BCF slices).
+- [**refget**](refget/README.md): Reference sequence server, providing hash-based access to reference data [WIP].
+- [**fuzon**](fuzon/README.md): Terminology code matching service.
+- [**kms**](kms/README.md): Key Management Service for issuing temporary S3 credentials and integrating authentication (OIDC).
 
-The MODOs are stored in an s3 (minio) bucket, and an htsget server is deployed alongside the modos-server to handle slicing and streaming of CRAM files. A REST API is exposed to the client to interact with the remote MODOs. Reference sequences are stored in another s3 bucket. Access is managed by a refget server.
+All services are connected via a Docker bridge network and exposed through Caddy on standard HTTP/HTTPS ports.
 
-All services are accessible at a single access point through an nginx reverse proxy on port 80.
+---
+
+## Architecture
 
 ```mermaid
-flowchart TB
-P0((80)) -.-> nginx
-subgraph " "
-  Vnginxdefaultconftemplate{{./nginx/default.conf.template}} -. "/etc/nginx/templates/default.conf.template" .-x nginx
-  Vminiodata([minio-data]) x-. /bitnami/minio/data .-x minio
-  Vminiodata x-. /data/s3 .-x htsget
-  Vminioreferences([minio-references]) x-. /bitnami/minio/references .-x minio
-  Vminioreferences x-. /references/s3 .-x refget
+flowchart TD
+    %% Network Overview for modos docker-compose
+    subgraph Public[Public Internet]
+        user((User))
+        idp[(External Identity Provider)]
+    end
 
-  P1((9001)) -.-> minio
-  nginx -.- modonetwork[/modos-network/]
-  minio -.- modonetwork
-  htsget -.- modonetwork
-  refget -.- modonetwork
-  modoserver[modos-server] -.- modonetwork
 
-  classDef volumes fill:#fdfae4,stroke:#867a22
-  class Vnginxdefaultconftemplate,Vminiodata,Vminiodata,Vminioreferences, volumes
-  classDef ports fill:#f8f8f8,stroke:#ccc
-  class P0,P1 ports
-  classDef nets fill:#fbfff7,stroke:#8bc34a
-  class modonetwork nets
-end
+    subgraph Network[modos-network]
+        caddy[Caddy Reverse Proxy]
+        modos_server[modos API Server]
+        kms[KMS Service]
+        garage[(Garage S3 Storage)]
+        htsget[htsget Service]
+        refget[refget Service]
+        fuzon[fuzon]
+    end
+
+    %% Connections
+    user -->|HTTP/HTTPS| caddy
+    caddy -->|Proxy| modos_server
+    caddy -->|Proxy| kms
+    caddy -->|Proxy| fuzon
+    caddy -->|Proxy| htsget
+    caddy -->|Proxy| refget
+    caddy -->|Proxy| garage
+
+    %% Internal dependencies
+
+    modos_server -->|read/write| garage
+    htsget -->|read| garage
+    refget -->|read/write| garage
+    garage -->|s3 keys| kms
+
+    kms -->|Authenticates via| idp
+    user -->|Authenticates via| idp
+
+    classDef profiled fill:#e8f3ff,stroke:#333,stroke-width:1px;
+    classDef external fill:#ffddcc,stroke:#333,stroke-width:1px;
+
+    class garage,kms profiled;
+    class idp external;
 
 ```
+---
 
-## Setup
+## Endpoints
 
-> [!IMPORTANT]
-> The instructions below are meant for development.
-> Production use would require changing the default
-> credentials and use authentication.
+All endpoints are accessible via the Caddy gateway (default: `http://localhost`):
 
-1. Start the server
+| Path             | Service         | Description                                 |
+|------------------|----------------|---------------------------------------------|
+| `/s3/*`          | Garage         | S3-compatible object storage API            |
+| `/htsget/*`      | htsget         | Genomic data streaming                      |
+| `/refget/*`      | refget         | Reference sequence access                   |
+| `/fuzon/*`       | fuzon          | Terminology code matching                   |
+| `/kms/*`         | kms            | Key management, authentication              |
+| `/list`          | modos-server   | List available MODOs                        |
+| `/meta`          | modos-server   | Retrieve metadata for all MODOs             |
+| `/get`           | modos-server   | Query MODOs by name (with optional fuzzy)   |
+| `/`              | modos-server   | Service status and endpoint discovery       |
 
+---
+
+## Configuration
+
+All configuration is handled via environment variables. **Do not edit the `.example.env` directly.**
+Instead, copy it to `.env` and adjust as needed:
+
+```sh
+cp .example.env .env
+# Edit .env to set secrets, bucket names, endpoints, etc.
+```
+
+Variables with `LOCAL` (e.g. `FUZON_LOCAL_URL`) represent addresses used by services to communicate with each other. Variables with `PUBLIC` (e.g. `FUZON_PUBLIC_URL`) represent addresses used by clients to communicate with services.
+
+> One exception to this is the htsget service, which access S3 via its public address.
+
+
+LOCAL addresses default to the service names, while PUBLIC addresses point to the reverse proxy route for the service. When externalizing a service, both LOCAL and PUBLIC addresses can be overridden.
+
+---
+
+## Deployment
+
+### 1. Prepare Environment
+
+- Copy `.example.env` to `.env` and edit as needed.
+- Ensure Docker and Docker Compose are installed.
+
+### 2. Start the Stack
 ```sh
 just deploy
 ```
 
-2. Upload MODO(s) to the default bucket from the minio console (default is http://localhost:9001)
-3. Login to the minio console (default credentials are minio/miniosecret)
+This will build and start all services for local development (using the `local` compose profile). Caddy will listen on ports 80 (HTTP) and 443 (HTTPS, if configured).
 
-## Usage
+### 3. Upload MODOs
 
-Once the server is started, a client can connect to the following endpoints:
+- Use the modos CLI to create and upload MODOs to the Garage S3 bucket.
+- Reference and data buckets are defined in your `.env`.
+- Default S3 credentials should be configured in your .env
 
-- `http://localhost:80/htsget`: directly access the htsget server
-- `http://localhost:80/refget`: directly access the refget server
-- `http://localhost:80/s3`: directly access the s3 server
-- `http://localhost:80/list`: list modos on the server
-- `http://localhost:80/meta`: return all metadata on the server
+### 4. Access Services
 
-## Configuration
+- All endpoints are available via `http://localhost` (or your configured domain).
+- Use the modos CLI or REST API to interact with the server.
 
-Most parameters can be configured using environment variables.
-The easiest way to change environment variables is to use a `.env`. An example is provided and can be used as follows:
+---
 
-```sh
-mv .example.env .env
-# edit .env as required
-docker compose up --build
-# docker compose automatically reads the .env file
-```
+## Authentication & Production Use
 
-In the `.env` file, each service has a `<service>_PUBLIC_URL` and a `<service>_LOCAL_URL` variable. The public URL is the address used by external clients, whereas LOCAL_URL is the address used by other services. For services deployed as part of the compose setup, the local address is `http://<service-name>:<service-port>` and the public address is the endpoint exposed by the nginx reverse proxy, typically `http://<server-host>/<service-name>`. If a service is deployed outside the compose, e.g. an external s3 bucket, the public and local address will both be pointing to the external address.
+- By default, authentication is **disabled** for ease of development. This means that all services are accessible, and that S3 can be accessed with standard S3 credentials (by exporting them as environment variables).
+- For production, set up an OIDC provider (only Authentik is tested and supported) and configure:
+  - `OIDC_ISSUER_URL`
+  - `AUTH_CLIENT_ID`
+  - `AUTH_URL`
+  - `AUTH_TOKEN`
+- Caddy can be configured for forward authentication to protect all endpoints with authentication, with the exception of S3, for which forward authentication should not be enabled. Instead, temporary S3 credentials are used to access it.
+- **Change all default credentials and secrets in your `.env` before going live.**
+- Expose only necessary ports and use HTTPS for all external traffic.
 
-### Streaming and requesting reference sequences with minio
+---
 
-There are two options to let the htsget and refget servers talk to the minio embedded in the compose setup:
+## Advanced Configuration
 
-1. Set `S3_PUBLIC_URL=http://<LOCAL-IP>:9000` where `<LOCAL-IP>` is your local IP address (find it using hostname -I). **This is done automatically when starting the server with `just deploy`**.
-
-2. Manually create a host mapping from the minio service to localhost on the machine:
-> `echo "127.0.0.1 minio" >> /etc/hosts`
-
-
-These steps are not needed when using an external S3 server, in which case `S3_PUBLIC_URL` can just be set to the external S3 endpoint.
-
-> [!NOTE]
-> These steps are needed because the S3 host must be available under the same name to both the client and htsget/refget. This is because the canonical URI (incl. hostname) is used to [derive s3 signature keys](https://docs.aws.amazon.com/IAM/latest/UserGuide/create-signed-request.html).
+- You can point any service to an external S3 endpoint by setting the appropriate `*_PUBLIC_URL` and `*_LOCAL_URL` in `.env`.
+- For custom domains or HTTPS, adjust the Caddyfile and environment variables accordingly.
+- For scaling or custom deployments, each service can be run independently.
