@@ -1,0 +1,232 @@
+modos.genomics.htsget
+=====================
+
+.. py:module:: modos.genomics.htsget
+
+.. autoapi-nested-parse::
+
+   htsget client implementation
+
+   The htsget protocol [1]_ allows to stream slices of genomic data from a remote server.
+   The client is implemented as a file-like interface that lazily streams chunks from the server.
+
+   In practice, the client sends a request for a file with a specific format and genomic region.
+   The htsget server finds the byte ranges on the data server (e.g. S3) corresponding to the requests
+   and responds with a "ticket".
+
+   The ticket is a json document containing a list of blocks; each having headers and a URL pointing to_file
+   the corresponding byte ranges on the data server.
+
+   The client then streams data from these URLs, effectively concatenating the blocks into a single stream.
+
+
+   .. figure:: http://samtools.github.io/hts-specs/pub/htsget-ticket.png
+      :width: 66%
+      :alt: htsget mechanism diagram
+
+      Illustration of the mechanism through which the htsget server allows streaming and random-access on genomic files. See [1]_ for more details.
+
+
+   .. rubric:: Notes
+
+   This implementation differs from the reference GA4GH implementation [2]_ in that it allows lazily consuming chunks from a file-like interface without saving to a file. A downside of this approach is that the client cannot seek.
+
+   Additionally, this implementation does not support asynchronous fetching of blocks, which means that blocks are fetched sequentially.
+
+   .. rubric:: References
+
+   .. [1] http://samtools.github.io/hts-specs/htsget.html
+   .. [2] https://github.com/ga4gh/htsget
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.genomics.htsget._HtsgetBlockIter
+   modos.genomics.htsget.HtsgetStream
+   modos.genomics.htsget.HtsgetConnection
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.genomics.htsget.build_htsget_url
+   modos.genomics.htsget.parse_htsget_url
+
+
+Module Contents
+---------------
+
+.. py:function:: build_htsget_url(host, path, region)
+
+   Build an htsget URL from a host, path, and region.
+
+   .. rubric:: Examples
+
+   >>> build_htsget_url(
+   ...   "http://localhost:8000",
+   ...   Path("file.bam"),
+   ...   Region("chr1", 0, 1000)
+   ... )
+   'http://localhost:8000/reads/file?format=BAM&referenceName=chr1&start=0&end=1000'
+
+
+.. py:function:: parse_htsget_url(url)
+
+   Given a URL to an htsget resource, extract the host, path, and region.
+
+
+.. py:class:: _HtsgetBlockIter(blocks, chunk_size = 65536, timeout = 60)
+
+   Transparent iterator over blocks of an htsget stream.
+
+   This is used internally by HtsgetStream to lazily fetch and concatenate blocks.
+
+   .. rubric:: Examples
+
+   >>> next(_HtsgetBlockIter([
+   ...     {"url": "data:;base64,MTIzNDU2Nzg5"},
+   ...     {"url": "data:;base64,MTIzNDU2Nzg5"},
+   ... ]))
+   b'123456789'
+
+
+   .. py:attribute:: _blocks
+
+
+   .. py:attribute:: _source
+
+
+   .. py:attribute:: chunk_size
+      :value: 65536
+
+
+
+   .. py:attribute:: timeout
+      :value: 60
+
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: _consume_block()
+
+      Get streaming iterator over current block.
+
+
+
+   .. py:method:: __next__()
+
+      Stream next chunk of current block, or first
+      chunk of next block.
+
+
+
+.. py:class:: HtsgetStream(blocks)
+
+   Bases: :py:obj:`io.RawIOBase`
+
+
+   A file-like handle to a read-only, buffered htsget stream.
+
+   .. rubric:: Examples
+
+   >>> stream = HtsgetStream([
+   ...   {"url": "data:;base64,MTIzNDU2Nzg5Cg=="},
+   ...   {"url": "data:;base64,MTIzNDU2Nzg5Cg=="},
+   ... ])
+   >>> stream.read(4)
+   b'1234'
+
+
+   .. py:attribute:: _iterator
+
+
+   .. py:attribute:: _leftover
+      :value: b''
+
+
+
+   .. py:method:: readable()
+
+      Return whether object was opened for reading.
+
+      If False, read() will raise OSError.
+
+
+
+   .. py:method:: readinto(b)
+
+      Read up to len(b) bytes into a writable buffer bytes
+      and return the number of bytes read.
+
+      .. rubric:: Notes
+
+      See https://docs.python.org/3/library/io.html#io.RawIOBase.readinto
+
+
+
+.. py:class:: HtsgetConnection
+
+   Connection to an htsget resource.
+   It allows to open a stream to the resource and lazily fetch data from it.
+
+
+   .. py:attribute:: host
+      :type:  pydantic.HttpUrl
+
+
+   .. py:attribute:: path
+      :type:  pathlib.Path
+
+
+   .. py:attribute:: region
+      :type:  modos.genomics.region.Region | None
+
+
+   .. py:property:: url
+      :type: str
+
+
+      URL to fetch the ticket.
+
+
+   .. py:property:: ticket
+      :type: dict[str, Any]
+
+
+      Ticket containing the URLs to fetch the data.
+
+
+   .. py:method:: open()
+
+      Open a connection to the stream data.
+
+
+
+   .. py:method:: to_file(path)
+
+      Save all data from the stream to a file.
+
+
+
+   .. py:method:: from_url(url)
+      :classmethod:
+
+
+      Open connection directly from an htsget URL.
+
+
+
+   .. py:method:: to_pysam(reference_filename = None)
+
+      Convert the stream to a pysam object.
+
+
+
