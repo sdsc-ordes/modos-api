@@ -33,6 +33,10 @@ HTSGET_PUBLIC_URL = os.environ.get("HTSGET_PUBLIC_URL", None)
 REFGET_PUBLIC_URL = os.environ.get("REFGET_PUBLIC_URL", None)
 KMS_PUBLIC_URL = os.environ.get("KMS_PUBLIC_URL", None)
 
+AUTH_ENABLED = all(
+    [x for x in (AUTH_TOKEN, AUTH_URL, OIDC_ISSUER_URL, AUTH_CLIENT_NAME)]
+)
+
 SERVICES = {
     "s3": S3_LOCAL_URL,
     "htsget": HTSGET_LOCAL_URL,
@@ -163,7 +167,7 @@ def get_endpoints():
         "kms": KMS_PUBLIC_URL,
         "refget": REFGET_PUBLIC_URL,
     }
-    if OIDC_ISSUER_URL and AUTH_CLIENT_NAME:
+    if AUTH_ENABLED:
         endpoints["auth"] = {
             "url": OIDC_ISSUER_URL,
             "client_id": get_client_id(AUTH_CLIENT_NAME),

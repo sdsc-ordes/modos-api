@@ -124,10 +124,6 @@ services:
     networks:
       - modos-network
     environment:
-      - OIDC_ISSUER_URL=${OIDC_ISSUER_URL}
-      - AUTH_TOKEN=${AUTH_TOKEN:-auth-token}
-      - AUTH_URL=${AUTH_URL:-http://auth.example.org}
-      - AUTH_CLIENT_NAME=${AUTH_CLIENT_NAME}
       - FUZON_PUBLIC_URL=${FUZON_PUBLIC_URL:-http://localhost/fuzon}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
@@ -140,4 +136,8 @@ services:
       - S3_BUCKET=${S3_BUCKET:-modos-demo}
       - S3_LOCAL_URL=${S3_LOCAL_URL:-http://garage:9000}
       - S3_PUBLIC_URL=${S3_PUBLIC_URL:-http://localhost/s3}
+      - OIDC_ISSUER_URL=${OIDC_ISSUER_URL}
+      - AUTH_TOKEN=${AUTH_TOKEN}
+      - AUTH_URL=${AUTH_URL}
+      - AUTH_CLIENT_NAME=${AUTH_CLIENT_NAME}
     command: uv run uvicorn --host 0.0.0.0 --port 8000 --reload server:app
