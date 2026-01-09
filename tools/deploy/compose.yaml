@@ -66,7 +66,7 @@ services:
       - modos-network
     environment:
       - AUTH_URL=${AUTH_URL:-http://auth.example.org}
-      - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-modos-proxy}
+      - AUTH_CLIENT_NAME=${AUTH_CLIENT_NAME:-modos_proxy}
       - AUTH_TOKEN=${AUTH_TOKEN:-auth-token}
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
       - S3_BUCKET=${S3_BUCKET:-modos-demo}
@@ -125,7 +125,9 @@ services:
       - modos-network
     environment:
       - OIDC_ISSUER_URL=${OIDC_ISSUER_URL}
-      - AUTH_CLIENT_ID=${AUTH_CLIENT_ID}
+      - AUTH_TOKEN=${AUTH_TOKEN:-auth-token}
+      - AUTH_URL=${AUTH_URL:-http://auth.example.org}
+      - AUTH_CLIENT_NAME=${AUTH_CLIENT_NAME}
       - FUZON_PUBLIC_URL=${FUZON_PUBLIC_URL:-http://localhost/fuzon}
       - HTSGET_LOCAL_URL=${HTSGET_LOCAL_URL:-http://htsget:8080}
       - HTSGET_PUBLIC_URL=${HTSGET_PUBLIC_URL:-http://localhost/htsget}
