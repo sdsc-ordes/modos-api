@@ -22,7 +22,7 @@ import requests
 from . import models
 
 AUTH_TOKEN = os.environ["AUTH_TOKEN"]  # NOTE: Authentik bootstrap token
-AUTH_CLIENT_ID = os.environ["AUTH_CLIENT_ID"]
+AUTH_CLIENT_NAME = os.environ["AUTH_CLIENT_NAME"]
 AUTH_URL = os.environ["AUTH_URL"]
 S3_BUCKET = os.environ["S3_BUCKET"]
 S3_API_URL = os.environ["S3_API_URL"]
@@ -58,7 +58,7 @@ def get_client_credentials() -> tuple[str, str]:
 
     # Find the proxy matching modos client id
     results = resp.json()["results"]
-    proxies = [o for o in results if o["client_id"] == AUTH_CLIENT_ID]
+    proxies = [o for o in results if o["name"] == AUTH_CLIENT_NAME]
 
     if len(proxies) > 1:
         raise ValueError("Multiple proxy providers matched client id")
