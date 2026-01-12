@@ -8,9 +8,11 @@ available modos, as well as their metadata.
 """
 
 import difflib
+from functools import lru_cache
 import os
 
 from fastapi import FastAPI, HTTPException
+import requests
 from modos.api import MODO
 from modos.logging import setup_logging
 from modos.storage import connect_s3
@@ -22,12 +24,18 @@ BUCKET = os.environ["S3_BUCKET"]
 HTSGET_LOCAL_URL = os.environ["HTSGET_LOCAL_URL"]
 
 # Optional
+AUTH_TOKEN = os.environ.get("AUTH_TOKEN", None)
+AUTH_URL = os.environ.get("AUTH_URL", None)
 OIDC_ISSUER_URL = os.environ.get("OIDC_ISSUER_URL", None)
-AUTH_CLIENT_ID = os.environ.get("AUTH_CLIENT_ID", None)
+AUTH_CLIENT_NAME = os.environ.get("AUTH_CLIENT_NAME", None)
 FUZON_PUBLIC_URL = os.environ.get("FUZON_PUBLIC_URL", None)
 HTSGET_PUBLIC_URL = os.environ.get("HTSGET_PUBLIC_URL", None)
 REFGET_PUBLIC_URL = os.environ.get("REFGET_PUBLIC_URL", None)
 KMS_PUBLIC_URL = os.environ.get("KMS_PUBLIC_URL", None)
+
+AUTH_ENABLED = all(
+    [x for x in (AUTH_TOKEN, AUTH_URL, OIDC_ISSUER_URL, AUTH_CLIENT_NAME)]
+)
 
 SERVICES = {
     "s3": S3_LOCAL_URL,
@@ -41,6 +49,42 @@ setup_logging(
     level="INFO",
     time=True,
 )
+
+
+@lru_cache
+def get_client_id(client_name: str) -> str:
+    """Get client id matching input name from authentik outpost proxy endpoint.
+
+    Parameters
+    ----------
+    client_name : str
+        Name of the client to search for.
+
+    Returns
+    -------
+    client_id
+        Authentik outpost client id.
+
+    """
+
+    resp = requests.get(
+        f"{AUTH_URL}/api/v3/outposts/proxy/",
+        headers={"Authorization": f"Bearer {AUTH_TOKEN}"},
+    )
+    try:
+        resp.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        raise HTTPException(status_code=resp.status_code, detail=str(err))
+
+    # Find the proxy matching modos client id
+    results = resp.json()["results"]
+    proxies = [o for o in results if o["name"] == client_name]
+
+    if len(proxies) > 1:
+        raise ValueError("Multiple proxy providers matched client id")
+    data = proxies[0]
+
+    return data["client_id"]
 
 
 @app.get("/list")
@@ -123,9 +167,9 @@ def get_endpoints():
         "kms": KMS_PUBLIC_URL,
         "refget": REFGET_PUBLIC_URL,
     }
-    if OIDC_ISSUER_URL and AUTH_CLIENT_ID:
+    if AUTH_ENABLED:
         endpoints["auth"] = {
             "url": OIDC_ISSUER_URL,
-            "client_id": AUTH_CLIENT_ID,
+            "client_id": get_client_id(AUTH_CLIENT_NAME),
         }
     return endpoints
