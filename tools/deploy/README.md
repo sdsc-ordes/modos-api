@@ -138,7 +138,7 @@ This will build and start all services for local development (using the `local` 
 - By default, authentication is **disabled** for ease of development. This means that all services are accessible, and that S3 can be accessed with standard S3 credentials (by exporting them as environment variables).
 - For production, set up an OIDC provider (only Authentik is tested and supported) and configure:
   - `OIDC_ISSUER_URL`
-  - `AUTH_CLIENT_ID`
+  - `AUTH_CLIENT_NAME`
   - `AUTH_URL`
   - `AUTH_TOKEN`
 - Caddy can be configured for forward authentication to protect all endpoints with authentication, with the exception of S3, for which forward authentication should not be enabled. Instead, temporary S3 credentials are used to access it.
