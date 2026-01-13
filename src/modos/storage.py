@@ -54,6 +54,21 @@ class Storage(ABC):
         ...
 
     @abstractmethod
+    def list_objects(
+        self,
+        target: Optional[Path] = None,
+    ) -> Generator[Path, None, None]:
+        """List files in the storage.
+
+        Parameters
+        ----------
+        target:
+            path to a directory to list relative to storage.path.
+            If None, list all objects in storage.
+        """
+        ...
+
+    @abstractmethod
     def move(self, rel_source: Path, target: Path):
         """Move a file within storage.
 
@@ -256,6 +271,16 @@ class S3Storage(Storage):
             for key in batch:
                 yield Path(key["path"])
 
+    def list_objects(
+        self, target: Optional[Path] = None
+    ) -> Generator[Path, None, None]:
+        seen: set[Path] = set()
+        for p in self.list(target):
+            prefix = prefix_before_zarr_root(p)
+            if prefix is not None and prefix not in seen:
+                seen.add(prefix)
+                yield prefix
+
     def open(self, target: Path) -> io.BufferedReader:
         return obs.open_reader(self.store, path=str(target))
 
@@ -325,3 +350,11 @@ def list_zarr_items(
     """Recursively list all zarr groups and arrays"""
 
     return group.members()
+
+
+def prefix_before_zarr_root(path: Path):
+    parts = path.parts
+    if ZARR_ROOT in parts:
+        idx = parts.index(ZARR_ROOT)
+        return Path(*parts[:idx]) if idx > 0 else Path(".")
+    return None
