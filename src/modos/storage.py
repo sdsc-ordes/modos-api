@@ -339,19 +339,8 @@ def list_remote_modos(
         path to a directory to list relative to storage.path.
         If None, list all objects in storage.
     """
-
-    seen: set[Path] = set()
     for batch in store.list(f"{target or ''}"):
         for key in batch:
-            prefix = prefix_before_zarr_root(Path(key["path"]))
-            if prefix is not None and prefix not in seen:
-                seen.add(prefix)
-                yield prefix
-
-
-def prefix_before_zarr_root(path: Path):
-    parts = path.parts
-    if ZARR_ROOT.as_posix() in parts:
-        idx = parts.index(ZARR_ROOT.as_posix())
-        return Path(*parts[:idx]) if idx > 0 else Path(".")
-    return None
+            prefix = Path(key["path"])
+            if prefix.match(f"{ZARR_ROOT}/zarr.json"):
+                yield prefix.parent.parent
