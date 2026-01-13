@@ -54,21 +54,6 @@ class Storage(ABC):
         ...
 
     @abstractmethod
-    def list_objects(
-        self,
-        target: Optional[Path] = None,
-    ) -> Generator[Path, None, None]:
-        """List files in the storage.
-
-        Parameters
-        ----------
-        target:
-            path to a directory to list relative to storage.path.
-            If None, list all objects in storage.
-        """
-        ...
-
-    @abstractmethod
     def move(self, rel_source: Path, target: Path):
         """Move a file within storage.
 
@@ -271,16 +256,6 @@ class S3Storage(Storage):
             for key in batch:
                 yield Path(key["path"])
 
-    def list_objects(
-        self, target: Optional[Path] = None
-    ) -> Generator[Path, None, None]:
-        seen: set[Path] = set()
-        for p in self.list(target):
-            prefix = prefix_before_zarr_root(p)
-            if prefix is not None and prefix not in seen:
-                seen.add(prefix)
-                yield prefix
-
     def open(self, target: Path) -> io.BufferedReader:
         return obs.open_reader(self.store, path=str(target))
 
@@ -352,9 +327,31 @@ def list_zarr_items(
     return group.members()
 
 
+def list_remote_modos(
+    store: S3Store,
+    target: Optional[Path] = None,
+) -> Generator[Path, None, None]:
+    """List all modos in the store.
+
+    Parameters
+    ----------
+    target:
+        path to a directory to list relative to storage.path.
+        If None, list all objects in storage.
+    """
+
+    seen: set[Path] = set()
+    for batch in store.list(f"{target or ''}"):
+        for key in batch:
+            prefix = prefix_before_zarr_root(Path(key["path"]))
+            if prefix is not None and prefix not in seen:
+                seen.add(prefix)
+                yield prefix
+
+
 def prefix_before_zarr_root(path: Path):
     parts = path.parts
-    if ZARR_ROOT in parts:
-        idx = parts.index(ZARR_ROOT)
+    if ZARR_ROOT.as_posix() in parts:
+        idx = parts.index(ZARR_ROOT.as_posix())
         return Path(*parts[:idx]) if idx > 0 else Path(".")
     return None
