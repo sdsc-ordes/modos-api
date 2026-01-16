@@ -125,10 +125,7 @@ class LocalStorage(Storage):
 
         with open(self.path / target, "wb") as f:
             while True:
-                try:
-                    chunk = source.read(8192)
-                except OSError:
-                    break
+                chunk = source.read()
                 if not chunk:
                     break
                 f.write(chunk)
