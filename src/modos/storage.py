@@ -124,11 +124,8 @@ class LocalStorage(Storage):
         os.makedirs(self.path / target.parent, exist_ok=True)
 
         with open(self.path / target, "wb") as f:
-            while True:
-                chunk = source.read()
-                if not chunk:
-                    break
-                f.write(chunk)
+            for chunk in source:
+                _ = f.write(chunk)
 
     def remove(self, target: Path):
         target_full = self.path / target
@@ -256,8 +253,9 @@ class S3Storage(Storage):
             for key in batch:
                 yield Path(key["path"])
 
-    def open(self, target: Path) -> io.BufferedReader:
-        return obs.open_reader(self.store, path=str(target))
+    def open(self, target: Path) -> Iterable[bytes]:
+        # return obs.open_reader(self.store, path=str(target))
+        return obs.get(self.store, str(target)).stream(min_chunk_size=8192)
 
     def remove(self, target: Path):
         if self.exists(target):
