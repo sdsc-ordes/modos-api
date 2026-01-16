@@ -124,11 +124,14 @@ class LocalStorage(Storage):
         os.makedirs(self.path / target.parent, exist_ok=True)
 
         with open(self.path / target, "wb") as f:
-            try:
-                while chunk := source.read(8192):
-                    _ = f.write(chunk)
-            except OSError:
-                _ = f.write(source.read())
+            while True:
+                try:
+                    chunk = source.read(8192)
+                except OSError:
+                    break
+                if not chunk:
+                    break
+                f.write(chunk)
 
     def remove(self, target: Path):
         target_full = self.path / target
