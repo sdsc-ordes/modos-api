@@ -629,3 +629,19 @@ class MODO:
             data.decrypt(seckey_path, sender_pubkey, passphrase)
             update_metadata_from_model(group, data.model)
         self.update_date()
+
+    def checksum(self) -> str:
+        """Compute a single checksum for the MODO based on its contents.
+
+        Only file contents are considered, not filenames.
+        """
+        import hashlib
+
+        m = hashlib.md5()
+        # iterate over all files in the storage
+        # load by chunks to avoid memory issues with large files
+
+        for file_path in sorted(self.storage.list()):
+            for chunk in self.storage.open(file_path):
+                m.update(chunk)
+        return m.hexdigest()
