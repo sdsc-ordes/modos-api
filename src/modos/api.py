@@ -117,7 +117,6 @@ class MODO:
                 f"Using remote endpoint {endpoint} for {path}.",
                 file=sys.stderr,
             )
-            print(f"Set up storage with: {s3_kwargs}")
             self.storage = S3Storage(str(path), self.endpoint.s3, s3_kwargs)
         else:
             # log to stderr
