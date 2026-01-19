@@ -151,16 +151,16 @@ def test_upload_modo(setup, test_modo):
     )
 
     post_sum = MODO(
-        "s3://test/upload_ex",
+        "s3://test/prefix/upload_ex",
         services={"s3": f"http://{minio_endpoint}"},
         s3_kwargs=minio_creds,
     ).checksum()
+
     assert pre_sum == post_sum
 
     store = connect_s3("s3://test", f"http://{minio_endpoint}", minio_creds)
     objects = list_remote_modos(store)
     assert "prefix/upload_ex" in [str(o) for o in objects]
-
 
 
 @pytest.mark.remote
