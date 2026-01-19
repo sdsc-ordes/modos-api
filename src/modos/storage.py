@@ -325,3 +325,22 @@ def list_zarr_items(
     """Recursively list all zarr groups and arrays"""
 
     return group.members()
+
+
+def list_remote_modos(
+    store: S3Store,
+    target: Optional[Path] = None,
+) -> Generator[Path, None, None]:
+    """List all modos in the store.
+
+    Parameters
+    ----------
+    target:
+        path to a directory to list relative to storage.path.
+        If None, list all objects in storage.
+    """
+    for batch in store.list(f"{target or ''}"):
+        for key in batch:
+            prefix = Path(key["path"])
+            if prefix.match(f"{ZARR_ROOT}/zarr.json"):
+                yield prefix.parent.parent

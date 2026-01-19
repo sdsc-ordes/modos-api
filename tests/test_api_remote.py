@@ -1,6 +1,7 @@
 """Tests for the remote use of multi-omics digital object (modo) API"""
 
 from modos.api import MODO
+from modos.storage import connect_s3, list_remote_modos
 
 import modos_schema.datamodel as model
 import pytest
@@ -138,17 +139,18 @@ def test_update_source_file_and_data_path(remote_modo):
 # Upload/download entire modo
 @pytest.mark.remote
 def test_upload_modo(setup, test_modo):
-    minio_client = setup["minio"].get_client()
     minio_endpoint = setup["minio"].get_config()["endpoint"]
     minio_creds = {
         "secret_access_key": "minioadmin",
         "access_key_id": "minioadmin",
     }
+    # NOTE: We upload to a prefix here and indirectly also test nested listing
     test_modo.upload(
-        "s3://test/upload_ex", f"http://{minio_endpoint}", minio_creds
+        "s3://test/prefix/upload_ex", f"http://{minio_endpoint}", minio_creds
     )
-    objects = minio_client.list_objects("test")
-    assert "upload_ex/" in [o.object_name for o in objects]
+    store = connect_s3("s3://test", f"http://{minio_endpoint}", minio_creds)
+    objects = list_remote_modos(store)
+    assert "prefix/upload_ex" in [str(o) for o in objects]
 
 
 @pytest.mark.remote
