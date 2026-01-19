@@ -325,7 +325,7 @@ def list_zarr_items(
 
 def list_remote_modos(
     store: S3Store,
-    target: Optional[Path] = None,
+    target: Path | None = None,
 ) -> Generator[Path, None, None]:
     """List all modos in the store.
 
