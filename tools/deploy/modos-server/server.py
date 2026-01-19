@@ -15,7 +15,7 @@ from fastapi import FastAPI, HTTPException
 import requests
 from modos.api import MODO
 from modos.logging import setup_logging
-from modos.storage import connect_s3
+from modos.storage import connect_s3, list_remote_modos
 
 # Required
 S3_LOCAL_URL = os.environ["S3_LOCAL_URL"]
@@ -44,7 +44,7 @@ SERVICES = {
 
 app = FastAPI()
 
-storage = connect_s3(f"s3://{BUCKET}", S3_LOCAL_URL)
+store = connect_s3(f"s3://{BUCKET}", S3_LOCAL_URL)
 setup_logging(
     level="INFO",
     time=True,
@@ -91,7 +91,7 @@ def get_client_id(client_name: str) -> str:
 def list_modos() -> dict[str, list[str]]:
     """List MODO entries in bucket."""
     try:
-        modos = storage.list_with_delimiter()["common_prefixes"]
+        modos = list_remote_modos(store)
     except PermissionError:
         raise HTTPException(
             status_code=500, detail=f"Cannot access S3 bucket: {BUCKET}"
@@ -106,7 +106,7 @@ def gather_metadata():
     resp = {"data": []}
 
     try:
-        for modo in storage.list_with_delimiter()["common_prefixes"]:
+        for modo in list_remote_modos(store):
             path = f"s3://{BUCKET}/{modo}"
             resp["data"].append(
                 {
@@ -131,13 +131,13 @@ def str_similarity(s1: str, s2: str) -> float:
 def get_s3_path(query: str, fuzzy: bool = False):
     """Receive the S3 path of all modos matching the query.
     Can optionally use fuzzy matching to find similar names."""
-    paths = storage.list_with_delimiter()["common_prefixes"]
+    paths = list_remote_modos(store)
 
     if not fuzzy:
         results = [path for path in paths if query == path]
 
     else:
-        sims = [str_similarity(query, path) for path in paths]
+        sims = [str_similarity(query, path.as_posix()) for path in paths]
         pairs = filter(lambda p: p[1] > 0.7, zip(paths, sims))
         pairs = sorted(pairs, key=lambda p: p[1], reverse=True)
         results = [p[0] for p in pairs]
