@@ -144,10 +144,20 @@ def test_upload_modo(setup, test_modo):
         "secret_access_key": "minioadmin",
         "access_key_id": "minioadmin",
     }
+    pre_sum = test_modo.checksum()
     # NOTE: We upload to a prefix here and indirectly also test nested listing
     test_modo.upload(
         "s3://test/prefix/upload_ex", f"http://{minio_endpoint}", minio_creds
     )
+
+    post_sum = MODO(
+        "s3://test/prefix/upload_ex",
+        services={"s3": f"http://{minio_endpoint}"},
+        s3_kwargs=minio_creds,
+    ).checksum()
+
+    assert pre_sum == post_sum
+
     store = connect_s3("s3://test", f"http://{minio_endpoint}", minio_creds)
     objects = list_remote_modos(store)
     assert "prefix/upload_ex" in [str(o) for o in objects]
@@ -155,5 +165,8 @@ def test_upload_modo(setup, test_modo):
 
 @pytest.mark.remote
 def test_download_modo(remote_modo, tmp_path):
+    pre_sum = remote_modo.checksum()
     remote_modo.download(tmp_path / "download_ex")
+    post_sum = MODO(tmp_path / "download_ex").checksum()
     assert (tmp_path / "download_ex").exists()
+    assert pre_sum == post_sum

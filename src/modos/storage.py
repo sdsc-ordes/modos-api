@@ -1,12 +1,12 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-import io
+from collections.abc import Iterable, Generator
 from loguru import logger
 import os
 from pathlib import Path
 import re
 import shutil
-from typing import Any, ClassVar, Generator, Optional
+from typing import Any, ClassVar
 
 import obstore as obs
 from obstore.store import S3Store
@@ -41,7 +41,7 @@ class Storage(ABC):
     @abstractmethod
     def list(
         self,
-        target: Optional[Path] = None,
+        target: Path | None = None,
     ) -> Generator[Path, None, None]:
         """List files in the storage.
 
@@ -67,10 +67,10 @@ class Storage(ABC):
         ...
 
     @abstractmethod
-    def open(self, target: Path) -> io.BufferedReader: ...
+    def open(self, target: Path) -> Iterable[bytes]: ...
 
     @abstractmethod
-    def put(self, source: io.BufferedReader, target: Path): ...
+    def put(self, source: Iterable[bytes], target: Path): ...
 
     @abstractmethod
     def remove(self, target: Path): ...
@@ -106,9 +106,7 @@ class LocalStorage(Storage):
     def exists(self, target: Path) -> bool:
         return (self.path / target).exists()
 
-    def list(
-        self, target: Optional[Path] = None
-    ) -> Generator[Path, None, None]:
+    def list(self, target: Path | None = None) -> Generator[Path, None, None]:
         path = self.path / (target or "")
         for path in path.rglob("*"):
             if path.is_file():
@@ -117,18 +115,15 @@ class LocalStorage(Storage):
     def move(self, rel_source: Path, target: Path):
         shutil.move(self.path / rel_source, self.path / target)
 
-    def open(self, target: Path) -> io.BufferedReader:
+    def open(self, target: Path) -> Iterable[bytes]:
         return open(self.path / target, "rb")
 
-    def put(self, source: io.BufferedReader, target: Path):
+    def put(self, source: Iterable[bytes], target: Path):
         os.makedirs(self.path / target.parent, exist_ok=True)
 
         with open(self.path / target, "wb") as f:
-            try:
-                while chunk := source.read(8192):
-                    _ = f.write(chunk)
-            except OSError:
-                _ = f.write(source.read())
+            for chunk in source:
+                _ = f.write(chunk)
 
     def remove(self, target: Path):
         target_full = self.path / target
@@ -200,7 +195,7 @@ class S3Storage(Storage):
         self,
         path: str,
         s3_endpoint: HttpUrl,
-        s3_kwargs: Optional[dict[str, Any]] = None,
+        s3_kwargs: dict[str, Any] | None = None,
     ):
         """S3 storage based on obstore.
 
@@ -256,8 +251,9 @@ class S3Storage(Storage):
             for key in batch:
                 yield Path(key["path"])
 
-    def open(self, target: Path) -> io.BufferedReader:
-        return obs.open_reader(self.store, path=str(target))
+    def open(self, target: Path) -> Iterable[bytes]:
+        # return obs.open_reader(self.store, path=str(target))
+        return obs.get(self.store, str(target)).stream(min_chunk_size=8192)
 
     def remove(self, target: Path):
         if self.exists(target):
@@ -266,7 +262,7 @@ class S3Storage(Storage):
                 f"Permanently deleted {target} from remote filesystem."
             )
 
-    def put(self, source: io.BufferedReader, target: Path):
+    def put(self, source: Iterable[bytes], target: Path):
         self.store.put(str(target), source)
 
     def move(self, rel_source: Path, target: Path):
@@ -329,7 +325,7 @@ def list_zarr_items(
 
 def list_remote_modos(
     store: S3Store,
-    target: Optional[Path] = None,
+    target: Path | None = None,
 ) -> Generator[Path, None, None]:
     """List all modos in the store.
 
