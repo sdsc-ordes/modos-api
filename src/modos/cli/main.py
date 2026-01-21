@@ -77,13 +77,18 @@ def s3_env_callback(ctx: typer.Context):
     s3_vars = {
         "AWS_ACCESS_KEY_ID": "access_key_id",
         "AWS_SECRET_ACCESS_KEY": "secret_access_key",
+        "AWS_DEFAULT_REGION": "region",
     }
-    # If S3 credentials set in environment, ignore cache
-    if all(k in os.environ for k in s3_vars.keys()):
-        return
-
     for var_name, kwarg in s3_vars.items():
-        ctx.obj["s3_kwargs"][kwarg] = cache.get(var_name)
+        # If S3 credentials set in environment, ignore cache
+        if var_name in os.environ.keys():
+            continue
+
+        # Set from cache if available
+        try:
+            ctx.obj["s3_kwargs"][kwarg] = cache[var_name]
+        except KeyError:
+            continue
 
 
 @cli.command(rich_help_panel="Read")
