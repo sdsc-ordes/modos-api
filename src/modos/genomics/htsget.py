@@ -50,6 +50,7 @@ from pydantic.dataclasses import dataclass
 import pysam
 import requests
 
+from modos.remote import get_session
 from modos.genomics.region import Region
 from modos.genomics.formats import GenomicFileSuffix, read_pysam
 
@@ -239,7 +240,7 @@ class HtsgetConnection:
     @cached_property
     def ticket(self) -> dict[str, Any]:
         """Ticket containing the URLs to fetch the data."""
-        return requests.get(self.url).json()
+        return get_session().get(self.url).json()
 
     def open(self) -> io.RawIOBase:
         """Open a connection to the stream data."""
