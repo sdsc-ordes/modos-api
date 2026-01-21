@@ -27,6 +27,7 @@ AUTH_URL = os.environ["AUTH_URL"]
 S3_BUCKET = os.environ["S3_BUCKET"]
 S3_API_URL = os.environ["S3_API_URL"]
 S3_API_TOKEN = os.environ["S3_API_TOKEN"]
+AWS_DEFAULT_REGION = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 
 setup_logging(
     level="INFO",
@@ -118,6 +119,7 @@ def extract_spec(token: str) -> S3KeySpec:
 
     return S3KeySpec(
         bucket=S3_BUCKET,
+        region=AWS_DEFAULT_REGION,
         name=str(uuid.uuid4()),
         expiration=datetime.datetime.fromtimestamp(expiration),
         prefixes=groups,

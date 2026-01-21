@@ -65,7 +65,6 @@ class EndpointManager:
     >>> ex = EndpointManager(services={"s3": "http://s3.example.org"})
     >>> ex.s3
     'http://s3.example.org'
-
     """
 
     modos: HttpUrl | None = None
@@ -93,7 +92,7 @@ class EndpointManager:
         return self.list().get("kms")
 
     @property
-    def s3(self) -> HttpUrl | None:
+    def s3(self) -> dict[str, str | HttpUrl] | None:
         return self.list().get("s3")
 
     @property
@@ -254,6 +253,7 @@ class S3KeySpec(BaseModel):
     prefixes: list[str] | None
     permissions: Permissions
     name: str | None = None
+    region: str = "us-east-1"
 
 
 class S3Key(BaseModel):
