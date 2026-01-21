@@ -81,6 +81,7 @@ def login(
     with open(get_cache_dir() / "s3.env", "w") as f:
         _ = f.write(f"AWS_ACCESS_KEY_ID={key.access_key_id}\n")
         _ = f.write(f"AWS_SECRET_ACCESS_KEY={key.secret_access_key}\n")
+        _ = f.write(f"AWS_DEFAULT_REGION={key.spec.region}\n")
 
     logger.info("You are logged in.")
     logger.info(f"S3 credentials valid until: {key.spec.expiration}.")
