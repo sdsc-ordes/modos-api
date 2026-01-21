@@ -16,6 +16,7 @@ from modos.cli.c4gh import c4gh
 from modos.cli.common import OBJECT_PATH_ARG, RdfFormat
 from modos.cli.remote import remote
 from modos.helpers.enums import UserElementType
+from modos.remote import list_remote_items
 
 
 cli = typer.Typer(add_completion=False)
@@ -117,7 +118,7 @@ def show(
     from modos.api import MODO
 
     endpoint = ctx.obj["endpoint"]
-    if endpoint:
+    if endpoint and object_path in list_remote_items(endpoint):
         obj = MODO(
             object_path,
             endpoint=endpoint,
