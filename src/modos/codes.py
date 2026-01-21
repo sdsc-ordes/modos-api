@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from pathlib import Path
-import requests
+
+from modos.remote import get_session
 
 
 SLOT_TERMINOLOGIES = {
@@ -72,9 +73,13 @@ class RemoteCodeMatcher(CodeMatcher):
         self.top: int = top
 
     def find_codes(self, query: str) -> list[Code]:
-        codes: list[dict[str, str]] = requests.get(
-            f"{self.endpoint}/codes/top?collection={self.slot}&query={query}&num={self.top}"
-        ).json()["codes"]
+        codes: list[dict[str, str]] = (
+            get_session()
+            .get(
+                f"{self.endpoint}/codes/top?collection={self.slot}&query={query}&num={self.top}"
+            )
+            .json()["codes"]
+        )
 
         return [Code(label=code["label"], uri=code["uri"]) for code in codes]
 
