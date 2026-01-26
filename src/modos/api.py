@@ -613,6 +613,7 @@ class MODO:
             )
             update_metadata_from_model(group, data.model)
         self.update_date()
+        zarr.consolidate_metadata(self.zarr.store)
 
     def decrypt(
         self,
@@ -628,6 +629,7 @@ class MODO:
             data.decrypt(seckey_path, sender_pubkey, passphrase)
             update_metadata_from_model(group, data.model)
         self.update_date()
+        zarr.consolidate_metadata(self.zarr.store)
 
     def checksum(self) -> str:
         """Compute a single checksum for the MODO based on its contents.
