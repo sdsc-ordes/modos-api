@@ -9,4 +9,5 @@ modo_remote.md
 genomics_streaming.md
 modo_arrays.md
 metabolomics_mztab.md
+remote_deployment.md
 :::

@@ -69,10 +69,10 @@ Check the CLI!
 
 :::
 
-:::{grid-item-card} {octicon}`book;2em` Background
+:::{grid-item-card} {octicon}`book;2em` Overview
 Read more about __multiomics__ data and MODOS's features and structure!
 
-:::{button-ref} intro/background
+:::{button-ref} intro/overview
 :ref-type: myst
 :expand:
 :color: dark
@@ -107,7 +107,7 @@ To the data model!
 :hidden:
 
 intro/quickstart.md
-intro/background.md
+intro/overview.md
 tutorials/tutorials.md
 autoapi/index
 cli.rst

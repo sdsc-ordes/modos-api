@@ -26,6 +26,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx.ext.autosectionlabel",
+    "sphinxcontrib.mermaid",
     "autoapi.extension",
     "sphinx_click",
     "sphinx_design",
