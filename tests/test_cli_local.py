@@ -138,6 +138,7 @@ def test_encrypt_modo(test_modo, c4gh_keypair, tmp_path):
     assert result.exit_code == 0
     assert (tmp_path / "demo1.cram.c4gh").exists()
     assert not (tmp_path / "demo1.cram").exists()
+    assert test_modo.metadata["data/demo1"]["data_path"] == "demo1.cram.c4gh"
 
 
 ## Decryption
