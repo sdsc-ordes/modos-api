@@ -143,6 +143,7 @@ This will build and start all services for local development (using the `local` 
   - `AUTH_CLIENT_NAME`
   - `AUTH_URL`
   - `AUTH_TOKEN`
+- to enable authentication in the compose deployment,  use `--profile auth`
 - Caddy can be configured for forward authentication to protect all endpoints with authentication, with the exception of S3, for which forward authentication should not be enabled. Instead, temporary S3 credentials are used to access it.
 - **Change all default credentials and secrets in your `.env` before going live.**
 - Expose only necessary ports and use HTTPS for all external traffic.
