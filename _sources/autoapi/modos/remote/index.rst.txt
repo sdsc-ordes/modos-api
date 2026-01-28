@@ -1,0 +1,536 @@
+modos.remote
+============
+
+.. py:module:: modos.remote
+
+.. autoapi-nested-parse::
+
+   Functions related to server storage handling
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.remote.BearerAuth
+   modos.remote.EndpointManager
+   modos.remote.JWT
+   modos.remote.Permissions
+   modos.remote.S3KeySpec
+   modos.remote.S3Key
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.remote.get_session
+   modos.remote.list_remote_items
+   modos.remote.get_metadata_from_remote
+   modos.remote.is_s3_path
+   modos.remote.get_s3_path
+   modos.remote.get_cache_dir
+
+
+Module Contents
+---------------
+
+.. py:class:: BearerAuth
+
+   Bases: :py:obj:`requests.auth.AuthBase`
+
+
+   Base class that all auth implementations derive from
+
+
+   .. py:attribute:: jwt
+      :value: None
+
+
+
+   .. py:method:: __call__(r)
+
+
+.. py:function:: get_session()
+
+.. py:class:: EndpointManager
+
+   Handle modos server endpoints.
+   If a modos server url is provided, it is used to detect
+   available service urls. Alternatively, service urls can
+   be provided explicitely if no modos server is available.
+
+   :param modos: URL to the modos server.
+   :param services: Mapping of services to their urls.
+
+   .. rubric:: Examples
+
+   >>> ex = EndpointManager(modos="http://modos.example.org") # doctest: +SKIP
+   >>> ex.list() # doctest: +SKIP
+   {
+     's3: 'http://s3.example.org/',
+     'htsget': 'http://htsget.example.org/'
+   }
+   >>> ex.htsget # doctest: +SKIP
+   'http://htsget.example.org'
+   >>> ex = EndpointManager(services={"s3": "http://s3.example.org"})
+   >>> ex.s3
+   'http://s3.example.org'
+
+
+   .. py:attribute:: modos
+      :type:  pydantic.HttpUrl | None
+      :value: None
+
+
+
+   .. py:attribute:: services
+      :type:  dict[str, Any]
+
+
+   .. py:property:: session
+
+
+   .. py:method:: list()
+
+      List available endpoints.
+
+
+
+   .. py:property:: auth
+      :type: dict[str, str | pydantic.HttpUrl] | None
+
+
+
+   .. py:property:: kms
+      :type: pydantic.HttpUrl | None
+
+
+
+   .. py:property:: s3
+      :type: dict[str, str | pydantic.HttpUrl] | None
+
+
+
+   .. py:property:: fuzon
+      :type: pydantic.HttpUrl | None
+
+
+
+   .. py:property:: htsget
+      :type: pydantic.HttpUrl | None
+
+
+
+   .. py:property:: refget
+      :type: pydantic.HttpUrl | None
+
+
+
+.. py:function:: list_remote_items(url)
+
+.. py:function:: get_metadata_from_remote(url, modo_id = None)
+
+   Function to access metadata from one specific or all modos on a remote server
+
+   :param server_url: Url to the remote modo server
+   :param id: id of the modo to retrieve metadata from. Will return all if not specified (default).
+
+
+.. py:function:: is_s3_path(path)
+
+   Check if a path is an S3 path
+
+
+.. py:function:: get_s3_path(url, query, exact_match = False)
+
+   Request public S3 path of a specific modo or all modos matching the query string
+   :param remote_url: Url to the remote modo server
+   :param query: query string to specify the modo of interest
+   :param exact_match: if True only modos with exactly that id will be returned, otherwise (default) all matching modos
+
+
+.. py:function:: get_cache_dir()
+
+.. py:class:: JWT
+
+   Handles storage of JWT tokens for authentication.
+
+   .. rubric:: Examples
+
+   >>> token = JWT(access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzI5MjU2MDB9.DummySignature")
+   >>> token.is_expired
+   True
+   >>> token.to_cache()
+   >>> loaded_jwt = JWT.from_cache()
+   >>> loaded_jwt.access_token == token.access_token
+   True
+
+
+   .. py:attribute:: access_token
+      :type:  str
+
+
+   .. py:attribute:: _expires_at
+      :type:  datetime.datetime | None
+      :value: None
+
+
+
+   .. py:property:: expires_at
+
+
+   .. py:method:: get_cache_path()
+      :staticmethod:
+
+
+
+   .. py:method:: to_cache()
+
+      Store JWT in cache directory.
+
+
+
+   .. py:method:: from_cache()
+      :classmethod:
+
+
+      Load JWT from cache directory if it exists.
+
+
+
+   .. py:property:: is_expired
+      :type: bool
+
+
+
+   .. py:method:: refresh()
+
+
+.. py:class:: Permissions(/, **data)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   !!! abstract "Usage Documentation"
+       [Models](../concepts/models.md)
+
+   A base class for creating Pydantic models.
+
+   .. attribute:: __class_vars__
+
+      The names of the class variables defined on the model.
+
+   .. attribute:: __private_attributes__
+
+      Metadata about the private attributes of the model.
+
+   .. attribute:: __signature__
+
+      The synthesized `__init__` [`Signature`][inspect.Signature] of the model.
+
+   .. attribute:: __pydantic_complete__
+
+      Whether model building is completed, or if there are still undefined fields.
+
+   .. attribute:: __pydantic_core_schema__
+
+      The core schema of the model.
+
+   .. attribute:: __pydantic_custom_init__
+
+      Whether the model has a custom `__init__` function.
+
+   .. attribute:: __pydantic_decorators__
+
+      Metadata containing the decorators defined on the model.
+      This replaces `Model.__validators__` and `Model.__root_validators__` from Pydantic V1.
+
+   .. attribute:: __pydantic_generic_metadata__
+
+      Metadata for generic models; contains data used for a similar purpose to
+      __args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.
+
+   .. attribute:: __pydantic_parent_namespace__
+
+      Parent namespace of the model, used for automatic rebuilding of models.
+
+   .. attribute:: __pydantic_post_init__
+
+      The name of the post-init method for the model, if defined.
+
+   .. attribute:: __pydantic_root_model__
+
+      Whether the model is a [`RootModel`][pydantic.root_model.RootModel].
+
+   .. attribute:: __pydantic_serializer__
+
+      The `pydantic-core` `SchemaSerializer` used to dump instances of the model.
+
+   .. attribute:: __pydantic_validator__
+
+      The `pydantic-core` `SchemaValidator` used to validate instances of the model.
+
+   .. attribute:: __pydantic_fields__
+
+      A dictionary of field names and their corresponding [`FieldInfo`][pydantic.fields.FieldInfo] objects.
+
+   .. attribute:: __pydantic_computed_fields__
+
+      A dictionary of computed field names and their corresponding [`ComputedFieldInfo`][pydantic.fields.ComputedFieldInfo] objects.
+
+   .. attribute:: __pydantic_extra__
+
+      A dictionary containing extra values, if [`extra`][pydantic.config.ConfigDict.extra]
+      is set to `'allow'`.
+
+   .. attribute:: __pydantic_fields_set__
+
+      The names of fields explicitly set during instantiation.
+
+   .. attribute:: __pydantic_private__
+
+      Values of private attributes set on the model instance.
+
+
+   .. py:attribute:: read
+      :type:  bool
+
+
+   .. py:attribute:: write
+      :type:  bool
+
+
+   .. py:attribute:: owner
+      :type:  bool
+
+
+   .. py:method:: default()
+      :classmethod:
+
+
+
+   .. py:method:: __str__()
+
+
+.. py:class:: S3KeySpec(/, **data)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   !!! abstract "Usage Documentation"
+       [Models](../concepts/models.md)
+
+   A base class for creating Pydantic models.
+
+   .. attribute:: __class_vars__
+
+      The names of the class variables defined on the model.
+
+   .. attribute:: __private_attributes__
+
+      Metadata about the private attributes of the model.
+
+   .. attribute:: __signature__
+
+      The synthesized `__init__` [`Signature`][inspect.Signature] of the model.
+
+   .. attribute:: __pydantic_complete__
+
+      Whether model building is completed, or if there are still undefined fields.
+
+   .. attribute:: __pydantic_core_schema__
+
+      The core schema of the model.
+
+   .. attribute:: __pydantic_custom_init__
+
+      Whether the model has a custom `__init__` function.
+
+   .. attribute:: __pydantic_decorators__
+
+      Metadata containing the decorators defined on the model.
+      This replaces `Model.__validators__` and `Model.__root_validators__` from Pydantic V1.
+
+   .. attribute:: __pydantic_generic_metadata__
+
+      Metadata for generic models; contains data used for a similar purpose to
+      __args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.
+
+   .. attribute:: __pydantic_parent_namespace__
+
+      Parent namespace of the model, used for automatic rebuilding of models.
+
+   .. attribute:: __pydantic_post_init__
+
+      The name of the post-init method for the model, if defined.
+
+   .. attribute:: __pydantic_root_model__
+
+      Whether the model is a [`RootModel`][pydantic.root_model.RootModel].
+
+   .. attribute:: __pydantic_serializer__
+
+      The `pydantic-core` `SchemaSerializer` used to dump instances of the model.
+
+   .. attribute:: __pydantic_validator__
+
+      The `pydantic-core` `SchemaValidator` used to validate instances of the model.
+
+   .. attribute:: __pydantic_fields__
+
+      A dictionary of field names and their corresponding [`FieldInfo`][pydantic.fields.FieldInfo] objects.
+
+   .. attribute:: __pydantic_computed_fields__
+
+      A dictionary of computed field names and their corresponding [`ComputedFieldInfo`][pydantic.fields.ComputedFieldInfo] objects.
+
+   .. attribute:: __pydantic_extra__
+
+      A dictionary containing extra values, if [`extra`][pydantic.config.ConfigDict.extra]
+      is set to `'allow'`.
+
+   .. attribute:: __pydantic_fields_set__
+
+      The names of fields explicitly set during instantiation.
+
+   .. attribute:: __pydantic_private__
+
+      Values of private attributes set on the model instance.
+
+
+   .. py:attribute:: bucket
+      :type:  str
+
+
+   .. py:attribute:: expiration
+      :type:  datetime.datetime
+
+
+   .. py:attribute:: prefixes
+      :type:  list[str] | None
+
+
+   .. py:attribute:: permissions
+      :type:  Permissions
+
+
+   .. py:attribute:: name
+      :type:  str | None
+      :value: None
+
+
+
+   .. py:attribute:: region
+      :type:  str
+      :value: 'us-east-1'
+
+
+
+.. py:class:: S3Key(/, **data)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   !!! abstract "Usage Documentation"
+       [Models](../concepts/models.md)
+
+   A base class for creating Pydantic models.
+
+   .. attribute:: __class_vars__
+
+      The names of the class variables defined on the model.
+
+   .. attribute:: __private_attributes__
+
+      Metadata about the private attributes of the model.
+
+   .. attribute:: __signature__
+
+      The synthesized `__init__` [`Signature`][inspect.Signature] of the model.
+
+   .. attribute:: __pydantic_complete__
+
+      Whether model building is completed, or if there are still undefined fields.
+
+   .. attribute:: __pydantic_core_schema__
+
+      The core schema of the model.
+
+   .. attribute:: __pydantic_custom_init__
+
+      Whether the model has a custom `__init__` function.
+
+   .. attribute:: __pydantic_decorators__
+
+      Metadata containing the decorators defined on the model.
+      This replaces `Model.__validators__` and `Model.__root_validators__` from Pydantic V1.
+
+   .. attribute:: __pydantic_generic_metadata__
+
+      Metadata for generic models; contains data used for a similar purpose to
+      __args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.
+
+   .. attribute:: __pydantic_parent_namespace__
+
+      Parent namespace of the model, used for automatic rebuilding of models.
+
+   .. attribute:: __pydantic_post_init__
+
+      The name of the post-init method for the model, if defined.
+
+   .. attribute:: __pydantic_root_model__
+
+      Whether the model is a [`RootModel`][pydantic.root_model.RootModel].
+
+   .. attribute:: __pydantic_serializer__
+
+      The `pydantic-core` `SchemaSerializer` used to dump instances of the model.
+
+   .. attribute:: __pydantic_validator__
+
+      The `pydantic-core` `SchemaValidator` used to validate instances of the model.
+
+   .. attribute:: __pydantic_fields__
+
+      A dictionary of field names and their corresponding [`FieldInfo`][pydantic.fields.FieldInfo] objects.
+
+   .. attribute:: __pydantic_computed_fields__
+
+      A dictionary of computed field names and their corresponding [`ComputedFieldInfo`][pydantic.fields.ComputedFieldInfo] objects.
+
+   .. attribute:: __pydantic_extra__
+
+      A dictionary containing extra values, if [`extra`][pydantic.config.ConfigDict.extra]
+      is set to `'allow'`.
+
+   .. attribute:: __pydantic_fields_set__
+
+      The names of fields explicitly set during instantiation.
+
+   .. attribute:: __pydantic_private__
+
+      Values of private attributes set on the model instance.
+
+
+   .. py:attribute:: spec
+      :type:  S3KeySpec
+
+
+   .. py:attribute:: access_key_id
+      :type:  str
+
+
+   .. py:attribute:: secret_access_key
+      :type:  str | None
+
+
+   .. py:method:: valid_paths()
+
+      Prints the valid S3 paths for this key.
+
+
+

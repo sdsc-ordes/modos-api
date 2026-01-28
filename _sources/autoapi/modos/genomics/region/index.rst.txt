@@ -1,0 +1,113 @@
+modos.genomics.region
+=====================
+
+.. py:module:: modos.genomics.region
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.genomics.region.Region
+
+
+Module Contents
+---------------
+
+.. py:class:: Region
+
+   Genomic region consisting of a chromosome (aka reference) name
+   and a 0-indexed half-open coordinate interval.
+   Note that the end may not be specified, in which it will be set to math.inf.
+
+
+   .. py:attribute:: chrom
+      :type:  str
+
+
+   .. py:attribute:: start
+      :type:  int
+
+
+   .. py:attribute:: end
+      :type:  int | float
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: to_htsget_query()
+
+      Serializes the region into an htsget URL query.
+
+      .. rubric:: Example
+
+      >>> Region(chrom='chr1', start=0, end=100).to_htsget_query()
+      'referenceName=chr1&start=0&end=100'
+
+
+
+   .. py:method:: to_tuple()
+
+      Return the region as a simple tuple.
+
+
+
+   .. py:method:: from_htsget_query(url)
+      :classmethod:
+
+
+      Instantiate from an htsget URL query
+
+      .. rubric:: Example
+
+      >>> Region.from_htsget_query(
+      ...   "http://localhost/htsget/reads/ex/demo1?format=CRAM&referenceName=chr1&start=0"
+      ... )
+      Region(chrom='chr1', start=0, end=inf)
+
+
+
+   .. py:method:: from_ucsc(ucsc)
+      :classmethod:
+
+
+      Instantiate from a UCSC-formatted region string.
+
+      .. rubric:: Example
+
+      >>> Region.from_ucsc('chr-1ba:10-320')
+      Region(chrom='chr-1ba', start=10, end=320)
+      >>> Region.from_ucsc('chr1:-320')
+      Region(chrom='chr1', start=0, end=320)
+      >>> Region.from_ucsc('chr1:10-')
+      Region(chrom='chr1', start=10, end=inf)
+      >>> Region.from_ucsc('chr1:10')
+      Region(chrom='chr1', start=10, end=inf)
+
+      .. note::
+
+         For more information about the UCSC coordinate system,
+         see: http://genomewiki.ucsc.edu/index.php/Coordinate_Transforms
+
+
+
+   .. py:method:: from_pysam(record)
+      :classmethod:
+
+
+
+   .. py:method:: overlaps(other)
+
+      Checks if other in self.
+      This check if any portion of other overlaps with self.
+
+
+
+   .. py:method:: contains(other)
+
+      Checks if other is fully contained in self.
+
+
+

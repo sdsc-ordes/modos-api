@@ -1,0 +1,236 @@
+modos.api
+=========
+
+.. py:module:: modos.api
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.api.MODO
+
+
+Module Contents
+---------------
+
+.. py:class:: MODO(path, id = None, name = None, description = None, creation_date = date.today(), last_update_date = date.today(), has_assay = [], source_uri = None, endpoint = None, s3_kwargs = None, services = None)
+
+   Multi-Omics Digital Object
+   A digital archive containing several multi-omics data and records
+   connected by zarr-backed metadata.
+
+   :param path: Path to the archive directory.
+   :param id: MODO identifier.
+              Defaults to the directory name.
+   :param name: Human-readable name.
+   :param description: Human readable description.
+   :param creation_date: When the MODO was created.
+   :param last_update_date: When the MODO was last updated.
+   :param has_assay: Existing assay identifiers to attach to MODO.
+   :param source_uri: URI of the source data.
+   :param endpoint: URL to the modos server.
+   :param s3_kwargs: Keyword arguments for the S3 storage.
+   :param services: Optional dictionary of service endpoints.
+
+   .. attribute:: storage
+
+      Storage backend for the archive.
+
+      :type: Storage
+
+   .. attribute:: endpoint
+
+      Server endpoint manager.
+
+      :type: EndpointManager
+
+   .. rubric:: Examples
+
+   >>> demo = MODO("data/ex")
+
+   # List identifiers of samples in the archive
+   >>> demo.list_samples()
+   ['sample/sample1']
+
+   # List files in the archive
+   >>> files = [str(x) for x in demo.list_files()]
+   >>> assert 'demo1.cram' in files
+   >>> assert 'reference.fa' in files
+
+
+   .. py:attribute:: endpoint
+
+
+   .. py:property:: zarr
+      :type: zarr.Group
+
+
+
+   .. py:property:: is_remote
+      :type: bool
+
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+
+
+   .. py:property:: metadata
+      :type: dict[str, Any]
+
+
+
+   .. py:method:: knowledge_graph(uri_prefix = None)
+
+      Return an RDF graph of the metadata. All identifiers
+      are converted to valid URIs if needed.
+
+
+
+   .. py:method:: show_contents(element = None)
+
+      Produces a YAML document of the object's contents.
+
+      :param element: Element, or group of elements (e.g. data or data/element_id) to show.
+                      If not provided, shows the metadata of the entire MODO.
+
+
+
+   .. py:method:: list_files()
+
+      Lists files in the archive recursively (except for the zarr file).
+
+
+
+   .. py:method:: list_arrays(element = None)
+
+      Views arrays in the archive recursively.
+
+      :param element: Element, or group of elements (e.g. data or data/element_id) to show.
+                      If not provided, shows the metadata of the entire MODO.
+
+
+
+   .. py:method:: query(query)
+
+      Use SPARQL to query the metadata graph
+
+
+
+   .. py:method:: list_samples()
+
+      Lists samples in the archive.
+
+
+
+   .. py:method:: update_date(date = date.today())
+
+      update last_update_date attribute
+
+
+
+   .. py:method:: remove_element(element_id)
+
+      Remove an element from the archive, along with any files
+      directly attached to it and links from other elements to it.
+
+
+
+   .. py:method:: remove_object()
+
+      Remove the complete modo object
+
+
+
+   .. py:method:: add_element(element, source_file = None, part_of = None)
+
+      Add an element to the archive.
+      If a data file is provided, it will be added to the archive.
+      If the element is part of another element, the parent metadata
+      will be updated.
+
+      :param element: Element to add to the archive.
+      :param source_file: File to associate with the element.
+      :param part_of: Id of the parent element. It must be scoped to the type.
+                      For example "sample/foo".
+
+
+
+   .. py:method:: _add_any_element(element, source_file = None, part_of = None, allowed_elements = ElementType)
+
+      Add an element of any type to the storage. This is meant to be called internally to add elements automatically.
+
+
+
+   .. py:method:: update_element(element_id, new, source_file = None, part_of = None, allowed_elements = UserElementType)
+
+      Update element metadata in place by adding new values from model object.
+
+      :param element_id: Full id path in the zarr store.
+      :param new: Element containing the enriched metadata.
+
+
+
+   .. py:method:: enrich_metadata()
+
+      Enrich MODO metadata in place using content from associated data files.
+
+
+
+   .. py:method:: stream_genomics(file_path, region = None, reference_filename = None)
+
+      Slices both local and remote CRAM, VCF (.vcf.gz), and BCF
+      files returning an iterator over records.
+
+      :param file_path: Path to the genomics file within the MODO.
+      :param region: Genomic region in UCSC format (e.g. chr1:1000-200
+      :param reference_filename: Path to the reference genome file.
+
+      :rtype: Iterator over pysam AlignedSegment or VariantRecord objects.
+
+
+
+   .. py:method:: from_file(config_path, object_path, endpoint = None, s3_kwargs = None, services = None, no_remove = False)
+      :classmethod:
+
+
+      build a modo from a yaml or json file
+
+
+
+   .. py:method:: download(target_path)
+
+      Download the MODO to a local directory.
+      This will download all files and metadata to the target directory.
+
+
+
+   .. py:method:: upload(target_path, s3_endpoint, s3_kwargs = None)
+
+      Upload a local MODO to a target_path on a remote endpoint.
+
+
+
+   .. py:method:: encrypt(recipient_pubkeys, seckey_path = None, passphrase = None, delete = True)
+
+      Encrypt genomic data files including index files in a modo using crypt4gh
+
+
+
+   .. py:method:: decrypt(seckey_path, sender_pubkey = None, passphrase = None)
+
+      Decrypt all c4gh encrypted data files in modo
+
+
+
+   .. py:method:: checksum()
+
+      Compute a single checksum for the MODO based on its contents.
+
+      Only file contents are considered, not filenames.
+
+
+

@@ -1,0 +1,934 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>modos.genomics.htsget &#8212; modos-api 0.3.5 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=ba50482b"></script>
+    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/modos/genomics/htsget/index';</script>
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="modos.genomics.refget" href="../refget/index.html" />
+    <link rel="prev" title="modos.genomics.formats" href="../formats/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/modos.png" class="logo__image only-light" alt="modos-api 0.3.5 documentation - Home"/>
+    <img src="../../../../_static/modos.png" class="logo__image only-dark pst-js-only" alt="modos-api 0.3.5 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../intro/overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../changelog-link.html">
+    [0.3.5] - 2025-11-17
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../intro/overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../changelog-link.html">
+    [0.3.5] - 2025-11-17
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">modos</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../api/index.html">modos.api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../codes/index.html">modos.codes</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">modos.genomics</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../c4gh/index.html">modos.genomics.c4gh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cram/index.html">modos.genomics.cram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../formats/index.html">modos.genomics.formats</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">modos.genomics.htsget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../refget/index.html">modos.genomics.refget</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../region/index.html">modos.genomics.region</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../helpers/index.html">modos.helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../io/index.html">modos.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logging/index.html">modos.logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metabolomics/index.html">modos.metabolomics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../prompt/index.html">modos.prompt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../rdf/index.html">modos.rdf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../remote/index.html">modos.remote</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">modos.storage</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">modos</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">modos.genomics</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">modos.genomics.htsget</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-modos.genomics.htsget">
+<span id="modos-genomics-htsget"></span><h1>modos.genomics.htsget<a class="headerlink" href="#module-modos.genomics.htsget" title="Link to this heading">#</a></h1>
+<p>htsget client implementation</p>
+<p>The htsget protocol <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> allows to stream slices of genomic data from a remote server.
+The client is implemented as a file-like interface that lazily streams chunks from the server.</p>
+<p>In practice, the client sends a request for a file with a specific format and genomic region.
+The htsget server finds the byte ranges on the data server (e.g. S3) corresponding to the requests
+and responds with a “ticket”.</p>
+<p>The ticket is a json document containing a list of blocks; each having headers and a URL pointing to_file
+the corresponding byte ranges on the data server.</p>
+<p>The client then streams data from these URLs, effectively concatenating the blocks into a single stream.</p>
+<figure class="align-default" id="id6">
+<a class="reference internal image-reference" href="http://samtools.github.io/hts-specs/pub/htsget-ticket.png"><img alt="htsget mechanism diagram" src="http://samtools.github.io/hts-specs/pub/htsget-ticket.png" style="width: 66%;" /></a>
+<figcaption>
+<p><span class="caption-text">Illustration of the mechanism through which the htsget server allows streaming and random-access on genomic files. See <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> for more details.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p class="rubric">Notes</p>
+<p>This implementation differs from the reference GA4GH implementation <a class="footnote-reference brackets" href="#id5" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> in that it allows lazily consuming chunks from a file-like interface without saving to a file. A downside of this approach is that the client cannot seek.</p>
+<p>Additionally, this implementation does not support asynchronous fetching of blocks, which means that blocks are fetched sequentially.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
+<p><a class="reference external" href="http://samtools.github.io/hts-specs/htsget.html">http://samtools.github.io/hts-specs/htsget.html</a></p>
+</aside>
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p><a class="github reference external" href="https://github.com/ga4gh/htsget">ga4gh/htsget</a></p>
+</aside>
+</aside>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.genomics.htsget._HtsgetBlockIter" title="modos.genomics.htsget._HtsgetBlockIter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_HtsgetBlockIter</span></code></a></p></td>
+<td><p>Transparent iterator over blocks of an htsget stream.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.genomics.htsget.HtsgetStream" title="modos.genomics.htsget.HtsgetStream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HtsgetStream</span></code></a></p></td>
+<td><p>A file-like handle to a read-only, buffered htsget stream.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.genomics.htsget.HtsgetConnection" title="modos.genomics.htsget.HtsgetConnection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HtsgetConnection</span></code></a></p></td>
+<td><p>Connection to an htsget resource.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.genomics.htsget.build_htsget_url" title="modos.genomics.htsget.build_htsget_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_htsget_url</span></code></a>(host, path, region)</p></td>
+<td><p>Build an htsget URL from a host, path, and region.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.genomics.htsget.parse_htsget_url" title="modos.genomics.htsget.parse_htsget_url"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_htsget_url</span></code></a>(url)</p></td>
+<td><p>Given a URL to an htsget resource, extract the host, path, and region.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.genomics.htsget.build_htsget_url">
+<span class="sig-prename descclassname"><span class="pre">modos.genomics.htsget.</span></span><span class="sig-name descname"><span class="pre">build_htsget_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#build_htsget_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.build_htsget_url" title="Link to this definition">#</a></dt>
+<dd><p>Build an htsget URL from a host, path, and region.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">build_htsget_url</span><span class="p">(</span>
+<span class="gp">... </span>  <span class="s2">&quot;http://localhost:8000&quot;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;file.bam&quot;</span><span class="p">),</span>
+<span class="gp">... </span>  <span class="n">Region</span><span class="p">(</span><span class="s2">&quot;chr1&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&#39;http://localhost:8000/reads/file?format=BAM&amp;referenceName=chr1&amp;start=0&amp;end=1000&#39;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<em>pydantic.HttpUrl</em>)</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>)</p></li>
+<li><p><strong>region</strong> (<a class="reference internal" href="../region/index.html#modos.genomics.region.Region" title="modos.genomics.region.Region"><em>modos.genomics.region.Region</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.genomics.htsget.parse_htsget_url">
+<span class="sig-prename descclassname"><span class="pre">modos.genomics.htsget.</span></span><span class="sig-name descname"><span class="pre">parse_htsget_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#parse_htsget_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.parse_htsget_url" title="Link to this definition">#</a></dt>
+<dd><p>Given a URL to an htsget resource, extract the host, path, and region.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>url</strong> (<em>pydantic.HttpUrl</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)">pathlib.Path</a>, <a class="reference internal" href="../region/index.html#modos.genomics.region.Region" title="modos.genomics.region.Region">modos.genomics.region.Region</a> | None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modos.genomics.htsget._HtsgetBlockIter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">modos.genomics.htsget.</span></span><span class="sig-name descname"><span class="pre">_HtsgetBlockIter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blocks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">65536</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#_HtsgetBlockIter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget._HtsgetBlockIter" title="Link to this definition">#</a></dt>
+<dd><p>Transparent iterator over blocks of an htsget stream.</p>
+<p>This is used internally by HtsgetStream to lazily fetch and concatenate blocks.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">_HtsgetBlockIter</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;data:;base64,MTIzNDU2Nzg5&quot;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;data:;base64,MTIzNDU2Nzg5&quot;</span><span class="p">},</span>
+<span class="gp">... </span><span class="p">]))</span>
+<span class="go">b&#39;123456789&#39;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>blocks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>]</em>)</p></li>
+<li><p><strong>chunk_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.genomics.htsget._HtsgetBlockIter._blocks">
+<span class="sig-name descname"><span class="pre">_blocks</span></span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#_HtsgetBlockIter._blocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget._HtsgetBlockIter._blocks" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.genomics.htsget._HtsgetBlockIter._source">
+<span class="sig-name descname"><span class="pre">_source</span></span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#_HtsgetBlockIter._source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget._HtsgetBlockIter._source" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.genomics.htsget._HtsgetBlockIter.chunk_size">
+<span class="sig-name descname"><span class="pre">chunk_size</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">65536</span></em><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#_HtsgetBlockIter.chunk_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget._HtsgetBlockIter.chunk_size" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.genomics.htsget._HtsgetBlockIter.timeout">
+<span class="sig-name descname"><span class="pre">timeout</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">60</span></em><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#_HtsgetBlockIter.timeout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget._HtsgetBlockIter.timeout" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.genomics.htsget._HtsgetBlockIter.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#_HtsgetBlockIter.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget._HtsgetBlockIter.__iter__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.genomics.htsget._HtsgetBlockIter._consume_block">
+<span class="sig-name descname"><span class="pre">_consume_block</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#_HtsgetBlockIter._consume_block"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget._HtsgetBlockIter._consume_block" title="Link to this definition">#</a></dt>
+<dd><p>Get streaming iterator over current block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.14)">collections.abc.Iterator</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.14)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.genomics.htsget._HtsgetBlockIter.__next__">
+<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#_HtsgetBlockIter.__next__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget._HtsgetBlockIter.__next__" title="Link to this definition">#</a></dt>
+<dd><p>Stream next chunk of current block, or first
+chunk of next block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.14)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetStream">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">modos.genomics.htsget.</span></span><span class="sig-name descname"><span class="pre">HtsgetStream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blocks</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetStream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetStream" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/io.html#io.RawIOBase" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">io.RawIOBase</span></code></a></p>
+<p>A file-like handle to a read-only, buffered htsget stream.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stream</span> <span class="o">=</span> <span class="n">HtsgetStream</span><span class="p">([</span>
+<span class="gp">... </span>  <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;data:;base64,MTIzNDU2Nzg5Cg==&quot;</span><span class="p">},</span>
+<span class="gp">... </span>  <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;data:;base64,MTIzNDU2Nzg5Cg==&quot;</span><span class="p">},</span>
+<span class="gp">... </span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">b&#39;1234&#39;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>blocks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>]</em>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetStream._iterator">
+<span class="sig-name descname"><span class="pre">_iterator</span></span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetStream._iterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetStream._iterator" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetStream._leftover">
+<span class="sig-name descname"><span class="pre">_leftover</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">b''</span></em><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetStream._leftover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetStream._leftover" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetStream.readable">
+<span class="sig-name descname"><span class="pre">readable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetStream.readable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetStream.readable" title="Link to this definition">#</a></dt>
+<dd><p>Return whether object was opened for reading.</p>
+<p>If False, read() will raise OSError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetStream.readinto">
+<span class="sig-name descname"><span class="pre">readinto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetStream.readinto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetStream.readinto" title="Link to this definition">#</a></dt>
+<dd><p>Read up to len(b) bytes into a writable buffer bytes
+and return the number of bytes read.</p>
+<p class="rubric">Notes</p>
+<p>See <a class="reference external" href="https://docs.python.org/3/library/io.html#io.RawIOBase.readinto">https://docs.python.org/3/library/io.html#io.RawIOBase.readinto</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Buffer" title="(in Python v3.14)"><em>collections.abc.Buffer</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">modos.genomics.htsget.</span></span><span class="sig-name descname"><span class="pre">HtsgetConnection</span></span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection" title="Link to this definition">#</a></dt>
+<dd><p>Connection to an htsget resource.
+It allows to open a stream to the resource and lazily fetch data from it.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection.host">
+<span class="sig-name descname"><span class="pre">host</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">pydantic.HttpUrl</span></em><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection.host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection.host" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection.path">
+<span class="sig-name descname"><span class="pre">path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">pathlib.Path</span></a></em><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection.path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection.path" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection.region">
+<span class="sig-name descname"><span class="pre">region</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../region/index.html#modos.genomics.region.Region" title="modos.genomics.region.Region"><span class="pre">modos.genomics.region.Region</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection.region"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection.region" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection.url">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection.url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection.url" title="Link to this definition">#</a></dt>
+<dd><p>URL to fetch the ticket.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection.ticket">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ticket</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection.ticket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection.ticket" title="Link to this definition">#</a></dt>
+<dd><p>Ticket containing the URLs to fetch the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection.open" title="Link to this definition">#</a></dt>
+<dd><p>Open a connection to the stream data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/io.html#io.RawIOBase" title="(in Python v3.14)">io.RawIOBase</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection.to_file">
+<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection.to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection.to_file" title="Link to this definition">#</a></dt>
+<dd><p>Save all data from the stream to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection.from_url">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection.from_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection.from_url" title="Link to this definition">#</a></dt>
+<dd><p>Open connection directly from an htsget URL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.genomics.htsget.HtsgetConnection.to_pysam">
+<span class="sig-name descname"><span class="pre">to_pysam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/genomics/htsget.html#HtsgetConnection.to_pysam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.genomics.htsget.HtsgetConnection.to_pysam" title="Link to this definition">#</a></dt>
+<dd><p>Convert the stream to a pysam object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reference_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.14)">collections.abc.Iterator</a>[pysam.AlignedSegment | pysam.VariantRecord]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../formats/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">modos.genomics.formats</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../refget/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">modos.genomics.refget</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.build_htsget_url"><code class="docutils literal notranslate"><span class="pre">build_htsget_url()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.parse_htsget_url"><code class="docutils literal notranslate"><span class="pre">parse_htsget_url()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget._HtsgetBlockIter"><code class="docutils literal notranslate"><span class="pre">_HtsgetBlockIter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget._HtsgetBlockIter._blocks"><code class="docutils literal notranslate"><span class="pre">_HtsgetBlockIter._blocks</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget._HtsgetBlockIter._source"><code class="docutils literal notranslate"><span class="pre">_HtsgetBlockIter._source</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget._HtsgetBlockIter.chunk_size"><code class="docutils literal notranslate"><span class="pre">_HtsgetBlockIter.chunk_size</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget._HtsgetBlockIter.timeout"><code class="docutils literal notranslate"><span class="pre">_HtsgetBlockIter.timeout</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget._HtsgetBlockIter.__iter__"><code class="docutils literal notranslate"><span class="pre">_HtsgetBlockIter.__iter__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget._HtsgetBlockIter._consume_block"><code class="docutils literal notranslate"><span class="pre">_HtsgetBlockIter._consume_block()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget._HtsgetBlockIter.__next__"><code class="docutils literal notranslate"><span class="pre">_HtsgetBlockIter.__next__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetStream"><code class="docutils literal notranslate"><span class="pre">HtsgetStream</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetStream._iterator"><code class="docutils literal notranslate"><span class="pre">HtsgetStream._iterator</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetStream._leftover"><code class="docutils literal notranslate"><span class="pre">HtsgetStream._leftover</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetStream.readable"><code class="docutils literal notranslate"><span class="pre">HtsgetStream.readable()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetStream.readinto"><code class="docutils literal notranslate"><span class="pre">HtsgetStream.readinto()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection.host"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection.host</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection.path"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection.path</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection.region"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection.region</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection.url"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection.url</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection.ticket"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection.ticket</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection.open"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection.open()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection.to_file"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection.to_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection.from_url"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection.from_url()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.genomics.htsget.HtsgetConnection.to_pysam"><code class="docutils literal notranslate"><span class="pre">HtsgetConnection.to_pysam()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/autoapi/modos/genomics/htsget/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, sdsc-ordes.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

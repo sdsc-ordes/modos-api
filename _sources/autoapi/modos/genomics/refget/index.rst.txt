@@ -1,0 +1,65 @@
+modos.genomics.refget
+=====================
+
+.. py:module:: modos.genomics.refget
+
+.. autoapi-nested-parse::
+
+   refget loader implementation
+
+   In the refget specifications each sequence object is associated by a metadata object.
+   Metadata provide a json encoded list of all known identifiers and aliases (see [1]_).
+
+   Sequence and metadata objects must have content-type header to fulfill the refget specification.
+
+   In S3 redirection can be used to enable sequence access via different ids.
+   This can be achieved by an empty object with the alternative id as filename and a Website-Redirect-Location header mapping to the sequence location (see [2]_).
+
+
+   .. rubric:: References
+
+   .. [1] http://samtools.github.io/hts-specs/refget.html
+   .. [2] https://github.com/ga4gh/refget-cloud/blob/master/docs/guides/DataSourceAwsS3.md
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.genomics.refget.RefgetStorage
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.genomics.refget.calculate_checksums
+   modos.genomics.refget.upload_to_s3
+
+
+Module Contents
+---------------
+
+.. py:class:: RefgetStorage
+
+   .. py:attribute:: fs
+      :type:  s3fs.S3FileSystem
+
+
+   .. py:attribute:: bucket
+      :type:  str
+
+
+   .. py:method:: upload_seq(seq, primary = 'md5', checksums = None)
+
+
+   .. py:method:: upload_fasta(fasta_file)
+
+
+.. py:function:: calculate_checksums(seq)
+
+.. py:function:: upload_to_s3(fs, bucket, key, data = '', headers = None)
+

@@ -1,0 +1,1182 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>modos.helpers.schema &#8212; modos-api 0.3.5 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=ba50482b"></script>
+    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/modos/helpers/schema/index';</script>
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="modos.io" href="../../io/index.html" />
+    <link rel="prev" title="modos.helpers.enums" href="../enums/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/modos.png" class="logo__image only-light" alt="modos-api 0.3.5 documentation - Home"/>
+    <img src="../../../../_static/modos.png" class="logo__image only-dark pst-js-only" alt="modos-api 0.3.5 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../intro/overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../changelog-link.html">
+    [0.3.5] - 2025-11-17
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../intro/overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../../index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../changelog-link.html">
+    [0.3.5] - 2025-11-17
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">modos</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../api/index.html">modos.api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../codes/index.html">modos.codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../genomics/index.html">modos.genomics</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">modos.helpers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../enums/index.html">modos.helpers.enums</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">modos.helpers.schema</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../io/index.html">modos.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logging/index.html">modos.logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metabolomics/index.html">modos.metabolomics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../prompt/index.html">modos.prompt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../rdf/index.html">modos.rdf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../remote/index.html">modos.remote</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">modos.storage</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">modos</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">modos.helpers</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">modos.helpers.schema</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-modos.helpers.schema">
+<span id="modos-helpers-schema"></span><h1>modos.helpers.schema<a class="headerlink" href="#module-modos.helpers.schema" title="Link to this heading">#</a></h1>
+<p>Introspection utilities for the MODO schema.</p>
+<p>This module provides helpers for accessing the schema structure
+and for converting instances to different representations.</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.SCHEMA_PATH" title="modos.helpers.schema.SCHEMA_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHEMA_PATH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.DataElement" title="modos.helpers.schema.DataElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataElement</span></code></a></p></td>
+<td><p>Facade class to wrap model DataEntity to facilitate file handling (including index files).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.helpers.schema.UserElementType" title="modos.helpers.schema.UserElementType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UserElementType</span></code></a></p></td>
+<td><p>Enumeration of element types exposed to the user.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.ElementType" title="modos.helpers.schema.ElementType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElementType</span></code></a></p></td>
+<td><p>Enumeration of all element types.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.class_from_name" title="modos.helpers.schema.class_from_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">class_from_name</span></code></a>(name)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.helpers.schema.dict_to_instance" title="modos.helpers.schema.dict_to_instance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_to_instance</span></code></a>(element)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.update_metadata_from_model" title="modos.helpers.schema.update_metadata_from_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_metadata_from_model</span></code></a>(group, element)</p></td>
+<td><p>Update the metadata of a zarr group with the metadata of a model element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.helpers.schema.is_full_id" title="modos.helpers.schema.is_full_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_full_id</span></code></a>(element_id)</p></td>
+<td><p>Checks if an element_id contains the element type as prefix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.set_haspart_relationship" title="modos.helpers.schema.set_haspart_relationship"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_haspart_relationship</span></code></a>(child_class, child_path, ...)</p></td>
+<td><p>Add element to the hasPart attribute of a parent zarr group</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.helpers.schema.update_haspart_id" title="modos.helpers.schema.update_haspart_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_haspart_id</span></code></a>(element)</p></td>
+<td><p>update the id of the has_part property of an element to use the full id including its type</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.set_data_path" title="modos.helpers.schema.set_data_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_data_path</span></code></a>(element[, source_file])</p></td>
+<td><p>Set the data_path attribute, if it is not specified to the modo root.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.helpers.schema.compute_checksum" title="modos.helpers.schema.compute_checksum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_checksum</span></code></a>(file_obj)</p></td>
+<td><p>Generate the BLAKE2b checksum of the file_obj digest.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.is_uri" title="modos.helpers.schema.is_uri"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_uri</span></code></a>(text)</p></td>
+<td><p>Checks if input is a valid URI.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.helpers.schema.load_schema" title="modos.helpers.schema.load_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_schema</span></code></a>()</p></td>
+<td><p>Return a view over the schema structure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.load_prefixmap" title="modos.helpers.schema.load_prefixmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_prefixmap</span></code></a>()</p></td>
+<td><p>Load the prefixmap.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.helpers.schema.get_slots" title="modos.helpers.schema.get_slots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_slots</span></code></a>(target_class[, required_only])</p></td>
+<td><p>Return a list of required slots for a class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.instance_to_graph" title="modos.helpers.schema.instance_to_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_to_graph</span></code></a>(instance)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.helpers.schema.get_slot_range" title="modos.helpers.schema.get_slot_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_slot_range</span></code></a>(slot_name)</p></td>
+<td><p>Return the class-independent range of a slot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#modos.helpers.schema.get_enum_values" title="modos.helpers.schema.get_enum_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_enum_values</span></code></a>(enum_name)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#modos.helpers.schema.get_haspart_property" title="modos.helpers.schema.get_haspart_property"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_haspart_property</span></code></a>(child_class)</p></td>
+<td><p>Return the name of the &quot;has_part&quot; property for a target class.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="modos.helpers.schema.SCHEMA_PATH">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">SCHEMA_PATH</span></span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#SCHEMA_PATH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.SCHEMA_PATH" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.class_from_name">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">class_from_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#class_from_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.class_from_name" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.dict_to_instance">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">dict_to_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#dict_to_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.dict_to_instance" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>Mapping</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.update_metadata_from_model">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">update_metadata_from_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#update_metadata_from_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.update_metadata_from_model" title="Link to this definition">#</a></dt>
+<dd><p>Update the metadata of a zarr group with the metadata of a model element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<a class="reference external" href="https://zarr.readthedocs.io/en/stable/api/zarr/group/#zarr.Group" title="(in zarr-python v0.0.0)"><em>zarr.Group</em></a>)</p></li>
+<li><p><strong>element</strong> (<em>modos_schema.datamodel.DataEntity</em><em> | </em><em>modos_schema.datamodel.Sample</em><em> | </em><em>modos_schema.datamodel.Assay</em><em> | </em><em>modos_schema.datamodel.ReferenceGenome</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.is_full_id">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">is_full_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#is_full_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.is_full_id" title="Link to this definition">#</a></dt>
+<dd><p>Checks if an element_id contains the element type as prefix.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_full_id</span><span class="p">(</span><span class="s2">&quot;sample1&quot;</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_full_id</span><span class="p">(</span><span class="s2">&quot;data/test&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_full_id</span><span class="p">(</span><span class="s2">&quot;/assay/test_assay&quot;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.set_haspart_relationship">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">set_haspart_relationship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#set_haspart_relationship"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.set_haspart_relationship" title="Link to this definition">#</a></dt>
+<dd><p>Add element to the hasPart attribute of a parent zarr group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>child_class</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>child_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>parent_group</strong> (<a class="reference external" href="https://zarr.readthedocs.io/en/stable/api/zarr/group/#zarr.Group" title="(in zarr-python v0.0.0)"><em>zarr.Group</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.update_haspart_id">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">update_haspart_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#update_haspart_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.update_haspart_id" title="Link to this definition">#</a></dt>
+<dd><p>update the id of the has_part property of an element to use the full id including its type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>modos_schema.datamodel.DataEntity</em><em> | </em><em>modos_schema.datamodel.Sample</em><em> | </em><em>modos_schema.datamodel.Assay</em><em> | </em><em>modos_schema.datamodel.ReferenceGenome</em><em> | </em><em>modos_schema.datamodel.MODO</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.set_data_path">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">set_data_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#set_data_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.set_data_path" title="Link to this definition">#</a></dt>
+<dd><p>Set the data_path attribute, if it is not specified to the modo root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>modos_schema.datamodel.DataEntity</em>)</p></li>
+<li><p><strong>source_file</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>modos_schema.datamodel.DataEntity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">DataElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement" title="Link to this definition">#</a></dt>
+<dd><p>Facade class to wrap model DataEntity to facilitate file handling (including index files).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>DataElement.__init__.model</em>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement.model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement.model" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement.storage">
+<span class="sig-name descname"><span class="pre">storage</span></span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement.storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement.storage" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement._set_metadata">
+<span class="sig-name descname"><span class="pre">_set_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement._set_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement._set_metadata" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement._update_checksum">
+<span class="sig-name descname"><span class="pre">_update_checksum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement._update_checksum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement._update_checksum" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement.is_genomic">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_genomic</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement.is_genomic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement.is_genomic" title="Link to this definition">#</a></dt>
+<dd><p>Check if the data element is genomic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement.add_file">
+<span class="sig-name descname"><span class="pre">add_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement.add_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement.add_file" title="Link to this definition">#</a></dt>
+<dd><p>Add a file to target_path to the storage.
+If existing also add the index file and update data_path and checksum in metadata</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>)</p></li>
+<li><p><strong>target_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement.move_file">
+<span class="sig-name descname"><span class="pre">move_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement.move_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement.move_file" title="Link to this definition">#</a></dt>
+<dd><p>Move a file from the path specified in metadata to the target_path.
+If existing also move the index file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement.remove_file">
+<span class="sig-name descname"><span class="pre">remove_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rm_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement.remove_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement.remove_file" title="Link to this definition">#</a></dt>
+<dd><p>Remove a file and its related index from the storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rm_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement.update_file">
+<span class="sig-name descname"><span class="pre">update_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement.update_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement.update_file" title="Link to this definition">#</a></dt>
+<dd><p>Update file, its corresponding index file and metadata, based on new data_path and source_file.</p>
+<p>There are four cases:
+1. Neither path nor contents changed –&gt; do nothing.
+2. Only contents changed –&gt; overwrite the file(s).
+3. Only path changed -&gt; move file(s).
+4. Both path and contents changed -&gt; add new file(s) and remove old ones.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>) – Path to where the file should be placed.</p></li>
+<li><p><strong>source_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a><em> | </em><em>None</em>) – Path to the file that shall be added. If None the file already associated to the DataElement will be used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement.encrypt">
+<span class="sig-name descname"><span class="pre">encrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipient_pubkeys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seckey_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passphrase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement.encrypt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement.encrypt" title="Link to this definition">#</a></dt>
+<dd><p>Encrypt data path linked to the DataElement.
+Works for genomic files and their index files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recipient_pubkeys</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><em>os.PathLike</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><em>os.PathLike</em></a>)</p></li>
+<li><p><strong>seckey_path</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><em>os.PathLike</em></a><em>]</em>)</p></li>
+<li><p><strong>passphrase</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>)</p></li>
+<li><p><strong>delete</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.DataElement.decrypt">
+<span class="sig-name descname"><span class="pre">decrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seckey_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sender_pubkey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passphrase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#DataElement.decrypt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.DataElement.decrypt" title="Link to this definition">#</a></dt>
+<dd><p>Decrypt data path linked to the DataElement.
+Works for genomic files and their index files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seckey_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><em>os.PathLike</em></a>)</p></li>
+<li><p><strong>sender_pubkey</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><em>os.PathLike</em></a><em>]</em>)</p></li>
+<li><p><strong>passphrase</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.compute_checksum">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">compute_checksum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#compute_checksum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.compute_checksum" title="Link to this definition">#</a></dt>
+<dd><p>Generate the BLAKE2b checksum of the file_obj digest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_obj</strong> (<a class="reference external" href="https://docs.python.org/3/library/io.html#io.RawIOBase" title="(in Python v3.14)"><em>io.RawIOBase</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modos.helpers.schema.UserElementType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">UserElementType</span></span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#UserElementType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.UserElementType" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></a></p>
+<p>Enumeration of element types exposed to the user.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.UserElementType.SAMPLE">
+<span class="sig-name descname"><span class="pre">SAMPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sample'</span></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#UserElementType.SAMPLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.UserElementType.SAMPLE" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.UserElementType.ASSAY">
+<span class="sig-name descname"><span class="pre">ASSAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'assay'</span></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#UserElementType.ASSAY"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.UserElementType.ASSAY" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.UserElementType.DATA_ENTITY">
+<span class="sig-name descname"><span class="pre">DATA_ENTITY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'data'</span></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#UserElementType.DATA_ENTITY"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.UserElementType.DATA_ENTITY" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.UserElementType.REFERENCE_GENOME">
+<span class="sig-name descname"><span class="pre">REFERENCE_GENOME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reference'</span></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#UserElementType.REFERENCE_GENOME"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.UserElementType.REFERENCE_GENOME" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.UserElementType.get_target_class">
+<span class="sig-name descname"><span class="pre">get_target_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#UserElementType.get_target_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.UserElementType.get_target_class" title="Link to this definition">#</a></dt>
+<dd><p>Return the target class for the element type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)">type</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.UserElementType.from_object">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#UserElementType.from_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.UserElementType.from_object" title="Link to this definition">#</a></dt>
+<dd><p>Return the element type from an object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="modos.helpers.schema.ElementType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">ElementType</span></span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#ElementType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.ElementType" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></a></p>
+<p>Enumeration of all element types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.ElementType.SAMPLE">
+<span class="sig-name descname"><span class="pre">SAMPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sample'</span></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#ElementType.SAMPLE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.ElementType.SAMPLE" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.ElementType.ASSAY">
+<span class="sig-name descname"><span class="pre">ASSAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'assay'</span></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#ElementType.ASSAY"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.ElementType.ASSAY" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.ElementType.DATA_ENTITY">
+<span class="sig-name descname"><span class="pre">DATA_ENTITY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'data'</span></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#ElementType.DATA_ENTITY"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.ElementType.DATA_ENTITY" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.ElementType.REFERENCE_GENOME">
+<span class="sig-name descname"><span class="pre">REFERENCE_GENOME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reference'</span></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#ElementType.REFERENCE_GENOME"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.ElementType.REFERENCE_GENOME" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="modos.helpers.schema.ElementType.REFERENCE_SEQUENCE">
+<span class="sig-name descname"><span class="pre">REFERENCE_SEQUENCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sequence'</span></em><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#ElementType.REFERENCE_SEQUENCE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.ElementType.REFERENCE_SEQUENCE" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.ElementType.get_target_class">
+<span class="sig-name descname"><span class="pre">get_target_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#ElementType.get_target_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.ElementType.get_target_class" title="Link to this definition">#</a></dt>
+<dd><p>Return the target class for the element type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)">type</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.ElementType.from_object">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#ElementType.from_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.ElementType.from_object" title="Link to this definition">#</a></dt>
+<dd><p>Return the element type from an object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="modos.helpers.schema.ElementType.from_model_name">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_model_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#ElementType.from_model_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.ElementType.from_model_name" title="Link to this definition">#</a></dt>
+<dd><p>Return the element type from an object name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.is_uri">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">is_uri</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#is_uri"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.is_uri" title="Link to this definition">#</a></dt>
+<dd><p>Checks if input is a valid URI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.load_schema">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">load_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#load_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.load_schema" title="Link to this definition">#</a></dt>
+<dd><p>Return a view over the schema structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>linkml_runtime.utils.schemaview.SchemaView</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.load_prefixmap">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">load_prefixmap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#load_prefixmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.load_prefixmap" title="Link to this definition">#</a></dt>
+<dd><p>Load the prefixmap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.get_slots">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">get_slots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#get_slots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.get_slots" title="Link to this definition">#</a></dt>
+<dd><p>Return a list of required slots for a class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target_class</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)"><em>type</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.instance_to_graph">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">instance_to_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#instance_to_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.instance_to_graph" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rdflib.Graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.get_slot_range">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">get_slot_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#get_slot_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.get_slot_range" title="Link to this definition">#</a></dt>
+<dd><p>Return the class-independent range of a slot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>slot_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.get_enum_values">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">get_enum_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enum_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#get_enum_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.get_enum_values" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enum_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modos.helpers.schema.get_haspart_property">
+<span class="sig-prename descclassname"><span class="pre">modos.helpers.schema.</span></span><span class="sig-name descname"><span class="pre">get_haspart_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child_class</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/modos/helpers/schema.html#get_haspart_property"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#modos.helpers.schema.get_haspart_property" title="Link to this definition">#</a></dt>
+<dd><p>Return the name of the “has_part” property for a target class.
+If no such property is in the schema, return None.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_haspart_property</span><span class="p">(</span><span class="s1">&#39;AlignmentSet&#39;</span><span class="p">)</span>
+<span class="go">&#39;has_data&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_haspart_property</span><span class="p">(</span><span class="s1">&#39;Assay&#39;</span><span class="p">)</span>
+<span class="go">&#39;has_assay&#39;</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>child_class</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../enums/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">modos.helpers.enums</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../io/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">modos.io</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.SCHEMA_PATH"><code class="docutils literal notranslate"><span class="pre">SCHEMA_PATH</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.class_from_name"><code class="docutils literal notranslate"><span class="pre">class_from_name()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.dict_to_instance"><code class="docutils literal notranslate"><span class="pre">dict_to_instance()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.update_metadata_from_model"><code class="docutils literal notranslate"><span class="pre">update_metadata_from_model()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.is_full_id"><code class="docutils literal notranslate"><span class="pre">is_full_id()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.set_haspart_relationship"><code class="docutils literal notranslate"><span class="pre">set_haspart_relationship()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.update_haspart_id"><code class="docutils literal notranslate"><span class="pre">update_haspart_id()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.set_data_path"><code class="docutils literal notranslate"><span class="pre">set_data_path()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement"><code class="docutils literal notranslate"><span class="pre">DataElement</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement.model"><code class="docutils literal notranslate"><span class="pre">DataElement.model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement.storage"><code class="docutils literal notranslate"><span class="pre">DataElement.storage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement._set_metadata"><code class="docutils literal notranslate"><span class="pre">DataElement._set_metadata()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement._update_checksum"><code class="docutils literal notranslate"><span class="pre">DataElement._update_checksum()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement.is_genomic"><code class="docutils literal notranslate"><span class="pre">DataElement.is_genomic</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement.add_file"><code class="docutils literal notranslate"><span class="pre">DataElement.add_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement.move_file"><code class="docutils literal notranslate"><span class="pre">DataElement.move_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement.remove_file"><code class="docutils literal notranslate"><span class="pre">DataElement.remove_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement.update_file"><code class="docutils literal notranslate"><span class="pre">DataElement.update_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement.encrypt"><code class="docutils literal notranslate"><span class="pre">DataElement.encrypt()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.DataElement.decrypt"><code class="docutils literal notranslate"><span class="pre">DataElement.decrypt()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.compute_checksum"><code class="docutils literal notranslate"><span class="pre">compute_checksum()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.UserElementType"><code class="docutils literal notranslate"><span class="pre">UserElementType</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.UserElementType.SAMPLE"><code class="docutils literal notranslate"><span class="pre">UserElementType.SAMPLE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.UserElementType.ASSAY"><code class="docutils literal notranslate"><span class="pre">UserElementType.ASSAY</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.UserElementType.DATA_ENTITY"><code class="docutils literal notranslate"><span class="pre">UserElementType.DATA_ENTITY</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.UserElementType.REFERENCE_GENOME"><code class="docutils literal notranslate"><span class="pre">UserElementType.REFERENCE_GENOME</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.UserElementType.get_target_class"><code class="docutils literal notranslate"><span class="pre">UserElementType.get_target_class()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.UserElementType.from_object"><code class="docutils literal notranslate"><span class="pre">UserElementType.from_object()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.ElementType"><code class="docutils literal notranslate"><span class="pre">ElementType</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.ElementType.SAMPLE"><code class="docutils literal notranslate"><span class="pre">ElementType.SAMPLE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.ElementType.ASSAY"><code class="docutils literal notranslate"><span class="pre">ElementType.ASSAY</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.ElementType.DATA_ENTITY"><code class="docutils literal notranslate"><span class="pre">ElementType.DATA_ENTITY</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.ElementType.REFERENCE_GENOME"><code class="docutils literal notranslate"><span class="pre">ElementType.REFERENCE_GENOME</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.ElementType.REFERENCE_SEQUENCE"><code class="docutils literal notranslate"><span class="pre">ElementType.REFERENCE_SEQUENCE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.ElementType.get_target_class"><code class="docutils literal notranslate"><span class="pre">ElementType.get_target_class()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.ElementType.from_object"><code class="docutils literal notranslate"><span class="pre">ElementType.from_object()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.ElementType.from_model_name"><code class="docutils literal notranslate"><span class="pre">ElementType.from_model_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.is_uri"><code class="docutils literal notranslate"><span class="pre">is_uri()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.load_schema"><code class="docutils literal notranslate"><span class="pre">load_schema()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.load_prefixmap"><code class="docutils literal notranslate"><span class="pre">load_prefixmap()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.get_slots"><code class="docutils literal notranslate"><span class="pre">get_slots()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.instance_to_graph"><code class="docutils literal notranslate"><span class="pre">instance_to_graph()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.get_slot_range"><code class="docutils literal notranslate"><span class="pre">get_slot_range()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.get_enum_values"><code class="docutils literal notranslate"><span class="pre">get_enum_values()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modos.helpers.schema.get_haspart_property"><code class="docutils literal notranslate"><span class="pre">get_haspart_property()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/autoapi/modos/helpers/schema/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, sdsc-ordes.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

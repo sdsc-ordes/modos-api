@@ -1,0 +1,1644 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>modos.api &#8212; modos-api 0.3.5 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=ba50482b"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/modos/api';</script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/modos.png" class="logo__image only-light" alt="modos-api 0.3.5 documentation - Home"/>
+    <img src="../../_static/modos.png" class="logo__image only-dark pst-js-only" alt="modos-api 0.3.5 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../changelog-link.html">
+    [0.3.5] - 2025-11-17
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../intro/overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../changelog-link.html">
+    [0.3.5] - 2025-11-17
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../modos.html" class="nav-link">modos</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">modos.api</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for modos.api</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">linkml_runtime.dumpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">json_dumper</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rdflib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">loguru</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">modos_schema.datamodel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">model</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numcodecs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpUrl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pysam</span><span class="w"> </span><span class="kn">import</span> <span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">VariantRecord</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">modos.rdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">attrs_to_graph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">modos.storage</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">add_metadata_group</span><span class="p">,</span>
+    <span class="n">list_zarr_items</span><span class="p">,</span>
+    <span class="n">LocalStorage</span><span class="p">,</span>
+    <span class="n">S3Storage</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">modos.helpers.schema</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">dict_to_instance</span><span class="p">,</span>
+    <span class="n">ElementType</span><span class="p">,</span>
+    <span class="n">set_data_path</span><span class="p">,</span>
+    <span class="n">set_haspart_relationship</span><span class="p">,</span>
+    <span class="n">UserElementType</span><span class="p">,</span>
+    <span class="n">update_haspart_id</span><span class="p">,</span>
+    <span class="n">update_metadata_from_model</span><span class="p">,</span>
+    <span class="n">DataElement</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">modos.genomics.formats</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_pysam</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">modos.genomics.htsget</span><span class="w"> </span><span class="kn">import</span> <span class="n">HtsgetConnection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">modos.genomics.region</span><span class="w"> </span><span class="kn">import</span> <span class="n">Region</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">modos.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_metadata</span><span class="p">,</span> <span class="n">parse_attributes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">modos.remote</span><span class="w"> </span><span class="kn">import</span> <span class="n">EndpointManager</span><span class="p">,</span> <span class="n">is_s3_path</span>
+
+
+<div class="viewcode-block" id="MODO">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MODO</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-Omics Digital Object</span>
+<span class="sd">    A digital archive containing several multi-omics data and records</span>
+<span class="sd">    connected by zarr-backed metadata.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path</span>
+<span class="sd">        Path to the archive directory.</span>
+<span class="sd">    id</span>
+<span class="sd">        MODO identifier.</span>
+<span class="sd">        Defaults to the directory name.</span>
+<span class="sd">    name</span>
+<span class="sd">        Human-readable name.</span>
+<span class="sd">    description</span>
+<span class="sd">        Human readable description.</span>
+<span class="sd">    creation_date</span>
+<span class="sd">        When the MODO was created.</span>
+<span class="sd">    last_update_date</span>
+<span class="sd">        When the MODO was last updated.</span>
+<span class="sd">    has_assay</span>
+<span class="sd">        Existing assay identifiers to attach to MODO.</span>
+<span class="sd">    source_uri</span>
+<span class="sd">        URI of the source data.</span>
+<span class="sd">    endpoint</span>
+<span class="sd">        URL to the modos server.</span>
+<span class="sd">    s3_kwargs</span>
+<span class="sd">        Keyword arguments for the S3 storage.</span>
+<span class="sd">    services</span>
+<span class="sd">        Optional dictionary of service endpoints.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    storage: Storage</span>
+<span class="sd">        Storage backend for the archive.</span>
+<span class="sd">    endpoint: EndpointManager</span>
+<span class="sd">        Server endpoint manager.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; demo = MODO(&quot;data/ex&quot;)</span>
+
+<span class="sd">    # List identifiers of samples in the archive</span>
+<span class="sd">    &gt;&gt;&gt; demo.list_samples()</span>
+<span class="sd">    [&#39;sample/sample1&#39;]</span>
+
+<span class="sd">    # List files in the archive</span>
+<span class="sd">    &gt;&gt;&gt; files = [str(x) for x in demo.list_files()]</span>
+<span class="sd">    &gt;&gt;&gt; assert &#39;demo1.cram&#39; in files</span>
+<span class="sd">    &gt;&gt;&gt; assert &#39;reference.fa&#39; in files</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">creation_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+        <span class="n">last_update_date</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span>
+        <span class="n">has_assay</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">source_uri</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="n">HttpUrl</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">s3_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">services</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">HttpUrl</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<div class="viewcode-block" id="MODO.endpoint">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.endpoint">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">EndpointManager</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">services</span> <span class="ow">or</span> <span class="p">{})</span></div>
+
+        <span class="k">if</span> <span class="n">is_s3_path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">s3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;S3 path requires an endpoint.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Using remote endpoint </span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">S3Storage</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">s3</span><span class="p">,</span> <span class="n">s3_kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># log to stderr</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using local storage for </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">LocalStorage</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="c1"># Opening existing object</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;MODO&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">&quot;creation_date&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">creation_date</span><span class="p">),</span>
+                <span class="s2">&quot;last_update_date&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">last_update_date</span><span class="p">),</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                <span class="s2">&quot;has_assay&quot;</span><span class="p">:</span> <span class="n">has_assay</span><span class="p">,</span>
+                <span class="s2">&quot;source_uri&quot;</span><span class="p">:</span> <span class="n">source_uri</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="c1"># instantiate and post-process</span>
+            <span class="n">sanitized_fields</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span>
+                <span class="n">update_haspart_id</span><span class="p">(</span><span class="n">dict_to_instance</span><span class="p">(</span><span class="n">fields</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="n">sanitized_fields</span><span class="p">[</span><span class="s2">&quot;@type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;MODO&quot;</span>
+
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">sanitized_fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="n">zarr</span><span class="o">.</span><span class="n">consolidate_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">store</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="MODO.zarr">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.zarr">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">zarr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">zarr</span><span class="o">.</span><span class="n">Group</span><span class="p">:</span>
+        <span class="c1"># NOTE: re-open every time to pick up changes</span>
+        <span class="c1"># sometimes new groups are not picked up in zarr v3</span>
+        <span class="k">return</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">store_path</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="MODO.is_remote">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.is_remote">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_remote</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">s3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="MODO.path">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">path</span></div>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="MODO.metadata">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.metadata">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open_consolidated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">store</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">zarr</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Root must be a group. Empty archive?&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Get flat dictionary with all attrs, easier to search</span>
+        <span class="n">group_attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="c1"># Document object itself</span>
+        <span class="n">root_id</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="n">group_attrs</span><span class="p">[</span><span class="n">root_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">subgroup</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">groups</span><span class="p">():</span>
+            <span class="n">group_type</span> <span class="o">=</span> <span class="n">subgroup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">list_zarr_items</span><span class="p">(</span><span class="n">subgroup</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">group_attrs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">group_type</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">group_attrs</span></div>
+
+
+<div class="viewcode-block" id="MODO.knowledge_graph">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.knowledge_graph">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">knowledge_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">Graph</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an RDF graph of the metadata. All identifiers</span>
+<span class="sd">        are converted to valid URIs if needed.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">uri_prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">uri_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;file://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/&quot;</span>
+        <span class="n">kg</span> <span class="o">=</span> <span class="n">attrs_to_graph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">uri_prefix</span><span class="o">=</span><span class="n">uri_prefix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">kg</span></div>
+
+
+<div class="viewcode-block" id="MODO.show_contents">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.show_contents">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Produces a YAML document of the object&#39;s contents.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        element:</span>
+<span class="sd">            Element, or group of elements (e.g. data or data/element_id) to show.</span>
+<span class="sd">            If not provided, shows the metadata of the entire MODO.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
+
+        <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">meta</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">element</span> <span class="ow">in</span> <span class="p">{</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">groups</span><span class="p">()}:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">meta</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">meta</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">element</span><span class="p">)}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">meta</span>
+        <span class="c1"># Pretty print metadata contents as yaml</span>
+
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO.list_files">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.list_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists files in the archive recursively (except for the zarr file).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">file</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;data.zarr&quot;</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MODO.list_arrays">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.list_arrays">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Views arrays in the archive recursively.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        element:</span>
+<span class="sd">            Element, or group of elements (e.g. data or data/element_id) to show.</span>
+<span class="sd">            If not provided, shows the metadata of the entire MODO.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open_consolidated</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">store</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">root</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span> <span class="k">if</span> <span class="n">element</span> <span class="k">else</span> <span class="n">root</span><span class="o">.</span><span class="n">tree</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MODO.query">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.query">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Use SPARQL to query the metadata graph&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">knowledge_graph</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO.list_samples">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.list_samples">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists samples in the archive.&quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SELECT ?s WHERE { ?s a modos:Sample }&quot;</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+                <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;file://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">samples</span></div>
+
+
+<div class="viewcode-block" id="MODO.update_date">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.update_date">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;update last_update_date attribute&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">last_update_date</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MODO.remove_element">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.remove_element">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an element from the archive, along with any files</span>
+<span class="sd">        directly attached to it and links from other elements to it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="n">element_id</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Element </span><span class="si">{</span><span class="n">element_id</span><span class="si">}</span><span class="s2"> not found in the archive.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Available elements are </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">err</span>
+
+        <span class="c1"># Remove data file</span>
+        <span class="k">if</span> <span class="s2">&quot;data_path&quot;</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;data_path must be a valid path, found: </span><span class="si">{</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;data_path&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
+
+        <span class="c1"># Remove element group</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="n">element_id</span><span class="p">]</span>
+
+        <span class="c1"># Remove links from other elements</span>
+        <span class="k">for</span> <span class="n">elem</span><span class="p">,</span> <span class="n">attrs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">element_id</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="n">elem</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="n">element_id</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="n">elem</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">element_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">()</span>
+        <span class="n">zarr</span><span class="o">.</span><span class="n">consolidate_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">store</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO.remove_object">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.remove_object">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the complete modo object&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">list</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fi</span><span class="p">)</span>
+        <span class="c1"># Locally remove the empty directory (does not affect remote).</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_remote</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permanently deleted </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO.add_element">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.add_element">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_element</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">element</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">DataEntity</span>
+            <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">Sample</span>
+            <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">Assay</span>
+            <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">ReferenceGenome</span>
+        <span class="p">),</span>
+        <span class="n">source_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">part_of</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an element to the archive.</span>
+<span class="sd">        If a data file is provided, it will be added to the archive.</span>
+<span class="sd">        If the element is part of another element, the parent metadata</span>
+<span class="sd">        will be updated.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        element</span>
+<span class="sd">            Element to add to the archive.</span>
+<span class="sd">        source_file</span>
+<span class="sd">            File to associate with the element.</span>
+<span class="sd">        part_of</span>
+<span class="sd">            Id of the parent element. It must be scoped to the type.</span>
+<span class="sd">            For example &quot;sample/foo&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_any_element</span><span class="p">(</span>
+            <span class="n">element</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span> <span class="n">part_of</span><span class="p">,</span> <span class="n">allowed_elements</span><span class="o">=</span><span class="n">UserElementType</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO._add_any_element">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO._add_any_element">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_any_element</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">element</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">DataEntity</span>
+            <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">Sample</span>
+            <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">Assay</span>
+            <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">ReferenceSequence</span>
+            <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">ReferenceGenome</span>
+        <span class="p">),</span>
+        <span class="n">source_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">part_of</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">allowed_elements</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">ElementType</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an element of any type to the storage. This is meant to be called internally to add elements automatically.&quot;&quot;&quot;</span>
+        <span class="c1"># Check that ID does not exist in modo</span>
+        <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">keys</span><span class="p">()]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Please specify a unique ID. Element with ID </span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> already exist.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Copy data file to storage</span>
+        <span class="k">if</span> <span class="n">source_file</span><span class="p">:</span>
+            <span class="c1"># NOTE: Keep this for compatibility until ReferenceGenomes are handeled by refget</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">ReferenceGenome</span><span class="p">):</span>
+                <span class="n">source_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_file</span><span class="p">)</span>
+                <span class="n">target_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="s2">&quot;data_path&quot;</span><span class="p">))</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">source_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
+
+            <span class="c1"># Add file (+ index) and update data_checksum attribute</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">DataEntity</span><span class="p">):</span>
+                <span class="n">new_data</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">)</span>
+                <span class="n">new_data</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">source_file</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">data_path</span><span class="p">))</span>
+
+        <span class="c1"># Infer type</span>
+        <span class="n">type_name</span> <span class="o">=</span> <span class="n">allowed_elements</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="n">element</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">type_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="n">type_name</span><span class="p">]</span>
+        <span class="n">element_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">type_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Assays are always bound to the MODO itself.</span>
+        <span class="k">if</span> <span class="n">type_name</span> <span class="o">==</span> <span class="s2">&quot;assay&quot;</span> <span class="ow">or</span> <span class="n">part_of</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">set_haspart_relationship</span><span class="p">(</span>
+                <span class="n">element</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">element_path</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="n">part_of</span><span class="p">]</span> <span class="k">if</span> <span class="n">part_of</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Update haspart relationship</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="n">update_haspart_id</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+
+        <span class="c1"># Add element to metadata</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_dumper</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">element</span><span class="p">))</span>
+        <span class="n">add_metadata_group</span><span class="p">(</span><span class="n">type_group</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">()</span>
+        <span class="n">zarr</span><span class="o">.</span><span class="n">consolidate_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">store</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO.update_element">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.update_element">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_element</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">element_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">new</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">DataEntity</span> <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">Sample</span> <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">Assay</span> <span class="o">|</span> <span class="n">model</span><span class="o">.</span><span class="n">MODO</span><span class="p">,</span>
+        <span class="n">source_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">part_of</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">allowed_elements</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">UserElementType</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update element metadata in place by adding new values from model object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------------</span>
+<span class="sd">        element_id</span>
+<span class="sd">            Full id path in the zarr store.</span>
+<span class="sd">        new</span>
+<span class="sd">            Element containing the enriched metadata.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="n">element_id</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">element_id</span><span class="p">)</span>
+        <span class="n">attr_dict</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">asdict</span><span class="p">()</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="n">dict_to_instance</span><span class="p">(</span><span class="n">attr_dict</span> <span class="o">|</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">element_id</span><span class="p">})</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">element</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Class </span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">class_name</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">element_id</span><span class="si">}</span><span class="s2"> does not match </span><span class="si">{</span><span class="n">new</span><span class="o">.</span><span class="n">class_name</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">DataEntity</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">new</span><span class="o">.</span><span class="n">data_path</span><span class="p">),</span> <span class="n">source_file</span><span class="p">)</span>
+            <span class="c1"># NOTE: data_checksum was updated in data, but needs to be synced into new</span>
+            <span class="n">new</span><span class="o">.</span><span class="n">data_checksum</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">data_checksum</span>
+
+        <span class="n">type_name</span> <span class="o">=</span> <span class="n">allowed_elements</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="n">new</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">element_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">type_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">new</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">part_of</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">set_haspart_relationship</span><span class="p">(</span>
+                <span class="n">new</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">element_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="n">part_of</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">new</span> <span class="o">=</span> <span class="n">update_haspart_id</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+        <span class="n">update_metadata_from_model</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">()</span>
+        <span class="n">zarr</span><span class="o">.</span><span class="n">consolidate_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">store</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO.enrich_metadata">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.enrich_metadata">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enrich_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enrich MODO metadata in place using content from associated data files.&quot;&quot;&quot;</span>
+
+        <span class="c1"># TODO: match using id instead of names -&gt; safer</span>
+        <span class="c1"># NOTE: will require handling type prefix.</span>
+        <span class="n">inst_names</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">inst</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span> <span class="nb">id</span>
+            <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">inst</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">entity</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;@type&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;DataEntity&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data_inst</span> <span class="o">=</span> <span class="n">dict_to_instance</span><span class="p">(</span><span class="n">entity</span> <span class="o">|</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">id</span><span class="p">})</span>
+                <span class="n">extracted</span> <span class="o">=</span> <span class="n">extract_metadata</span><span class="p">(</span><span class="n">data_inst</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="c1"># skip entities whose format does not support enrich</span>
+            <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">new_elements</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">extracted</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ele</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">inst_names</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">inst_names</span><span class="p">[</span><span class="n">ele</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">ele</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">ele</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_elements</span><span class="p">:</span>
+                    <span class="n">new_elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_any_element</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+            <span class="c1"># Add arrays if the parent is not an array already.</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">extracted</span><span class="o">.</span><span class="n">arrays</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">zarr</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Nest arrays directly in parent group</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">arr</span> <span class="ow">in</span> <span class="n">extracted</span><span class="o">.</span><span class="n">arrays</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">parent</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                    <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">arr</span><span class="p">,</span> <span class="n">object_codec</span><span class="o">=</span><span class="n">numcodecs</span><span class="o">.</span><span class="n">VLenUTF8</span><span class="p">()</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO.stream_genomics">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.stream_genomics">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stream_genomics</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">reference_filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">AlignedSegment</span> <span class="o">|</span> <span class="n">VariantRecord</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Slices both local and remote CRAM, VCF (.vcf.gz), and BCF</span>
+<span class="sd">        files returning an iterator over records.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file_path</span>
+<span class="sd">            Path to the genomics file within the MODO.</span>
+<span class="sd">        region</span>
+<span class="sd">            Genomic region in UCSC format (e.g. chr1:1000-200</span>
+<span class="sd">        reference_filename</span>
+<span class="sd">            Path to the reference genome file.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Iterator over pysam AlignedSegment or VariantRecord objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">_region</span> <span class="o">=</span> <span class="n">Region</span><span class="o">.</span><span class="n">from_ucsc</span><span class="p">(</span><span class="n">region</span><span class="p">)</span> <span class="k">if</span> <span class="n">region</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="c1"># check requested genomics file exists in MODO</span>
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_files</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> not found in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">s3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">htsget</span><span class="p">:</span>
+            <span class="n">con</span> <span class="o">=</span> <span class="n">HtsgetConnection</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">htsget</span><span class="p">,</span>
+                <span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span> <span class="n">file_path</span><span class="p">,</span>
+                <span class="n">region</span><span class="o">=</span><span class="n">_region</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">to_pysam</span><span class="p">(</span><span class="n">reference_filename</span><span class="o">=</span><span class="n">reference_filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="n">read_pysam</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="n">file_path</span><span class="p">,</span>
+                <span class="n">reference_filename</span><span class="o">=</span><span class="n">reference_filename</span><span class="p">,</span>
+                <span class="n">region</span><span class="o">=</span><span class="n">_region</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">stream</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="MODO.from_file">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.from_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">object_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="n">HttpUrl</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">s3_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">services</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">HttpUrl</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">no_remove</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MODO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;build a modo from a yaml or json file&quot;&quot;&quot;</span>
+        <span class="n">element_list</span> <span class="o">=</span> <span class="n">parse_attributes</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+
+        <span class="c1"># checks</span>
+        <span class="n">modo_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">ele</span><span class="p">[</span><span class="s2">&quot;element&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;@type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;MODO&quot;</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">element_list</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">modo_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;There can not be more than one modo. Found </span><span class="si">{</span><span class="n">modo_count</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">ele</span><span class="p">[</span><span class="s2">&quot;element&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">element_list</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ids</span><span class="p">)):</span>
+            <span class="n">dup</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ids</span> <span class="k">if</span> <span class="n">ids</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Please specify unique IDs. Element(s) with ID(s) </span><span class="si">{</span><span class="n">dup</span><span class="si">}</span><span class="s2"> already exist.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">instance_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">modo_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">element_list</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">element</span><span class="p">[</span><span class="s2">&quot;element&quot;</span><span class="p">]</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;args&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;@type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;MODO&quot;</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;@type&quot;</span><span class="p">]</span>
+                <span class="n">modo_dict</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metadata</span>
+                <span class="n">modo_dict</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">set_data_path</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_file&quot;</span><span class="p">))</span>
+                <span class="n">inst</span> <span class="o">=</span> <span class="n">dict_to_instance</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+                <span class="n">instance_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">inst</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+        <span class="n">modo</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">path</span><span class="o">=</span><span class="n">object_path</span><span class="p">,</span>
+            <span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span>
+            <span class="n">services</span><span class="o">=</span><span class="n">services</span><span class="p">,</span>
+            <span class="n">s3_kwargs</span><span class="o">=</span><span class="n">s3_kwargs</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">modo_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;meta&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+            <span class="o">**</span><span class="n">modo_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;args&quot;</span><span class="p">,</span> <span class="p">{}),</span>
+        <span class="p">)</span>
+
+        <span class="n">modo_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">Path</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">id</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">modo</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="k">for</span> <span class="n">inst</span><span class="p">,</span> <span class="n">args</span> <span class="ow">in</span> <span class="n">instance_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">inst</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">modo_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">modo</span><span class="o">.</span><span class="n">update_element</span><span class="p">(</span><span class="n">modo_ids</span><span class="p">[</span><span class="n">inst</span><span class="o">.</span><span class="n">id</span><span class="p">],</span> <span class="n">inst</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">modo</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">no_remove</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">modo</span>
+        <span class="n">modo_id</span> <span class="o">=</span> <span class="n">modo</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="n">old_ids</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">id</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">modo_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="nb">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ids</span> <span class="ow">and</span> <span class="nb">id</span> <span class="o">!=</span> <span class="n">modo_id</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">old_id</span> <span class="ow">in</span> <span class="n">old_ids</span><span class="p">:</span>
+            <span class="n">modo</span><span class="o">.</span><span class="n">remove_element</span><span class="p">(</span><span class="n">modo_ids</span><span class="p">[</span><span class="n">old_id</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">modo</span></div>
+
+
+<div class="viewcode-block" id="MODO.download">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.download">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Download the MODO to a local directory.</span>
+<span class="sd">        This will download all files and metadata to the target directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">LocalStorage</span><span class="p">(</span><span class="n">target_path</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MODO.upload">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.upload">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">target_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">s3_endpoint</span><span class="p">:</span> <span class="n">HttpUrl</span><span class="p">,</span>
+        <span class="n">s3_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload a local MODO to a target_path on a remote endpoint.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span><span class="n">S3Storage</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="n">s3_endpoint</span><span class="p">,</span> <span class="n">s3_kwargs</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MODO.encrypt">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.encrypt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encrypt</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">recipient_pubkeys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">]</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span>
+        <span class="n">seckey_path</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">passphrase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">delete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encrypt genomic data files including index files in a modo using crypt4gh&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">members</span><span class="p">():</span>
+            <span class="n">meta</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">asdict</span><span class="p">()</span>
+            <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">dict_to_instance</span><span class="p">(</span><span class="n">meta</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
+                <span class="n">recipient_pubkeys</span><span class="p">,</span>
+                <span class="n">seckey_path</span><span class="p">,</span>
+                <span class="n">passphrase</span><span class="p">,</span>
+                <span class="n">delete</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">update_metadata_from_model</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">()</span>
+        <span class="n">zarr</span><span class="o">.</span><span class="n">consolidate_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">store</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO.decrypt">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.decrypt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decrypt</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seckey_path</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span>
+        <span class="n">sender_pubkey</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">passphrase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decrypt all c4gh encrypted data files in modo&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">members</span><span class="p">():</span>
+            <span class="n">meta</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">asdict</span><span class="p">()</span>
+            <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">DataElement</span><span class="p">(</span><span class="n">dict_to_instance</span><span class="p">(</span><span class="n">meta</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">seckey_path</span><span class="p">,</span> <span class="n">sender_pubkey</span><span class="p">,</span> <span class="n">passphrase</span><span class="p">)</span>
+            <span class="n">update_metadata_from_model</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_date</span><span class="p">()</span>
+        <span class="n">zarr</span><span class="o">.</span><span class="n">consolidate_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zarr</span><span class="o">.</span><span class="n">store</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MODO.checksum">
+<a class="viewcode-back" href="../../autoapi/modos/api/index.html#modos.api.MODO.checksum">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute a single checksum for the MODO based on its contents.</span>
+
+<span class="sd">        Only file contents are considered, not filenames.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+        <span class="c1"># iterate over all files in the storage</span>
+        <span class="c1"># load by chunks to avoid memory issues with large files</span>
+
+        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">list</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, sdsc-ordes.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

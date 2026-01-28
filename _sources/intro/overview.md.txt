@@ -1,0 +1,53 @@
+# Overview
+
+## Multiomics - the (full) picture
+
+Molecular mechanisms are highly regulated at various levels. Different omic layers (genomics, transcriptomics, proteomics, metabolomics) interact and communicate with each other to establish specific phenotypes. Thus, it can be crucial to explore several of these layers together to understand phenotypic pattern and their nuances, e.g. in the manifestation of genetic diseases. Recent advances in sequencing technologies enabled the parallel measurement of multiple omic layers from the same sample. Integrated analysis of these __multiomics__ data can help to unravel the underlying molecular mechanisms of regulation and their interactions.
+
+## Multi Omics Digital Object System(MODOS)
+
+### Features
+
+:::{image} ../img/multiomics.svg
+   :align: right
+   :width: 200
+   :height: 200
+   :alt: multiomics
+:::
+
+The main goal of `MODOS` is to enable collaborative analysis and data sharing of multiomics data. Typically multiomics data are large in size, diverse in their formats and object to secure access. Thus remote storage with regulated access can be key to enable data sharing and integrated analysis.
+Because of these requirements the `MODOS-api` provides the following __key features__:
+
+- queryable, linked metadata
+- data and metadata synchronisation
+- compression
+- remote access
+- streaming
+
+### Object structure
+
+Internally, `MODOS` builds on the <a href="https://github.com/zarr-developers/zarr-python" target="_blank">zarr</a> file storage format, that allows storage and access of chunked, compressed, N-dimensional __arrays__ alongside their __metadata__ in __hierachical groups__. All metadata can be consolidated and exported separately for querying or listing purposes. Genomics data are not stored as arrays, but can be added to the `zarr` archive in <a href="https://samtools.github.io/hts-specs/CRAMv3.pdf" target="_blank">CRAM</a> format. CRAM is a reference-based compression format for alignment files:
+
+:::{image} ../img/digital-object-structure.png
+   :align: center
+   :width: 600
+   :alt: digital-object
+:::
+
+### Remote storage
+
+Modos includes a modular and secure deployment stack consisting of __5 main components__:
+- a webserver exposing a REST api to interact with remote objects
+- a htsget server to provide streaming access over network to CRAM files
+- s3 bucket for remote file storage
+- a reverse proxy direct remote access
+- a key management service to provide short-lived S3 credentials
+
+Coupled with an identity provider these components allow to restrict access to authenticated user.
+Detailed instructions about how to deploy can be found in the [MODOs Deployment Stack](../tutorials/remote_deployment) tutorial.
+
+:::{image} ../img/architecture_simple.svg
+   :align: center
+   :height: 300
+   :alt: deployment-stack
+:::

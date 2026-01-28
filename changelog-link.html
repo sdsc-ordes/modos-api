@@ -1,0 +1,900 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>[0.3.5] - 2025-11-17 &#8212; modos-api 0.3.5 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=ba50482b"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'changelog-link';</script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Command Line Interface" href="cli.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/modos.png" class="logo__image only-light" alt="modos-api 0.3.5 documentation - Home"/>
+    <img src="_static/modos.png" class="logo__image only-dark pst-js-only" alt="modos-api 0.3.5 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="#">
+    [0.3.5] - 2025-11-17
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/overview.html">
+    Overview
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorials/tutorials.html">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="cli.html">
+    Command Line Interface
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    [0.3.5] - 2025-11-17
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/sdsc-ordes/modos-api" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">[0.3.5] - 2025-11-17</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p>Notable changes introduced in modos releases are documented in this file</p>
+<section id="id1">
+<h1>[0.3.5] - 2025-11-17<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<section id="bug-fixes">
+<h2>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(deploy)</em> switch from minio to garage as S3 storage service (#183)</p></li>
+</ul>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(cli)</em> oauth device code flow support (#183)</p></li>
+</ul>
+</section>
+</section>
+<section id="id2">
+<h1>[0.3.4] - 2025-10-14<a class="headerlink" href="#id2" title="Link to this heading">#</a></h1>
+<section id="id3">
+<h2>Bug Fixes<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(api)</em> do not consolidate on read operations (#173)</p></li>
+<li><p><em>(api)</em> auto-attach assays to MODO (#176)</p></li>
+<li><p><em>(server)</em> explicit error message on missing bucket (#165)- vcf streaming to pysam (#180)</p></li>
+</ul>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(tutorials)</em> fix obsolete api parameters (#168)</p></li>
+<li><p><em>(tutorials)</em> add advanced yaml example (#172)</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>Features<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(cli)</em> codes for sample processing (#178)</p></li>
+<li><p><em>(cli)</em> pass s3 credentials via env (#179)</p></li>
+<li><p><em>(fuzon)</em> cli fallback without autocomplete (#164)- schema upgrade (#177)</p></li>
+</ul>
+</section>
+</section>
+<section id="id5">
+<h1>[0.3.3] - 2025-08-22<a class="headerlink" href="#id5" title="Link to this heading">#</a></h1>
+<section id="id6">
+<h2>Bug Fixes<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(deploy)</em> drop depends_on.required for compat with older compose (#156)</p></li>
+<li><p><em>(deploy)</em> nonroot container users (#157)</p></li>
+<li><p><em>(deploy)</em> addgroup -&gt; groupadd for debian-based images</p></li>
+</ul>
+</section>
+<section id="id7">
+<h2>Features<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(deploy)</em> caddy with https support (#160)- compatibility with air-gapped
+deployments (#154)</p></li>
+</ul>
+</section>
+</section>
+<section id="id8">
+<h1>[0.3.2] - 2025-06-16<a class="headerlink" href="#id8" title="Link to this heading">#</a></h1>
+<section id="id9">
+<h2>Bug Fixes<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(cli)</em> syntax when reading passphrase from file (#140)</p></li>
+<li><p><em>(storage)</em> transfer metadata (#148)</p></li>
+</ul>
+</section>
+</section>
+<section id="id10">
+<h1>[0.3.1] - 2025-05-23<a class="headerlink" href="#id10" title="Link to this heading">#</a></h1>
+<section id="id11">
+<h2>Bug Fixes<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(api)</em> sequential encryption (#138)</p></li>
+<li><p>pin typer AND click versions for compatibility</p></li>
+</ul>
+</section>
+<section id="id12">
+<h2>Documentation<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>add encryption and upload sections (#136)</p></li>
+</ul>
+</section>
+</section>
+<section id="id13">
+<h1>[0.3.0] - 2025-05-20<a class="headerlink" href="#id13" title="Link to this heading">#</a></h1>
+<section id="id14">
+<h2>Bug Fixes<a class="headerlink" href="#id14" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(api)</em> update data path (#118)</p></li>
+<li><p><em>(deps)</em> remove misplaced pyfuzon import</p></li>
+<li><p><em>(server)</em> api compatibility for /meta and /get (#126)</p></li>
+</ul>
+</section>
+<section id="id15">
+<h2>Documentation<a class="headerlink" href="#id15" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(readme)</em> fix gha badge url (#132)</p></li>
+<li><p><em>(tuto)</em> document modos enrich subcommand- add file format design notes (#111)</p></li>
+</ul>
+</section>
+<section id="id16">
+<h2>Features<a class="headerlink" href="#id16" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(cli)</em> update prompts for removal of missing config elements (#123)</p></li>
+<li><p><em>(deploy)</em> setup refget service (#121)- logger (#130)</p></li>
+<li><p>local crypt4gh encryption (#127)</p></li>
+</ul>
+</section>
+</section>
+<section id="id17">
+<h1>[0.2.3] - 2024-11-29<a class="headerlink" href="#id17" title="Link to this heading">#</a></h1>
+<section id="id18">
+<h2>Bug Fixes<a class="headerlink" href="#id18" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(deploy)</em> htsget networking (#102)</p></li>
+<li><p><em>(htsget)</em> minio connection</p></li>
+</ul>
+</section>
+<section id="id19">
+<h2>Documentation<a class="headerlink" href="#id19" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(readme)</em> fix example sparql query</p></li>
+<li><p><em>(tuto)</em> fix mztab example</p></li>
+</ul>
+</section>
+<section id="id20">
+<h2>Features<a class="headerlink" href="#id20" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(cli)</em> consistent path options (#105)</p></li>
+<li><p><em>(cli, api)</em> show only target element (#98)- support terminology codes (#106)</p></li>
+<li><p>mztab support (#107)</p></li>
+</ul>
+</section>
+</section>
+<section id="id21">
+<h1>[0.2.2] - 2024-08-12<a class="headerlink" href="#id21" title="Link to this heading">#</a></h1>
+<section id="id22">
+<h2>Bug Fixes<a class="headerlink" href="#id22" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(rdf)</em> inject schema:identifier (#99)</p></li>
+</ul>
+</section>
+<section id="id23">
+<h2>Documentation<a class="headerlink" href="#id23" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(tutorial)</em> update remote and genomics (#97)</p></li>
+</ul>
+</section>
+</section>
+<section id="id24">
+<h1>[0.2.1] - 2024-08-08<a class="headerlink" href="#id24" title="Link to this heading">#</a></h1>
+<section id="id25">
+<h2>Bug Fixes<a class="headerlink" href="#id25" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(rdf)</em> schema.org prefix (#96)</p></li>
+</ul>
+</section>
+</section>
+<section id="id26">
+<h1>[0.2.0] - 2024-08-05<a class="headerlink" href="#id26" title="Link to this heading">#</a></h1>
+<section id="id27">
+<h2>Bug Fixes<a class="headerlink" href="#id27" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(api)</em> add type hints, fix doctests</p></li>
+<li><p><em>(api)</em> MODO.metadata extracts own attributes</p></li>
+<li><p><em>(api)</em> update changed values in update_element (#83)</p></li>
+<li><p><em>(cli)</em> duplicated prompt for id</p></li>
+<li><p><em>(cli)</em> drop zarr group creation on modo create</p></li>
+<li><p><em>(compose)</em> network syntax</p></li>
+<li><p><em>(compose)</em> volume mounts + listening address</p></li>
+<li><p><em>(compose)</em> env vars to specify buckets and policies</p></li>
+<li><p><em>(compose)</em> disconnect s3 volume from modo-server (accessed via net)</p></li>
+<li><p><em>(cram)</em> add slicing logic</p></li>
+<li><p><em>(cram)</em> coords -&gt; region</p></li>
+<li><p><em>(deploy)</em> disable body size limit in nginx (#42)</p></li>
+<li><p><em>(deploy)</em> disable max body size in nginx</p></li>
+<li><p><em>(docker)</em> missing dep in client dockerfile</p></li>
+<li><p><em>(introspection)</em> support inheritance in get_slots</p></li>
+<li><p><em>(io)</em> rm unneeded id_ -&gt; id</p></li>
+<li><p><em>(minio)</em> add env variables for auth</p></li>
+<li><p><em>(minio)</em> expose console port locally</p></li>
+<li><p><em>(nginx)</em> define rewrite rules for s3+htsget</p></li>
+<li><p><em>(rdf)</em> handle path-&gt;uri conversion for data_path</p></li>
+<li><p><em>(server)</em> pin dependencies</p></li>
+<li><p><em>(server)</em> safer bucket replacement</p></li>
+<li><p><em>(server)</em> safer bucket replacement</p></li>
+<li><p><em>(server)</em> make exact_match match exactly</p></li>
+<li><p><em>(server)</em> pin htsget version + bump msrv (#49)</p></li>
+<li><p><em>(server)</em> reload minio filesystem on server queries (#62)- schema syntax</p></li>
+<li><p>drop unused query</p></li>
+<li><p>visit nodes recursively when extracting metadata</p></li>
+<li><p>path handling on modo creation</p></li>
+<li><p>cli display of modo show</p></li>
+<li><p>rm unused linkml-owl helper+undeclared linkml dep</p></li>
+<li><p>add missing –data-file option</p></li>
+<li><p>set filename using metadata when copying into digital object</p></li>
+<li><p>validate types of has_part relationship in MODO.add</p></li>
+<li><p>handle root path when adding data</p></li>
+<li><p>allow flexible number of elements in yaml</p></li>
+<li><p>change path in example config.yaml</p></li>
+<li><p>use schema model to build modo from yaml</p></li>
+<li><p>directly cast schema models</p></li>
+<li><p>add check for list</p></li>
+<li><p>propagate function name change</p></li>
+<li><p>minor fix in example yaml id</p></li>
+<li><p>add check for existing before adding element to modo</p></li>
+<li><p>missing typing import</p></li>
+<li><p>create unique sequence ids from extracted metadata</p></li>
+<li><p>standardize metadata extraction</p></li>
+<li><p>extract reference from list</p></li>
+<li><p>remote metadata streaming</p></li>
+<li><p>add group level to extract_metadata in line with the new structure</p></li>
+<li><p>adapt tests to zarr path as id</p></li>
+<li><p>prevent failing for non existing keys in whitelist</p></li>
+<li><p>define existing paths in test yaml</p></li>
+<li><p>use relative path to enrich metadata</p></li>
+<li><p>rename whitelist, simplify conditions</p></li>
+<li><p>set full id for has_part attributes when build from yaml</p></li>
+<li><p>adapt has_part ids to full id when build from yaml</p></li>
+<li><p>consistent naming</p></li>
+<li><p>include metadata from all modos</p></li>
+<li><p>wildcard use in fstring</p></li>
+<li><p>adapt env var name</p></li>
+<li><p>name mismatch in slice_remote_cram</p></li>
+<li><p>mutable args (#52)</p></li>
+<li><p>auto upload cram index (#64)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">direnv</span></code> tooling and ignore</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">pyright</span></code> lsp</p></li>
+<li><p>format bug in feature-request.yml</p></li>
+<li><p>consistent ids (#70)</p></li>
+<li><p>client-side region-filter on htsget streams (#71)</p></li>
+</ul>
+</section>
+<section id="id28">
+<h2>Documentation<a class="headerlink" href="#id28" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(cli)</em> shorten command descriptions</p></li>
+<li><p><em>(compose)</em> mount -&gt; volume for minio</p></li>
+<li><p><em>(deploy)</em> add deployment instructions and docs</p></li>
+<li><p><em>(deploy)</em> update readme with nginx setup</p></li>
+<li><p><em>(deploy)</em> document configuration with .env file</p></li>
+<li><p><em>(readme)</em> add usage+development guidelines</p></li>
+<li><p><em>(readme)</em> refresh api description</p></li>
+<li><p><em>(readme)</em> add credits (#55)</p></li>
+<li><p><em>(readme)</em> styling + update examples (#80)</p></li>
+<li><p><em>(readme)</em> fix api example</p></li>
+<li><p><em>(typo)</em> deploy/README.md</p></li>
+<li><p><em>(typo)</em> deploy/README.md- add initial README.md</p></li>
+<li><p>add implementation details to README.md</p></li>
+<li><p>add status to readme</p></li>
+<li><p>add license</p></li>
+<li><p>add NOTE in get_slot_range about class-independence</p></li>
+<li><p>mention class-independence in get_slot_range docstring</p></li>
+<li><p>docstring for MODO.update_element</p></li>
+<li><p>sphinx website with API reference (#32)</p></li>
+<li><p>Add some documentation for using <code class="docutils literal notranslate"><span class="pre">nix</span></code></p></li>
+<li><p>format markdown documents (#66)</p></li>
+</ul>
+</section>
+<section id="id29">
+<h2>Features<a class="headerlink" href="#id29" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><em>(api)</em> basic metadata extraction</p></li>
+<li><p><em>(api)</em> update existing elements</p></li>
+<li><p><em>(api)</em> allow passing zarr archive to MODO constructor</p></li>
+<li><p><em>(cli)</em> implement create command</p></li>
+<li><p><em>(cli)</em> add write commands for metadata+data</p></li>
+<li><p><em>(cli)</em> add support for multi-choice prompt</p></li>
+<li><p><em>(cli)</em> allow skipping slot prompts</p></li>
+<li><p><em>(cli)</em> stream command (#87)</p></li>
+<li><p><em>(cli)</em> update modo from yaml file (#89)</p></li>
+<li><p><em>(cli, api)</em> remove modo (#76)</p></li>
+<li><p><em>(cram)</em> region parsing func</p></li>
+<li><p><em>(cram)</em> slice local files</p></li>
+<li><p><em>(deploy)</em> add nginx service in compose</p></li>
+<li><p><em>(deploy)</em> htsget over s3 (#26)</p></li>
+<li><p><em>(docker)</em> version as build arg + metadata label</p></li>
+<li><p><em>(helpers)</em> allow enum from model object</p></li>
+<li><p><em>(introspection)</em> add getter methods, cache schema views</p></li>
+<li><p><em>(io)</em> helper functions for loading instances</p></li>
+<li><p><em>(makefile)</em> docker build recipe</p></li>
+<li><p><em>(meta)</em> add custom rdf converter</p></li>
+<li><p><em>(nginx)</em> placeholder config</p></li>
+<li><p><em>(s3)</em> allow virtual-host-style buckets (#75)</p></li>
+<li><p><em>(server)</em> extend client dockerfile</p></li>
+<li><p><em>(server)</em> list modos and gather metadata[wip]</p></li>
+<li><p><em>(server)</em> sort matches by similarity- add draft rdf metadata schema</p></li>
+<li><p>add taxid in schema</p></li>
+<li><p>add pkg skeleton</p></li>
+<li><p>add helper functions to inspect schema</p></li>
+<li><p>add zarr mgmt funcs to modo.storage</p></li>
+<li><p>list samples in archive via API</p></li>
+<li><p>add remove command</p></li>
+<li><p>allow adding reference genomes</p></li>
+<li><p>relevant metadata from cram file</p></li>
+<li><p>first version to build full obj from yaml</p></li>
+<li><p>extend cli create</p></li>
+<li><p>server deployment (#12)</p></li>
+<li><p>update build_modo_from_file for new structure</p></li>
+<li><p>use zarr path as id, check for unique</p></li>
+<li><p>fail early for duplicated id in build_modo_from_file</p></li>
+<li><p>repeat prompt for invalid inputs (non unique ids)</p></li>
+<li><p>copy files into modo when building from yaml</p></li>
+<li><p>request server endpoints</p></li>
+<li><p>Add get?query to modo server</p></li>
+<li><p>enable instantiation of remote modo</p></li>
+<li><p>add a function to handle both cram and vcf/bcf BytesIO buffers.</p></li>
+<li><p>add helper function to determine the file format. needed for generalized
+save/stream_genomics methods, and possibly for oter methods/functions as well</p></li>
+<li><p>add a function to handle both cram and vcf/bcf BytesIO buffers.</p></li>
+<li><p>add a function to handle both cram and vcf/bcf BytesIO buffers.</p></li>
+<li><p>Add development setup for Nix shell</p></li>
+<li><p>Enable <code class="docutils literal notranslate"><span class="pre">nix</span></code> development</p></li>
+<li><p>auto update last_update_date attr (#73)</p></li>
+<li><p>htsget client (#78)</p></li>
+<li><p>streamline remote options (#90)</p></li>
+</ul>
+<!--generated by git-cliff -->
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="cli.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Command Line Interface</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">[0.3.5] - 2025-11-17</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bug-fixes">Bug Fixes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">[0.3.4] - 2025-10-14</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Bug Fixes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Features</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">[0.3.3] - 2025-08-22</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Bug Fixes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Features</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">[0.3.2] - 2025-06-16</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">[0.3.1] - 2025-05-23</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Bug Fixes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Documentation</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">[0.3.0] - 2025-05-20</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Bug Fixes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Features</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">[0.2.3] - 2024-11-29</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Bug Fixes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Features</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">[0.2.2] - 2024-08-12</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Bug Fixes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Documentation</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">[0.2.1] - 2024-08-08</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">[0.2.0] - 2024-08-05</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">Bug Fixes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">Documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">Features</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/changelog-link.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, sdsc-ordes.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

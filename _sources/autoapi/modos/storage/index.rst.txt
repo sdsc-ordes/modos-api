@@ -1,0 +1,309 @@
+modos.storage
+=============
+
+.. py:module:: modos.storage
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   modos.storage.ZARR_ROOT
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.storage.Storage
+   modos.storage.LocalStorage
+   modos.storage.S3Path
+   modos.storage.S3Storage
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.storage.init_zarr
+   modos.storage.connect_s3
+   modos.storage.add_metadata_group
+   modos.storage.add_data
+   modos.storage.list_zarr_items
+   modos.storage.list_remote_modos
+
+
+Module Contents
+---------------
+
+.. py:data:: ZARR_ROOT
+
+.. py:class:: Storage
+
+   Bases: :py:obj:`abc.ABC`
+
+
+   Abstract base class for modos storage backends.
+   Paths in a Storage are always interpreted relative to self.path.
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+      :abstractmethod:
+
+
+
+   .. py:property:: zarr
+      :type: zarr.Group
+
+      :abstractmethod:
+
+
+
+   .. py:method:: exists(target)
+      :abstractmethod:
+
+
+
+   .. py:method:: list(target = None)
+      :abstractmethod:
+
+
+      List files in the storage.
+
+      :param target: path to a directory to list relative to storage.path.
+                     If None, list all files in storage.
+
+
+
+   .. py:method:: move(rel_source, target)
+      :abstractmethod:
+
+
+      Move a file within storage.
+
+      :param rel_source: source path to the file to move relative to storage.path
+      :param target: target path within storage
+
+
+
+   .. py:method:: open(target)
+      :abstractmethod:
+
+
+
+   .. py:method:: put(source, target)
+      :abstractmethod:
+
+
+
+   .. py:method:: remove(target)
+      :abstractmethod:
+
+
+
+   .. py:method:: transfer(other)
+
+      Transfer all contents of one storage to another one.
+
+
+
+   .. py:method:: empty()
+
+
+.. py:class:: LocalStorage(path)
+
+   Bases: :py:obj:`Storage`
+
+
+   Abstract base class for modos storage backends.
+   Paths in a Storage are always interpreted relative to self.path.
+
+
+   .. py:attribute:: _path
+
+
+   .. py:property:: zarr
+      :type: zarr.Group
+
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+
+
+   .. py:method:: exists(target)
+
+
+   .. py:method:: list(target = None)
+
+      List files in the storage.
+
+      :param target: path to a directory to list relative to storage.path.
+                     If None, list all files in storage.
+
+
+
+   .. py:method:: move(rel_source, target)
+
+      Move a file within storage.
+
+      :param rel_source: source path to the file to move relative to storage.path
+      :param target: target path within storage
+
+
+
+   .. py:method:: open(target)
+
+
+   .. py:method:: put(source, target)
+
+
+   .. py:method:: remove(target)
+
+
+.. py:class:: S3Path
+
+   Pydantic Model for S3 URLs. Performs validation against amazon's official naming rules [1]_ [2]_
+
+   .. [1] https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html
+   .. [2] https://gist.github.com/rajivnarayan/c38f01b89de852b3e7d459cfde067f3f
+
+
+   .. rubric:: Examples
+
+   >>> S3Path(url="s3://test/ex")
+   S3Path(url='s3://test/ex')
+   >>> S3Path(url='s3://?invalid-bucket-name!/def') # doctest: +IGNORE_EXCEPTION_DETAIL
+   Traceback (most recent call last):
+     ...
+   pydantic_core._pydantic_core.ValidationError: 1 validation error for S3Path
+
+
+   .. py:attribute:: _s3_pattern
+      :type:  ClassVar[re.Pattern[str]]
+
+
+   .. py:attribute:: url
+      :type:  str
+      :value: None
+
+
+
+   .. py:method:: __truediv__(other)
+
+
+   .. py:method:: __str__()
+
+
+   .. py:method:: s3_url_parts()
+
+
+   .. py:property:: bucket
+      :type: str
+
+
+
+   .. py:property:: key
+      :type: str
+
+
+
+.. py:class:: S3Storage(path, s3_endpoint, s3_kwargs = None)
+
+   Bases: :py:obj:`Storage`
+
+
+   Abstract base class for modos storage backends.
+   Paths in a Storage are always interpreted relative to self.path.
+
+
+   .. py:attribute:: _path
+
+
+   .. py:attribute:: endpoint
+
+
+   .. py:attribute:: store
+
+
+   .. py:attribute:: zarr_store
+
+
+   .. py:property:: path
+      :type: pathlib.Path
+
+
+
+   .. py:property:: zarr
+      :type: zarr.Group
+
+
+
+   .. py:method:: exists(target)
+
+      Checks whether target, or objects in target directory exist in the store.
+      The target should be relative to self.path.
+
+
+
+   .. py:method:: list(target = None)
+
+      Lists objects in target directory.
+      The target should be relative to self.path.
+
+
+
+   .. py:method:: open(target)
+
+
+   .. py:method:: remove(target)
+
+
+   .. py:method:: put(source, target)
+
+
+   .. py:method:: move(rel_source, target)
+
+      Move a file within storage.
+
+      :param rel_source: source path to the file to move relative to storage.path
+      :param target: target path within storage
+
+
+
+.. py:function:: init_zarr(zarr_store)
+
+   Initialize object's directory and metadata structure.
+
+
+.. py:function:: connect_s3(path, endpoint, s3_kwargs = None)
+
+.. py:function:: add_metadata_group(parent_group, metadata)
+
+   Add input metadata dictionary to an existing zarr group.
+
+
+.. py:function:: add_data(group, data)
+
+   Add a numpy array to an existing zarr group.
+
+
+.. py:function:: list_zarr_items(group)
+
+   Recursively list all zarr groups and arrays
+
+
+.. py:function:: list_remote_modos(store, target = None)
+
+   List all modos in the store.
+
+   :param target: path to a directory to list relative to storage.path.
+                  If None, list all objects in storage.
+
+

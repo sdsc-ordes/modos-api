@@ -1,0 +1,20 @@
+modos.genomics
+==============
+
+.. py:module:: modos.genomics
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/modos/genomics/c4gh/index
+   /autoapi/modos/genomics/cram/index
+   /autoapi/modos/genomics/formats/index
+   /autoapi/modos/genomics/htsget/index
+   /autoapi/modos/genomics/refget/index
+   /autoapi/modos/genomics/region/index
+
+
