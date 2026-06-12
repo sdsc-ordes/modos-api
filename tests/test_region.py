@@ -22,6 +22,14 @@ def test_overlap():
     assert not region3.overlaps(region1)
 
 
+def test_overlap_contained_region():
+    """A region fully contained in another overlaps it, both ways."""
+    outer = Region(chrom="chr1", start=10, end=100)
+    inner = Region(chrom="chr1", start=40, end=50)
+    assert outer.overlaps(inner)
+    assert inner.overlaps(outer)
+
+
 def test_contain():
     region1 = Region(chrom="chr1", start=10, end=20)
     region2 = Region(chrom="chr1", start=15, end=18)

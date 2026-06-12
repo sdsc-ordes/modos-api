@@ -131,14 +131,13 @@ class Region:
                 raise ValueError("Record must have coordinates")
 
     def overlaps(self, other: Region) -> bool:
-        """Checks if other in self.
-        This check if any portion of other overlaps with self.
+        """Checks if any portion of other overlaps with self.
+
+        Uses half-open interval semantics, so adjacent regions
+        (e.g. [10, 20) and [20, 30)) do not overlap.
         """
         same_chrom = self.chrom == other.chrom
-        starts_in = self.start <= other.start <= self.end
-        ends_in = self.start <= other.end <= self.end
-
-        return same_chrom and (starts_in or ends_in)
+        return same_chrom and self.start < other.end and other.start < self.end
 
     def contains(self, other: Region) -> bool:
         """Checks if other is fully contained in self."""
