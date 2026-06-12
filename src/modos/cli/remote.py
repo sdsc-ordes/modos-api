@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from typing import Optional
 from typing_extensions import Annotated
 from loguru import logger
 import typer
@@ -169,6 +170,23 @@ def stream(
             help="Restrict stream to genomic region (chr:start-end).",
         ),
     ] = None,
+    secret_key: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--secret-key",
+            "-s",
+            help="Secret key to decrypt an encrypted stream. Its public "
+            "key is sent to the htsget server.",
+        ),
+    ] = None,
+    passphrase: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--passphrase",
+            "-pw",
+            help="Path to file with passphrase to unlock the secret key.",
+        ),
+    ] = None,
 ):
     """Stream genomic file from a remote modo into stdout."""
     from modos.genomics.htsget import HtsgetConnection
@@ -189,7 +207,13 @@ def stream(
     if not endpoint.htsget:
         raise ValueError("No htsget service found.")
 
-    con = HtsgetConnection(endpoint.htsget, source, _region)
+    con = HtsgetConnection(
+        endpoint.htsget,
+        source,
+        _region,
+        secret_key=secret_key,
+        passphrase=open(passphrase).read() if passphrase else None,
+    )
     with con.open() as f:
         for chunk in f:
             sys.stdout.buffer.write(chunk)

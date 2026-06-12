@@ -48,3 +48,53 @@ def test_list_modo(httpserver: HTTPServer):
         ],
     )
     assert result.exit_code == 0
+
+
+def test_cli_stream_threads_secret_key(monkeypatch, tmp_path):
+    """`modos remote stream --secret-key` forwards the key to HtsgetConnection."""
+    import io
+
+    import modos.genomics.htsget as htsget_mod
+    import modos.remote as remote_mod
+
+    captured = {}
+
+    class FakeConnection:
+        def __init__(
+            self, host, path, region=None, secret_key=None, passphrase=None
+        ):
+            captured["secret_key"] = secret_key
+
+        def open(self):
+            return io.BytesIO(b"")
+
+    class FakeEndpoint:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def __bool__(self):
+            return True
+
+        htsget = "http://htsget"
+
+    monkeypatch.setattr(htsget_mod, "HtsgetConnection", FakeConnection)
+    monkeypatch.setattr(remote_mod, "EndpointManager", FakeEndpoint)
+
+    key = tmp_path / "key.sec"
+    key.write_text("")
+    result = runner.invoke(
+        cli,
+        [
+            "--endpoint",
+            "http://example.org",
+            "remote",
+            "stream",
+            "--secret-key",
+            str(key),
+            "s3://bucket/ex",
+            "demo1.cram",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert captured["secret_key"] == key
