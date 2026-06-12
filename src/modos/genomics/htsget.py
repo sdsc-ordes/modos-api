@@ -293,26 +293,27 @@ class HtsgetConnection:
         crypt4gh.lib.decrypt requires seekable infile/outfile, so the
         assembled stream is buffered to a temporary file first.
         """
-        encrypted = tempfile.TemporaryFile("w+b")
-        for chunk in stream:
-            encrypted.write(chunk)
-        encrypted.seek(0)
         plaintext = tempfile.TemporaryFile("w+b")
         try:
-            decrypt(
-                keys=[(0, self._seckey, None)],
-                infile=encrypted,
-                outfile=plaintext,
-            )
-        except Exception as err:
+            with stream, tempfile.TemporaryFile("w+b") as encrypted:
+                for chunk in stream:
+                    encrypted.write(chunk)
+                encrypted.seek(0)
+                try:
+                    decrypt(
+                        keys=[(0, self._seckey, None)],
+                        infile=encrypted,
+                        outfile=plaintext,
+                    )
+                except Exception as err:
+                    raise ValueError(
+                        "Failed to decrypt htsget stream. Ensure the "
+                        "secret key matches the public key registered "
+                        "with the server."
+                    ) from err
+        except BaseException:
             plaintext.close()
-            raise ValueError(
-                "Failed to decrypt htsget stream. Ensure the secret key "
-                "matches the public key registered with the server."
-            ) from err
-        finally:
-            encrypted.close()
-            stream.close()
+            raise
         plaintext.seek(0)
         return plaintext
 
