@@ -7,9 +7,9 @@ from functools import lru_cache
 import os
 from pathlib import Path
 from typing import Any, Self
-import warnings
 
 import jwt
+from loguru import logger
 from pydantic import BaseModel, HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
 import requests
@@ -229,7 +229,10 @@ class JWT:
         )
 
     def refresh(self) -> JWT | None:
-        warnings.warn("Token refresh is not yet implemented.")
+        # TODO: implement token refresh
+        logger.warning(
+            "Your session has expired. Run `modos login` to re-authenticate."
+        )
         return None
 
 
