@@ -3,8 +3,10 @@
 import base64
 from pathlib import Path
 
+import pytest
 from crypt4gh.keys import get_public_key
 from modos import remote
+from modos.genomics.c4gh import encrypt_file
 from modos.genomics.htsget import HtsgetConnection, build_htsget_url
 from modos.genomics.region import Region
 
@@ -82,8 +84,6 @@ def test_ticket_omits_client_public_key_when_plaintext(
 
 def test_open_decrypts_encrypted_stream(c4gh_keypair, tmp_path):
     """open() returns plaintext when a secret key is configured."""
-    from modos.genomics.c4gh import encrypt_file
-
     payload = b"##fileformat=VCFv4.3\nchr1\t1\t.\tA\tT\t.\t.\t.\n" * 50
     plain_path = tmp_path / "payload.vcf"
     plain_path.write_bytes(payload)
@@ -108,8 +108,6 @@ def test_open_decrypts_encrypted_stream(c4gh_keypair, tmp_path):
 
 def test_open_wraps_decryption_failure(c4gh_keypair):
     """A stream that is not valid crypt4gh raises a clear error."""
-    import pytest
-
     block = base64.b64encode(b"not encrypted data").decode()
     con = HtsgetConnection(
         host="http://localhost:8000",

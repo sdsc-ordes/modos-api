@@ -288,7 +288,11 @@ class HtsgetConnection:
         return self._decrypt(stream)
 
     def _decrypt(self, stream: io.RawIOBase) -> io.IOBase:
-        """Decrypt a crypt4gh stream into a readable plaintext temp file."""
+        """Decrypt a crypt4gh stream into a plaintext temp file.
+
+        crypt4gh.lib.decrypt requires seekable infile/outfile, so the
+        assembled stream is buffered to a temporary file first.
+        """
         encrypted = tempfile.TemporaryFile("w+b")
         for chunk in stream:
             encrypted.write(chunk)
@@ -308,6 +312,7 @@ class HtsgetConnection:
             ) from err
         finally:
             encrypted.close()
+            stream.close()
         plaintext.seek(0)
         return plaintext
 
