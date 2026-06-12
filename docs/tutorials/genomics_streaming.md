@@ -42,9 +42,9 @@ When the htsget server stores crypt4gh-encrypted data, pass your secret key to
 decrypt the stream on the fly. The matching public key is derived and sent to
 the server automatically; the decrypted region is returned transparently.
 
-::::{tab-set}
+:::::{tab-set}
 
-:::{tab-item} python
+::::{tab-item} python
 :sync: python
 ```{code-block} python
 from modos.api import MODO
@@ -56,9 +56,9 @@ modo.stream_genomics(
     secret_key="path/to/recipient.sec",
 )
 ```
-:::
+::::
 
-:::{tab-item} cli
+::::{tab-item} cli
 :sync: cli
 ```{code-block} console
 modos --endpoint http://localhost remote stream \
@@ -66,9 +66,9 @@ modos --endpoint http://localhost remote stream \
   --secret-key path/to/recipient.sec \
   s3://modos-demo/ex demo1.cram
 ```
-:::
-
 ::::
+
+:::::
 
 ## Data encryption and decryption
 
