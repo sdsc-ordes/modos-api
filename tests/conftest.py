@@ -130,8 +130,10 @@ def c4gh_keypair(tmp_path):
     original_umask = os.umask(0)
     os.umask(original_umask)
 
-    # Generate a new keypair
-    c4gh.generate(private_key_path, public_key_path)
+    # Generate a new keypair.
+    c4gh.generate(
+        private_key_path, public_key_path, passphrase=None, comment=None
+    )
 
     # Restore umask
     os.umask(original_umask)
