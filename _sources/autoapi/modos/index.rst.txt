@@ -1,0 +1,40 @@
+modos
+=====
+
+.. py:module:: modos
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/modos/api/index
+   /autoapi/modos/codes/index
+   /autoapi/modos/genomics/index
+   /autoapi/modos/helpers/index
+   /autoapi/modos/io/index
+   /autoapi/modos/logging/index
+   /autoapi/modos/metabolomics/index
+   /autoapi/modos/prompt/index
+   /autoapi/modos/rdf/index
+   /autoapi/modos/remote/index
+   /autoapi/modos/storage/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   modos.__version__
+
+
+Package Contents
+----------------
+
+.. py:data:: __version__
+   :value: '0.3.5'
+
+

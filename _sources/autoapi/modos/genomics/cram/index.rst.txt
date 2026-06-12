@@ -1,0 +1,41 @@
+modos.genomics.cram
+===================
+
+.. py:module:: modos.genomics.cram
+
+.. autoapi-nested-parse::
+
+   Utilities to interact with genomic intervals in CRAM files.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.genomics.cram.extract_metadata
+   modos.genomics.cram.validate_cram_files
+   modos.genomics.cram.create_sequence_id
+
+
+Module Contents
+---------------
+
+.. py:function:: extract_metadata(instance, base_path)
+
+   Extract metadata from the CRAM file header and
+   convert specific attributes according to the modo schema.
+
+
+.. py:function:: validate_cram_files(cram_path)
+
+   Validate CRAM files using pysam.
+   Checks if the file is sorted and has an index.
+
+
+.. py:function:: create_sequence_id(name, sequence_md5)
+
+   Helper function to create a unique id from a sequence name and md5 hash
+
+

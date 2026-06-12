@@ -1,0 +1,76 @@
+modos.io
+========
+
+.. py:module:: modos.io
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   modos.io.ext2loader
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.io.ExtractedMetadata
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.io.get_loader
+   modos.io.parse_instance
+   modos.io.parse_attributes
+   modos.io.parse_multiple_instances
+   modos.io.extract_metadata
+
+
+Module Contents
+---------------
+
+.. py:data:: ext2loader
+
+.. py:function:: get_loader(path)
+
+   Get a loader based on the file extension using regex.
+
+
+.. py:function:: parse_instance(path, target_class)
+
+   Load a model of target_class from a file.
+
+
+.. py:function:: parse_attributes(path)
+
+   Load model specification from file into a list of dictionaries. Model types must be specified as @type
+
+
+.. py:function:: parse_multiple_instances(path)
+
+   Load one or more model from file. Model types must be specified as @type
+
+
+.. py:class:: ExtractedMetadata
+
+   .. py:attribute:: elements
+      :type:  list[modos_schema.datamodel.NamedThing]
+
+
+   .. py:attribute:: arrays
+      :type:  Optional[dict[str, zarr.Array]]
+      :value: None
+
+
+
+.. py:function:: extract_metadata(instance, base_path)
+
+   Extract metadata from files associated to a model instance
+
+

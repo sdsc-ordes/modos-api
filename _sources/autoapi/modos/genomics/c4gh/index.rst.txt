@@ -1,0 +1,62 @@
+modos.genomics.c4gh
+===================
+
+.. py:module:: modos.genomics.c4gh
+
+.. autoapi-nested-parse::
+
+   crypt4gh implementation
+
+   Crypt4gh allows envelop encryption of genomic files. See [1]_ for more details.
+
+   Here we use the crypt4gh python [2]_ implementation to allow de/encryption of genomic files within modos.
+
+   .. rubric:: References
+
+   .. [1] https://samtools.github.io/hts-specs/crypt4gh.pdf
+   .. [2] https://github.com/EGA-archive/crypt4gh
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.genomics.c4gh.get_secret_key
+   modos.genomics.c4gh.get_keys
+   modos.genomics.c4gh.encrypt_file
+   modos.genomics.c4gh.decrypt_file
+
+
+Module Contents
+---------------
+
+.. py:function:: get_secret_key(seckey_path = None, passphrase = None)
+
+   Get the secret key for encryption/decryption.
+   If no secret key path is provided a new secret key will be generated automatically.
+   This can be used to allow authicated encryption without prior key generation.
+
+   :param seckey_path: Path to the secret key.
+   :param passphrase: Passphrase for the secret key.
+
+
+.. py:function:: get_keys(recipient_pubkeys, seckey)
+
+   Retrieves recipient public keys and builds a collection of "key tuples".
+
+   :param recipient_pubkeys: Path to the recipient public key, or list of paths if multiple recipients.
+   :param seckey: Secret key of the sender.
+
+   :returns: Set of key triplets, one for each recipient.
+   :rtype: {(method, seckey, recipient_pubkey)}
+
+
+.. py:function:: encrypt_file(recipient_pubkeys, infile, outfile, seckey_path = None, passphrase = None)
+
+   Encrypt a file using the crypt4gh algorithm (authenticated encryption).
+
+
+.. py:function:: decrypt_file(seckey_path, infile, outfile, sender_pubkey = None, passphrase = None)
+
