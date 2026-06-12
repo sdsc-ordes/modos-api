@@ -174,3 +174,37 @@ def test_stream_genomics_region(test_modo):
     )
     assert isinstance(seq, Iterator)
     assert isinstance(next(seq), pysam.AlignedSegment)
+
+
+def test_stream_genomics_threads_secret_key(monkeypatch, tmp_path):
+    """stream_genomics forwards secret_key/passphrase to HtsgetConnection."""
+    import modos.api as api_mod
+
+    modo = MODO(tmp_path)
+    captured = {}
+
+    class FakeConnection:
+        def __init__(
+            self, host, path, region=None, secret_key=None, passphrase=None
+        ):
+            captured["secret_key"] = secret_key
+            captured["passphrase"] = passphrase
+
+        def to_pysam(self, reference_filename=None):
+            return iter([])
+
+    class FakeEndpoint:
+        s3 = {"s3": "http://s3"}
+        htsget = "http://htsget"
+
+    monkeypatch.setattr(api_mod, "HtsgetConnection", FakeConnection)
+    monkeypatch.setattr(MODO, "list_files", lambda self: [Path("demo1.cram")])
+    monkeypatch.setattr(modo, "endpoint", FakeEndpoint())
+
+    key = tmp_path / "key.sec"
+    list(
+        modo.stream_genomics("demo1.cram", secret_key=key, passphrase="secret")
+    )
+
+    assert captured["secret_key"] == key
+    assert captured["passphrase"] == "secret"
