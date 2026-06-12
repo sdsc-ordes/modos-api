@@ -51,7 +51,7 @@ def test_list_modo(httpserver: HTTPServer):
 
 
 def test_cli_stream_threads_secret_key(monkeypatch, tmp_path):
-    """`modos remote stream --secret-key` forwards the key to HtsgetConnection."""
+    """`modos remote stream` forwards the secret key to HtsgetConnection."""
     import io
 
     import modos.genomics.htsget as htsget_mod
@@ -64,6 +64,7 @@ def test_cli_stream_threads_secret_key(monkeypatch, tmp_path):
             self, host, path, region=None, secret_key=None, passphrase=None
         ):
             captured["secret_key"] = secret_key
+            captured["passphrase"] = passphrase
 
         def open(self):
             return io.BytesIO(b"")
@@ -82,6 +83,8 @@ def test_cli_stream_threads_secret_key(monkeypatch, tmp_path):
 
     key = tmp_path / "key.sec"
     key.write_text("")
+    pw = tmp_path / "pw.txt"
+    pw.write_text("hunter2")
     result = runner.invoke(
         cli,
         [
@@ -91,6 +94,8 @@ def test_cli_stream_threads_secret_key(monkeypatch, tmp_path):
             "stream",
             "--secret-key",
             str(key),
+            "--passphrase",
+            str(pw),
             "s3://bucket/ex",
             "demo1.cram",
         ],
@@ -98,3 +103,4 @@ def test_cli_stream_threads_secret_key(monkeypatch, tmp_path):
 
     assert result.exit_code == 0, result.output
     assert captured["secret_key"] == key
+    assert captured["passphrase"] == "hunter2"
