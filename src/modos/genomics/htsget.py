@@ -45,6 +45,7 @@ import tempfile
 from typing import Any
 from urllib.parse import urlparse, parse_qs
 
+from crypt4gh.lib import decrypt
 from pydantic import HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
 import pysam
@@ -276,12 +277,39 @@ class HtsgetConnection:
             headers["Client-Public-Key"] = self._client_public_key()
         return get_session().get(self.url, headers=headers).json()
 
-    def open(self) -> io.RawIOBase:
-        """Open a connection to the stream data."""
+    def open(self) -> io.IOBase:
+        """Open a connection to the stream data (decrypted if a key is set)."""
         try:
-            return HtsgetStream(self.ticket["htsget"]["urls"])
+            stream = HtsgetStream(self.ticket["htsget"]["urls"])
         except KeyError:
             raise KeyError(f"No htsget urls found in ticket: {self.ticket}")
+        if not self._encrypted:
+            return stream
+        return self._decrypt(stream)
+
+    def _decrypt(self, stream: io.RawIOBase) -> io.IOBase:
+        """Decrypt a crypt4gh stream into a readable plaintext temp file."""
+        encrypted = tempfile.TemporaryFile("w+b")
+        for chunk in stream:
+            encrypted.write(chunk)
+        encrypted.seek(0)
+        plaintext = tempfile.TemporaryFile("w+b")
+        try:
+            decrypt(
+                keys=[(0, self._seckey, None)],
+                infile=encrypted,
+                outfile=plaintext,
+            )
+        except Exception as err:
+            plaintext.close()
+            raise ValueError(
+                "Failed to decrypt htsget stream. Ensure the secret key "
+                "matches the public key registered with the server."
+            ) from err
+        finally:
+            encrypted.close()
+        plaintext.seek(0)
+        return plaintext
 
     def to_file(self, path: Path):
         """Save all data from the stream to a file."""

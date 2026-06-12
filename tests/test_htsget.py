@@ -78,3 +78,48 @@ def test_ticket_omits_client_public_key_when_plaintext(
 
     request, _ = httpserver.log[0]
     assert "Client-Public-Key" not in request.headers
+
+
+def test_open_decrypts_encrypted_stream(c4gh_keypair, tmp_path):
+    """open() returns plaintext when a secret key is configured."""
+    from modos.genomics.c4gh import encrypt_file
+
+    payload = b"##fileformat=VCFv4.3\nchr1\t1\t.\tA\tT\t.\t.\t.\n" * 50
+    plain_path = tmp_path / "payload.vcf"
+    plain_path.write_bytes(payload)
+    enc_path = tmp_path / "payload.vcf.c4gh"
+    encrypt_file(c4gh_keypair["public_key"], plain_path, enc_path)
+
+    block = base64.b64encode(enc_path.read_bytes()).decode()
+    con = HtsgetConnection(
+        host="http://localhost:8000",
+        path=Path("payload.vcf"),
+        region=None,
+        secret_key=c4gh_keypair["private_key"],
+    )
+    # Inject the ticket directly to avoid an HTTP round-trip (cached_property).
+    con.__dict__["ticket"] = {
+        "htsget": {"urls": [{"url": f"data:;base64,{block}"}]}
+    }
+
+    with con.open() as handle:
+        assert handle.read() == payload
+
+
+def test_open_wraps_decryption_failure(c4gh_keypair):
+    """A stream that is not valid crypt4gh raises a clear error."""
+    import pytest
+
+    block = base64.b64encode(b"not encrypted data").decode()
+    con = HtsgetConnection(
+        host="http://localhost:8000",
+        path=Path("payload.vcf"),
+        region=None,
+        secret_key=c4gh_keypair["private_key"],
+    )
+    con.__dict__["ticket"] = {
+        "htsget": {"urls": [{"url": f"data:;base64,{block}"}]}
+    }
+
+    with pytest.raises(ValueError, match="decrypt"):
+        con.open()
