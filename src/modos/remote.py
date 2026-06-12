@@ -20,8 +20,6 @@ class BearerAuth(AuthBase):
     def __call__(
         self, r: requests.PreparedRequest
     ) -> requests.PreparedRequest:
-        # Read the token from cache per request so a login performed after
-        # the session was created (the session is process-cached) is picked up.
         token = JWT.from_cache()
         if not token:
             return r
