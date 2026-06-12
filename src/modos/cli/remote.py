@@ -212,7 +212,7 @@ def stream(
         source,
         _region,
         secret_key=secret_key,
-        passphrase=open(passphrase).read() if passphrase else None,
+        passphrase=passphrase.read_text() if passphrase else None,
     )
     with con.open() as f:
         for chunk in f:

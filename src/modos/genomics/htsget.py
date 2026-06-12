@@ -265,20 +265,22 @@ class HtsgetConnection:
     def _seckey(self) -> bytes:
         return get_secret_key(self.secret_key, self.passphrase)
 
-    def _client_public_key(self) -> str:
-        """Encode the client public key for the htsget Client-Public-Key header."""
-        return base64.b64encode(derive_public_key(self._seckey)).decode()
-
     @cached_property
     def ticket(self) -> dict[str, Any]:
         """Ticket containing the URLs to fetch the data."""
         headers = {}
         if self._encrypted:
-            headers["Client-Public-Key"] = self._client_public_key()
+            headers["Client-Public-Key"] = base64.b64encode(
+                derive_public_key(self._seckey)
+            ).decode()
         return get_session().get(self.url, headers=headers).json()
 
     def open(self) -> io.IOBase:
-        """Open a connection to the stream data (decrypted if a key is set)."""
+        """Open a connection to the stream data (decrypted if a key is set).
+
+        Encrypted streams are buffered to a temporary file for decryption,
+        so the requested region is materialized before this returns.
+        """
         try:
             stream = HtsgetStream(self.ticket["htsget"]["urls"])
         except KeyError:
