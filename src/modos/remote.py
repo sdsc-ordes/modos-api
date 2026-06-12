@@ -17,17 +17,17 @@ from requests.auth import AuthBase
 
 
 class BearerAuth(AuthBase):
-    def __init__(self):
-        self.jwt = JWT.from_cache()
-
     def __call__(
         self, r: requests.PreparedRequest
     ) -> requests.PreparedRequest:
-        if self.jwt:
-            if self.jwt.is_expired:
-                self.jwt = self.jwt.refresh()
-            if self.jwt:
-                r.headers["Authorization"] = f"Bearer {self.jwt.access_token}"
+        # Read the token from cache per request so a login performed after
+        # the session was created (the session is process-cached) is picked up.
+        token = JWT.from_cache()
+        if token:
+            if token.is_expired:
+                token = token.refresh()
+            if token:
+                r.headers["Authorization"] = f"Bearer {token.access_token}"
         return r
 
 
