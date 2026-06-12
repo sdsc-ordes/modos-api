@@ -1,3 +1,9 @@
+# agents
+.agents
+AGENTS.md
+.claude
+CLAUDE.md
+
 # zarr
 .zmetadata
 # Byte-compiled / optimized / DLL files
