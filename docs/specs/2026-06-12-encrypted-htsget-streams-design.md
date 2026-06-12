@@ -1,19 +1,19 @@
 # Client-side support for encrypted htsget streams
 
 Date: 2026-06-12
-Status: Approved (design)
 
 ## Problem
 
-`modos` streams genomic regions from a remote htsget-rs server.
-The client (`src/modos/genomics/htsget.py`): fetches a ticket,
-concatenates the referenced byte ranges into a single stream,
-and feeds the result to stdout (CLI) or a temporary file  and
-then to `pysam` (Python API).
+modos embeds an htsget client in `modos.genomics.htsget` to stream genomic regions from a remote server.
+The high-level client-side process is as follows:
+1. Requests a ticket containing byte ranges corresponding to a list of genomic regions.
+2. Concatenates the referenced byte ranges into a single stream.
+3. Feed the result to stdout (CLI) or a temporary file  and then to `pysam` (Python API).
 
-htsget-rs can serve crypt4gh-encrypted streams. The client must opt in, send its
+We use [htsget-rs](https://github.com/umccr/htsget-rs) as the standard server implementation,
+which supports crypt4gh-encrypted streams. The client must opt in, send its
 public key, and decrypt the assembled stream locally. We already have crypt4gh
-encrypt/decrypt for *local* files (`src/modos/genomics/c4gh.py`), but remote
+encrypt/decrypt for *local* files (`modos.genomics.c4gh`), but remote
 streams cannot currently be decrypted.
 
 ## How htsget-rs serves encrypted streams
@@ -107,21 +107,21 @@ Both thread `secret_key` / `passphrase` straight into `HtsgetConnection`:
 ## Data flow (encrypted path)
 
 ```
-modos stream -s key.sec ...        MODO.stream_genomics(..., secret_key=...)
-            |                                   |
-            v                                   v
-        HtsgetConnection(secret_key=..., passphrase=...)
-            |
-            | ticket request: header Client-Public-Key: b64(derive(seckey))
-            |                 url   ...&encryptionScheme=C4GH
-            v
-        ticket (byte ranges -> crypt4gh-encrypted stream)
-            |
-            v
-        open(): assemble blocks -> spool -> crypt4gh.decrypt(seckey) -> plaintext handle
-            |
-            v
-        stdout loop  /  to_pysam (temp file -> pysam records)
+flowchart TD
+    A["modos stream -s key.sec ..."]
+    B["MODO.stream_genomics(..., secret_key=...)"]
+
+    A --> C["HtsgetConnection(secret_key=..., passphrase=...)"]
+    B --> C
+
+    C --> D["Ticket request<br/>Header: Client-Public-Key = b64(derive(seckey))<br/>URL: ...&encryptionScheme=C4GH"]
+
+    D --> E["Ticket<br/>(byte ranges → Crypt4GH-encrypted stream)"]
+
+    E --> F["open()<br/>Assemble blocks → spool → crypt4gh.decrypt(seckey)<br/>→ plaintext handle"]
+
+    F --> G["stdout loop"]
+    F --> H["to_pysam<br/>(temp file → pysam records)"]
 ```
 
 ## Error handling
