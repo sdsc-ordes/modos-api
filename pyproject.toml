@@ -18,6 +18,7 @@ dependencies = [
     "pandas>=2.2.3,<3.0.0",
     "prompt-toolkit>=3.0.48,<4.0.0",
     "pydantic>=2.8.2,<3.0.0",
+    "pynacl>=1.6.2,<2.0.0",
     "pyocli>=0.1.0,<1.0.0",
     "pyfuzon>=0.4,<0.5; sys_platform != 'win32'",
     "pyjwt>=2.10.1",
