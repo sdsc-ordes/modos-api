@@ -61,6 +61,15 @@ def get_secret_key(
     return get_private_key(seckey_path, cb)
 
 
+def derive_public_key(seckey: bytes) -> bytes:
+    """Derive the raw 32-byte X25519 public key from secret key bytes.
+
+    Used to advertise the client public key to an htsget server via the
+    Client-Public-Key header without requiring a separate public key file.
+    """
+    return bytes(PrivateKey(seckey).public_key)
+
+
 def get_keys(
     recipient_pubkeys: List[os.PathLike] | os.PathLike, seckey: bytes
 ) -> Set[Tuple[int, bytes, bytes]]:
