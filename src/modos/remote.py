@@ -7,9 +7,9 @@ from functools import lru_cache
 import os
 from pathlib import Path
 from typing import Any, Self
-import warnings
 
 import jwt
+from loguru import logger
 from pydantic import BaseModel, HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
 import requests
@@ -17,17 +17,16 @@ from requests.auth import AuthBase
 
 
 class BearerAuth(AuthBase):
-    def __init__(self):
-        self.jwt = JWT.from_cache()
-
     def __call__(
         self, r: requests.PreparedRequest
     ) -> requests.PreparedRequest:
-        if self.jwt:
-            if self.jwt.is_expired:
-                self.jwt = self.jwt.refresh()
-            if self.jwt:
-                r.headers["Authorization"] = f"Bearer {self.jwt.access_token}"
+        token = JWT.from_cache()
+        if not token:
+            return r
+        if token.is_expired:
+            token = token.refresh()
+        if token:
+            r.headers["Authorization"] = f"Bearer {token.access_token}"
         return r
 
 
@@ -230,7 +229,10 @@ class JWT:
         )
 
     def refresh(self) -> JWT | None:
-        warnings.warn("Token refresh is not yet implemented.")
+        # TODO: implement token refresh
+        logger.warning(
+            "Your session has expired. Run `modos login` to re-authenticate."
+        )
         return None
 
 
