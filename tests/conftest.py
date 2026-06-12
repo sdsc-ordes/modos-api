@@ -13,7 +13,7 @@ from modos.api import MODO
 
 @pytest.fixture(scope="session")
 def httpserver_listen_address():
-    """Use 127.0.0.1 instead of localhost to avoid DNS resolution issues."""
+    """Bind to 127.0.0.1; 'localhost' may resolve to ::1 and break the client."""
     return ("127.0.0.1", 0)
 
 

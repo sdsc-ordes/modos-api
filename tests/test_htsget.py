@@ -3,6 +3,7 @@
 import base64
 from pathlib import Path
 
+from crypt4gh.keys import get_public_key
 from modos import remote
 from modos.genomics.htsget import HtsgetConnection, build_htsget_url
 from modos.genomics.region import Region
@@ -40,7 +41,7 @@ def test_connection_url_reflects_secret_key(tmp_path):
 def test_ticket_sends_client_public_key(
     httpserver, c4gh_keypair, monkeypatch, tmp_path
 ):
-    """The ticket request carries the derived client public key when encrypted."""
+    """The ticket request carries the client public key when encrypted."""
     # Avoid touching the real token cache (keep auth out of the way).
     monkeypatch.setattr(remote, "get_cache_dir", lambda: tmp_path)
     httpserver.expect_request("/reads/file").respond_with_json(
@@ -58,8 +59,6 @@ def test_ticket_sends_client_public_key(
     request, _ = httpserver.log[0]
     assert "Client-Public-Key" in request.headers
     sent = base64.b64decode(request.headers["Client-Public-Key"])
-    from crypt4gh.keys import get_public_key
-
     assert sent == get_public_key(str(c4gh_keypair["public_key"]))
 
 

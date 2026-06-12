@@ -265,7 +265,7 @@ class HtsgetConnection:
         return get_secret_key(self.secret_key, self.passphrase)
 
     def _client_public_key(self) -> str:
-        """Base64-encoded public key for the Client-Public-Key header."""
+        """Encode the client public key for the htsget Client-Public-Key header."""
         return base64.b64encode(derive_public_key(self._seckey)).decode()
 
     @cached_property
