@@ -36,6 +36,40 @@ modos --endpoint http://localhost stream --region BA000007.3 s3://modos-demo/ex 
 We highly recommend using the `MODOs` CLI for streaming. The output can directly be passed to tools like <a href="https://www.htslib.org/" target="_blank">samtools</a>. Streaming using the `MODOs` python api will return a <a href="https://pysam.readthedocs.io/en/stable/" target="_blank">pysam</a> object. `pysam` does not allow reading from byte-streams and thus the streamed region will be written into an temporary file before parsing to `pysam`. For large files/regions this can cause issues.
 :::
 
+### Streaming encrypted data
+
+When the htsget server stores crypt4gh-encrypted data, pass your secret key to
+decrypt the stream on the fly. The matching public key is derived and sent to
+the server automatically; the decrypted region is returned transparently.
+
+:::::{tab-set}
+
+::::{tab-item} python
+:sync: python
+```{code-block} python
+from modos.api import MODO
+
+modo = MODO(path='s3://modos-demo/ex', endpoint='http://localhost')
+modo.stream_genomics(
+    file_path="demo1.cram",
+    region="BA000007.3",
+    secret_key="path/to/recipient.sec",
+)
+```
+::::
+
+::::{tab-item} cli
+:sync: cli
+```{code-block} console
+modos --endpoint http://localhost remote stream \
+  --region BA000007.3 \
+  --secret-key path/to/recipient.sec \
+  s3://modos-demo/ex demo1.cram
+```
+::::
+
+:::::
+
 ## Data encryption and decryption
 
 Genomic data is typically sensitive, and data sharing increases the risk to data security.

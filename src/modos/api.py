@@ -475,6 +475,8 @@ class MODO:
         file_path: str,
         region: str | None = None,
         reference_filename: str | None = None,
+        secret_key: Path | None = None,
+        passphrase: str | None = None,
     ) -> Iterator[AlignedSegment | VariantRecord]:
         """Slices both local and remote CRAM, VCF (.vcf.gz), and BCF
         files returning an iterator over records.
@@ -487,6 +489,10 @@ class MODO:
             Genomic region in UCSC format (e.g. chr1:1000-200
         reference_filename
             Path to the reference genome file.
+        secret_key
+            Path to a crypt4gh secret key to decrypt an encrypted stream.
+        passphrase
+            Passphrase to unlock the secret key, if it is protected.
 
         Returns
         -------
@@ -503,6 +509,8 @@ class MODO:
                 self.endpoint.htsget,
                 Path(*self.path.parts[1:]) / file_path,
                 region=_region,
+                secret_key=secret_key,
+                passphrase=passphrase,
             )
             stream = con.to_pysam(reference_filename=reference_filename)
         else:

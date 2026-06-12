@@ -2,13 +2,20 @@
 
 import os
 from pathlib import Path
-import pytest
 
-import modos_schema.datamodel as model
 import crypt4gh.keys.c4gh as c4gh
+import modos_schema.datamodel as model
+import pytest
 from testcontainers.minio import MinioContainer
 
 from modos.api import MODO
+
+
+@pytest.fixture(scope="session")
+def httpserver_listen_address():
+    """Bind to 127.0.0.1; 'localhost' may resolve to ::1 and break the client."""
+    return ("127.0.0.1", 0)
+
 
 ## Add --remote option
 # see: https://docs.pytest.org/en/latest/example/simple.html#control-skipping-of-tests-according-to-command-line-option
