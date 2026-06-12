@@ -4,149 +4,56 @@ Date: 2026-06-12
 
 ## Problem
 
-modos embeds an htsget client in `modos.genomics.htsget` to stream genomic regions from a remote server.
-The high-level client-side process is as follows:
-1. Requests a ticket containing byte ranges corresponding to a list of genomic regions.
-2. Concatenates the referenced byte ranges into a single stream.
-3. Feed the result to stdout (CLI) or a temporary file  and then to `pysam` (Python API).
+The htsget client in `modos.genomics.htsget` streams genomic regions by
+fetching a ticket of byte ranges and concatenating them into a single stream.
+The [htsget-rs](https://github.com/umccr/htsget-rs) server can serve
+crypt4gh-encrypted streams, but the client cannot yet decrypt them (we only
+do crypt4gh on *local* files, in `modos.genomics.c4gh`).
 
-We use [htsget-rs](https://github.com/umccr/htsget-rs) as the standard server implementation,
-which supports crypt4gh-encrypted streams. The client must opt in, send its
-public key, and decrypt the assembled stream locally. We already have crypt4gh
-encrypt/decrypt for *local* files (`modos.genomics.c4gh`), but remote
-streams cannot currently be decrypted.
+## Server protocol (htsget-rs, experimental)
 
-## How htsget-rs serves encrypted streams
+The client sends a `Client-Public-Key: <base64 crypt4gh public key>` header and
+an `encryptionScheme=C4GH` query parameter. The server returns byte ranges that
+concatenate into a valid crypt4gh file (header re-encrypted to that public key,
+plus edit lists). The client decrypts the assembled stream with the matching
+private key.
 
-Documented as experimental feature in htsget-rs:
-
-1. Client sends a `Client-Public-Key: <base64 crypt4gh public key>` request
-   header, plus an experimental `encryptionScheme=C4GH` query parameter.
-2. Server re-encrypts the crypt4gh header to *that* public key and returns
-   byte ranges that, concatenated, form a **valid crypt4gh file** (re-encrypted
-   header + edit lists + encrypted data blocks).
-3. Client decrypts the assembled stream with the matching **private key**
-   using standard crypt4gh decryption, which handles edit lists natively.
-
-References:
-- htsget-rs C4GH config: https://github.com/umccr/htsget-rs/blob/main/htsget-config/README.md
-- UMCCR walkthrough: https://umccr.org/blog/htsget-rs-crypt4gh/
-
-Caveat: the `encryptionScheme=C4GH` parameter is experimental and "subject to
-change" per htsget-rs; this client targets a moving server-side spec.
+The `encryptionScheme=C4GH` parameter is experimental and subject to change.
 
 ## Decisions
 
-- **Key input:** a single `--secret-key` (path) plus optional passphrase. The
-  client derives the public key from the secret key to send as the header, and
-  uses the secret key to decrypt. One input, guaranteed matched pair, mirrors
-  the existing `modos c4gh decrypt -s` ergonomics.
-- **Surface:** both the CLI `modos stream` command and the Python API
-  (`HtsgetConnection` / `MODO.stream_genomics` / `to_pysam`).
-- **Output:** decrypt to CRAM/SAM/input format transparently. The user receives
-  requested region in plaintext on stdout / as decrypted records of the corresponding
-  format; encryption is invisible to them.
+- User inputs: A `--secret-key` path (plus optional passphrase). The
+  public key is derived from it if possible.
+- **Surface:** both the CLI `modos stream` and the Python API
+  (`HtsgetConnection` / `MODO.stream_genomics`).
+- **Output:** decrypt transparently; the user gets the plaintext region.
 
 ## Approach
 
-Decrypt at the `HtsgetConnection.open()` boundary. When a secret key is
-configured, `open()` returns a decrypted readable; every downstream consumer
-(CLI stdout loop, `to_pysam`, `to_file`) is unchanged and operate on decrypted
-data. This keeps a single integration point, reuses the existing crypt4gh
-decrypt, and keeps encryption awareness out of every consumer.
+Decrypt at the `HtsgetConnection.open()` boundary: when a secret key is set,
+`open()` returns a decrypted readable and every consumer (CLI, `to_pysam`,
+`to_file`) is unchanged. The encrypted stream is buffered to a temp file before
+decryption (consistent with `to_pysam`, which already spools).
 
-The region-bounded encrypted stream is buffered through a temporary
-file before decryption. This is consistent with the existing `to_pysam` path,
-which already spools to a temp file because `pysam` cannot read byte streams.
+Rejected: decrypting in each consumer (duplication, leaks encryption awareness);
+a lazy streaming-decrypt wrapper (crypt4gh has no clean incremental reader).
 
-Rejected alternatives:
-- **Decrypt at each consumer** — duplicates the decrypt call and leaks
-  encryption awareness into the CLI and `to_pysam`.
-- **Lazy streaming-decrypt `RawIOBase` wrapper** — crypt4gh's Python API has no
-  clean incremental reader; reimplementing block/edit-list handling is high risk
-  for little gain on bounded region slices.
+## Flow
 
-## Components
-
-### `genomics/c4gh.py`
-
-Add a key-derivation helper:
-
-- `derive_public_key(seckey: bytes) -> bytes`: derive the raw 32-byte
-  X25519 public key from the secret-key bytes (via
-  `nacl.public.PrivateKey(seckey).public_key`). The `Client-Public-Key` header
-  value is its base64 encoding.
-
-Existing `get_secret_key(path, passphrase)` is reused to load the key (it
-already supports passphrase prompting and auto-generation).
-
-### `genomics/htsget.py`
-
-- `HtsgetConnection` gains `secret_key: Path | None = None` and
-  `passphrase: str | None = None`, with an `_encrypted` property
-  (`secret_key is not None`).
-- The ticket request adds the `Client-Public-Key` header (base64 of the derived
-  public key) when encrypted.
-- `build_htsget_url` appends `&encryptionScheme=C4GH` when encrypted.
-- `open()`: when encrypted, write the assembled crypt4gh stream to a temporary
-  spool and decrypt it with the secret key (reusing crypt4gh `decrypt`),
-  returning a readable handle to the plaintext; otherwise return `HtsgetStream`
-  as today.
-  - Implementation detail to verify: whether crypt4gh can consume the
-    non-seekable assembled stream directly, allowing one temp file to be
-    dropped. This does not change the design.
-
-### Entry points
-
-Both thread `secret_key` / `passphrase` straight into `HtsgetConnection`:
-
-- CLI `modos stream`: new `--secret-key` / `-s` PATH option (mirrors
-  `modos c4gh decrypt -s`) and optional passphrase. The stdout loop is unchanged.
-- Python `MODO.stream_genomics(..., secret_key=None, passphrase=None)`.
-
-## Data flow (encrypted path)
-
+```mermaid
+sequenceDiagram
+    participant C as client
+    participant H as htsget-rs
+    participant S as store
+    C->>H: ticket (public key, C4GH)
+    H-->>C: byte ranges
+    C->>S: fetch ranges
+    S-->>C: crypt4gh blocks
+    Note over C: open(): assemble + decrypt
+    C->>C: plaintext region
 ```
-flowchart TD
-    A["modos stream -s key.sec ..."]
-    B["MODO.stream_genomics(..., secret_key=...)"]
-
-    A --> C["HtsgetConnection(secret_key=..., passphrase=...)"]
-    B --> C
-
-    C --> D["Ticket request<br/>Header: Client-Public-Key = b64(derive(seckey))<br/>URL: ...&encryptionScheme=C4GH"]
-
-    D --> E["Ticket<br/>(byte ranges → Crypt4GH-encrypted stream)"]
-
-    E --> F["open()<br/>Assemble blocks → spool → crypt4gh.decrypt(seckey)<br/>→ plaintext handle"]
-
-    F --> G["stdout loop"]
-    F --> H["to_pysam<br/>(temp file → pysam records)"]
-```
-
-## Error handling
-
-- A missing or invalid secret key reuses `get_secret_key`'s `ValueError`s.
-- If decryption fails (wrong key, or the server returned plaintext despite the
-  header), surface a clear error wrapping the crypt4gh failure rather than
-  emitting garbage bytes.
-- Encryption is strictly opt-in; plaintext streaming paths are unchanged.
-
-## Testing
-
-- **Unit:** `public_key_from_secret` matches crypt4gh's own public key for a
-  generated keypair (generate keys, derive, compare).
-- **Unit:** the ticket request carries `Client-Public-Key` and
-  `encryptionScheme=C4GH` only when a secret key is set, and neither when it is
-  not (via `pytest-httpserver`, already a dev dependency).
-- **Integration round-trip:** crypt4gh-encrypt a small payload to the client's
-  derived public key, serve it as ticket blocks, and assert `open()` yields the
-  original plaintext — exercising the full decrypt-at-`open()` path without a
-  live htsget-rs server. crypt4gh handles edit lists natively, so standard
-  stream decryption coverage is sufficient for the client side.
 
 ## Out of scope
 
 - Server-side / deployment configuration of htsget-rs C4GH.
-- Encrypting or decrypting remote objects at rest (still local-only).
-- Tracking future changes to the experimental `encryptionScheme` negotiation.
+- Encrypting or decrypting remote objects at rest (client-side only).
