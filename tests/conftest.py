@@ -131,8 +131,6 @@ def c4gh_keypair(tmp_path):
     os.umask(original_umask)
 
     # Generate a new keypair.
-    # NOTE: crypt4gh >=1.8 requires passphrase and comment as positional
-    # arguments; None keeps the private key unencrypted as before.
     c4gh.generate(
         private_key_path, public_key_path, passphrase=None, comment=None
     )
