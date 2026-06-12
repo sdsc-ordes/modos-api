@@ -12,6 +12,7 @@ dynamic = ["version"]
 dependencies = [
     "crypt4gh>=1.7,<2.0",
     "gtars>=0.2.2,<0.3.0",
+    "linkml-runtime>=1.9.5,<2.0.0",
     "loguru>=0.7.3",
     "modos-schema>=0.3.4",
     "pandas>=2.2.3,<3.0.0",
