@@ -51,6 +51,7 @@ import pysam
 import requests
 
 from modos.remote import get_session
+from modos.genomics.c4gh import derive_public_key, get_secret_key
 from modos.genomics.region import Region
 from modos.genomics.formats import GenomicFileSuffix, read_pysam
 
@@ -260,9 +261,20 @@ class HtsgetConnection:
         )
 
     @cached_property
+    def _seckey(self) -> bytes:
+        return get_secret_key(self.secret_key, self.passphrase)
+
+    def _client_public_key(self) -> str:
+        """Base64-encoded public key for the Client-Public-Key header."""
+        return base64.b64encode(derive_public_key(self._seckey)).decode()
+
+    @cached_property
     def ticket(self) -> dict[str, Any]:
         """Ticket containing the URLs to fetch the data."""
-        return get_session().get(self.url).json()
+        headers = {}
+        if self._encrypted:
+            headers["Client-Public-Key"] = self._client_public_key()
+        return get_session().get(self.url, headers=headers).json()
 
     def open(self) -> io.RawIOBase:
         """Open a connection to the stream data."""
