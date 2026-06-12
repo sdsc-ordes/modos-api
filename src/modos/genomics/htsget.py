@@ -56,7 +56,12 @@ from modos.genomics.formats import GenomicFileSuffix, read_pysam
 
 
 @validate_call
-def build_htsget_url(host: HttpUrl, path: Path, region: Region | None) -> str:
+def build_htsget_url(
+    host: HttpUrl,
+    path: Path,
+    region: Region | None,
+    encrypted: bool = False,
+) -> str:
     """Build an htsget URL from a host, path, and region.
 
     Examples
@@ -79,6 +84,8 @@ def build_htsget_url(host: HttpUrl, path: Path, region: Region | None) -> str:
     url = f"{netloc}{endpoint}/{stem}?format={format.name}"
     if region:
         url += f"&{region.to_htsget_query()}"
+    if encrypted:
+        url += "&encryptionScheme=C4GH"
     return url
 
 
@@ -231,11 +238,19 @@ class HtsgetConnection:
     host: HttpUrl
     path: Path
     region: Region | None
+    secret_key: Path | None = None
+    passphrase: str | None = None
+
+    @property
+    def _encrypted(self) -> bool:
+        return self.secret_key is not None
 
     @property
     def url(self) -> str:
         """URL to fetch the ticket."""
-        return build_htsget_url(self.host, Path(self.path), self.region)
+        return build_htsget_url(
+            self.host, Path(self.path), self.region, encrypted=self._encrypted
+        )
 
     @cached_property
     def ticket(self) -> dict[str, Any]:
