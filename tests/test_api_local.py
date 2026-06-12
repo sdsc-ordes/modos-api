@@ -63,6 +63,16 @@ def test_remove_element_link_list(test_modo):
     assert ["sample/sample1"] not in test_modo.metadata["data/demo1"].values()
 
 
+def test_remove_element_preserves_other_links(sample, test_modo):
+    """Removing one member of a multivalued link must keep the others."""
+    test_modo.add_element(sample, part_of="data/demo1")
+
+    test_modo.remove_element("sample/sample1")
+
+    has_sample = test_modo.metadata["data/demo1"]["has_sample"]
+    assert has_sample == ["sample/test_sample"]
+
+
 def test_remove_element_delete_file(test_modo):
     data_fi = Path(test_modo.path / "demo1.cram")
     assert data_fi.exists()

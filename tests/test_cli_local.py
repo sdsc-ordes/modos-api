@@ -99,7 +99,7 @@ def test_remove_element_link_list(test_modo, tmp_path):
     )
     result = runner.invoke(cli, ["remove", str(tmp_path), "sample/sample1"])
     assert result.exit_code == 0
-    assert test_modo.zarr["data/demo1"].attrs["has_sample"] is None
+    assert test_modo.zarr["data/demo1"].attrs["has_sample"] == []
 
 
 ## Remove modo

@@ -278,7 +278,9 @@ class MODO:
                 if value == element_id:
                     del self.zarr[elem].attrs[key]
                 elif isinstance(value, list) and element_id in value:
-                    self.zarr[elem].attrs[key] = value.remove(element_id)
+                    self.zarr[elem].attrs[key] = [
+                        v for v in value if v != element_id
+                    ]
 
         self.update_date()
         zarr.consolidate_metadata(self.zarr.store)
