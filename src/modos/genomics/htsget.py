@@ -41,10 +41,12 @@ from functools import cached_property
 import io
 from pathlib import Path
 import re
-import tempfile
 from typing import Any
 from urllib.parse import urlparse, parse_qs
 
+from pysam.libcalignedsegment import AlignedSegment
+
+import htslurp
 from pydantic import HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
 import pysam
@@ -52,7 +54,7 @@ import requests
 
 from modos.remote import get_session
 from modos.genomics.region import Region
-from modos.genomics.formats import GenomicFileSuffix, read_pysam
+from modos.genomics.formats import GenomicFileSuffix
 
 
 @validate_call
@@ -255,34 +257,52 @@ class HtsgetConnection:
             for block in source:
                 sink.write(block)
 
+    @property
+    def format(self) -> str:
+        return GenomicFileSuffix.from_path(self.path).name
+
     @classmethod
     def from_url(cls, url: str):
         """Open connection directly from an htsget URL."""
         host, path, region = parse_htsget_url(url)
         return cls(host, path, region=region)
 
+    def records(self, reference: Path | None = None) -> htslurp.RecordIter:
+        records = htslurp.stream_records(
+            base_url=self.url,
+            id=str(self.path),
+            format=self.format,
+            region=self.region,
+            reference=reference,
+        )
+        return records
+
     def to_pysam(
-        self, reference_filename: str | None = None
+        self, reference_filename: Path | None = None
     ) -> Iterator[pysam.AlignedSegment | pysam.VariantRecord]:
         """Convert the stream to a pysam object."""
 
-        # NOTE: pysam needs a path or file descriptor,
-        # we have to stream from drive until this is addressed:
+        # NOTE: we use a dedicated client because pysam does not support bytestreams
         # ref: https://github.com/pysam-developers/pysam/blob/0787ca9da997b5911c00fd12584dad9741c82fb4/pysam/libcalignmentfile.pyx#L855
-        # TODO: when above addressed, replace temporary file with
+        # TODO: if above addressed, replace temporary file with
         # self.open() to stream directly from in-memory buffer.
-        buffer = tempfile.NamedTemporaryFile(
-            "w+b", delete=False, suffix="".join(self.path.suffixes)
-        ).name
 
-        self.to_file(Path(buffer))
-        buffer = read_pysam(
-            Path(buffer), reference_filename=reference_filename
-        )
+        stream = self.records(reference_filename)
 
-        for record in buffer:
+        for record in stream:
+            match self.format:
+                case "CRAM" | "BAM" | "SAM":
+                    parsed = AlignedSegment.fromstring(
+                        record.decode(), stream.header
+                    )
+                case _:
+                    # NOTE: pysam does not support instantiating VariantRecord on the fly.
+                    raise ValueError(
+                        f"Cannot convert {self.format} records to pysam."
+                    )
+
             if self.region is None:
-                yield record
+                yield parsed
                 continue
 
             # htsget includes all returns in the bgzf block
@@ -290,4 +310,4 @@ class HtsgetConnection:
             record_region = Region.from_pysam(record)
             if not record_region.overlaps(self.region):
                 continue
-            yield record
+            yield parsed
