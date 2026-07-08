@@ -292,6 +292,9 @@ class HtsgetConnection:
         stream = self._stream()
         if not self._encrypted:
             return stream
+
+        # TODO: decrypt on the stream, and return a wrapped stream instead
+        # of using a temp file
         plaintext = tempfile.TemporaryFile("w+b")
         try:
             self._decrypt_into(stream, plaintext)
