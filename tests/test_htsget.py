@@ -31,7 +31,7 @@ def test_connection_url_reflects_secret_key(tmp_path):
         host="http://localhost:8000",
         path=Path("file.cram"),
         region=None,
-        secret_key=tmp_path / "key.sec",
+        secret_key_path=tmp_path / "key.sec",
     )
     plain = HtsgetConnection(
         host="http://localhost:8000", path=Path("file.cram"), region=None
@@ -54,7 +54,7 @@ def test_ticket_sends_client_public_key(
         host=httpserver.url_for("/"),
         path=Path("file.cram"),
         region=None,
-        secret_key=c4gh_keypair["private_key"],
+        secret_key_path=c4gh_keypair["private_key"],
     )
     _ = con.ticket
 
@@ -95,7 +95,7 @@ def test_open_decrypts_encrypted_stream(c4gh_keypair, tmp_path):
         host="http://localhost:8000",
         path=Path("payload.vcf"),
         region=None,
-        secret_key=c4gh_keypair["private_key"],
+        secret_key_path=c4gh_keypair["private_key"],
     )
     # Inject the ticket directly to avoid an HTTP round-trip (cached_property).
     con.__dict__["ticket"] = {
@@ -113,7 +113,7 @@ def test_open_wraps_decryption_failure(c4gh_keypair):
         host="http://localhost:8000",
         path=Path("payload.vcf"),
         region=None,
-        secret_key=c4gh_keypair["private_key"],
+        secret_key_path=c4gh_keypair["private_key"],
     )
     con.__dict__["ticket"] = {
         "htsget": {"urls": [{"url": f"data:;base64,{block}"}]}

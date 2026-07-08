@@ -170,7 +170,7 @@ def stream(
             help="Restrict stream to genomic region (chr:start-end).",
         ),
     ] = None,
-    secret_key: Annotated[
+    secret_key_path: Annotated[
         Optional[Path],
         typer.Option(
             "--secret-key",
@@ -211,7 +211,7 @@ def stream(
         endpoint.htsget,
         source,
         _region,
-        secret_key=secret_key,
+        secret_key_path=secret_key_path,
         passphrase=passphrase.read_text() if passphrase else None,
     )
     with con.open() as f:

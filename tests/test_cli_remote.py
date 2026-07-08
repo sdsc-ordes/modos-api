@@ -61,9 +61,14 @@ def test_cli_stream_threads_secret_key(monkeypatch, tmp_path):
 
     class FakeConnection:
         def __init__(
-            self, host, path, region=None, secret_key=None, passphrase=None
+            self,
+            host,
+            path,
+            region=None,
+            secret_key_path=None,
+            passphrase=None,
         ):
-            captured["secret_key"] = secret_key
+            captured["secret_key_path"] = secret_key_path
             captured["passphrase"] = passphrase
 
         def open(self):
@@ -102,5 +107,5 @@ def test_cli_stream_threads_secret_key(monkeypatch, tmp_path):
     )
 
     assert result.exit_code == 0, result.output
-    assert captured["secret_key"] == key
+    assert captured["secret_key_path"] == key
     assert captured["passphrase"] == "hunter2"

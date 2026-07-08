@@ -247,12 +247,12 @@ class HtsgetConnection:
     host: HttpUrl
     path: Path
     region: Region | None
-    secret_key: Path | None = None
+    secret_key_path: Path | None = None
     passphrase: str | None = None
 
     @property
     def _encrypted(self) -> bool:
-        return self.secret_key is not None
+        return self.secret_key_path is not None
 
     @property
     def url(self) -> str:
@@ -263,7 +263,7 @@ class HtsgetConnection:
 
     @cached_property
     def _seckey(self) -> bytes:
-        return get_secret_key(self.secret_key, self.passphrase)
+        return get_secret_key(self.secret_key_path, self.passphrase)
 
     @cached_property
     def ticket(self) -> dict[str, Any]:

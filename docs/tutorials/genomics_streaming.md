@@ -53,7 +53,7 @@ modo = MODO(path='s3://modos-demo/ex', endpoint='http://localhost')
 modo.stream_genomics(
     file_path="demo1.cram",
     region="BA000007.3",
-    secret_key="path/to/recipient.sec",
+    secret_key_path="path/to/recipient.sec",
 )
 ```
 ::::
