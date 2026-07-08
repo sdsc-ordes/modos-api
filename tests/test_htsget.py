@@ -53,14 +53,26 @@ def test_ticket_omits_client_public_key_when_plaintext(
 
 
 def test_open_decrypts_encrypted_stream(c4gh_keypair, tmp_path):
-    """open() returns plaintext when a secret key is configured."""
-    payload = b"##fileformat=VCFv4.3\nchr1\t1\t.\tA\tT\t.\t.\t.\n" * 50
+    """open() reassembles and decrypts a multi-block encrypted stream.
+
+    The payload spans several crypt4gh cipher segments and the ciphertext
+    is split into small, segment-unaligned htsget blocks. This exercises
+    the BufferedReader that guarantees full-segment reads on decryption.
+    """
+    payload = b"##fileformat=VCFv4.3\nchr1\t1\t.\tA\tT\t.\t.\t.\n" * 5000
     plain_path = tmp_path / "payload.vcf"
     plain_path.write_bytes(payload)
     enc_path = tmp_path / "payload.vcf.c4gh"
     encrypt_file(c4gh_keypair["public_key"], plain_path, enc_path)
 
-    block = base64.b64encode(enc_path.read_bytes()).decode()
+    ciphertext = enc_path.read_bytes()
+    step = 7000  # deliberately not a cipher-segment multiple
+    blocks = [
+        {"url": f"data:;base64,{base64.b64encode(chunk).decode()}"}
+        for chunk in (
+            ciphertext[i : i + step] for i in range(0, len(ciphertext), step)
+        )
+    ]
     con = HtsgetConnection(
         host="http://localhost:8000",
         path=Path("payload.vcf"),
@@ -68,9 +80,7 @@ def test_open_decrypts_encrypted_stream(c4gh_keypair, tmp_path):
         secret_key_path=c4gh_keypair["private_key"],
     )
     # Inject the ticket directly to avoid an HTTP round-trip (cached_property).
-    con.__dict__["ticket"] = {
-        "htsget": {"urls": [{"url": f"data:;base64,{block}"}]}
-    }
+    con.__dict__["ticket"] = {"htsget": {"urls": blocks}}
 
     with con.open() as handle:
         assert handle.read() == payload

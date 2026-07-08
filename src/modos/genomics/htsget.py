@@ -45,6 +45,7 @@ import tempfile
 from typing import Any
 from urllib.parse import urlparse, parse_qs
 
+from crypt4gh import CIPHER_SEGMENT_SIZE
 from crypt4gh.lib import decrypt
 from pydantic import HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
@@ -275,55 +276,63 @@ class HtsgetConnection:
             ).decode()
         return get_session().get(self.url, headers=headers).json()
 
+    def _stream(self) -> HtsgetStream:
+        """Assemble the raw (still encrypted) htsget stream from the ticket."""
+        try:
+            return HtsgetStream(self.ticket["htsget"]["urls"])
+        except KeyError:
+            raise KeyError(f"No htsget urls found in ticket: {self.ticket}")
+
     def open(self) -> io.IOBase:
         """Open a connection to the stream data (decrypted if a key is set).
 
         Encrypted streams are buffered to a temporary file for decryption,
         so the requested region is materialized before this returns.
         """
-        try:
-            stream = HtsgetStream(self.ticket["htsget"]["urls"])
-        except KeyError:
-            raise KeyError(f"No htsget urls found in ticket: {self.ticket}")
+        stream = self._stream()
         if not self._encrypted:
             return stream
-        return self._decrypt(stream)
-
-    def _decrypt(self, stream: io.RawIOBase) -> io.IOBase:
-        """Decrypt a crypt4gh stream into a plaintext temp file.
-
-        crypt4gh.lib.decrypt requires seekable infile/outfile, so the
-        assembled stream is buffered to a temporary file first.
-        """
         plaintext = tempfile.TemporaryFile("w+b")
         try:
-            with stream, tempfile.TemporaryFile("w+b") as encrypted:
-                for chunk in stream:
-                    encrypted.write(chunk)
-                encrypted.seek(0)
-                try:
-                    decrypt(
-                        keys=[(0, self._seckey, None)],
-                        infile=encrypted,
-                        outfile=plaintext,
-                    )
-                except Exception as err:
-                    raise ValueError(
-                        "Failed to decrypt htsget stream. Ensure the "
-                        "secret key matches the public key registered "
-                        "with the server."
-                    ) from err
+            self._decrypt_into(stream, plaintext)
         except BaseException:
             plaintext.close()
             raise
         plaintext.seek(0)
         return plaintext
 
+    def _decrypt_into(self, stream: io.RawIOBase, outfile: io.IOBase) -> None:
+        """Decrypt the whole stream at once, writing plaintext to outfile."""
+        # decrypt expects a full cipher segment per read; BufferedReader
+        # wraps HtsgetStream's per-block reads to deliver one.
+        with io.BufferedReader(
+            stream, buffer_size=CIPHER_SEGMENT_SIZE
+        ) as encrypted:
+            try:
+                decrypt(
+                    keys=[(0, self._seckey, None)],
+                    infile=encrypted,
+                    outfile=outfile,
+                )
+            except Exception as err:
+                raise ValueError(
+                    "Failed to decrypt htsget stream. Ensure the "
+                    "secret key matches the public key registered "
+                    "with the server."
+                ) from err
+
     def to_file(self, path: Path):
-        """Save all data from the stream to a file."""
-        with self.open() as source, open(path, "wb") as sink:
-            for block in source:
-                sink.write(block)
+        """Save all data from the stream to a file.
+
+        Decryption writes straight into the destination, so an encrypted
+        stream is never materialized to an intermediate temporary file.
+        """
+        with self._stream() as stream, open(path, "wb") as sink:
+            if self._encrypted:
+                self._decrypt_into(stream, sink)
+            else:
+                for block in stream:
+                    sink.write(block)
 
     @classmethod
     def from_url(cls, url: str):
