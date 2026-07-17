@@ -180,7 +180,7 @@ def stream(
         ),
     ] = None,
     passphrase: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option(
             "--passphrase",
             "-pw",
