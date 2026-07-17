@@ -95,7 +95,9 @@ def get_keys(
         if not os.path.exists(pubkey_path):
             raise ValueError(f"Recipient public key not found: {pubkey}")
         recipient_list.append((0, seckey, get_public_key(pubkey_path)))
-recipient_list.append((0, seckey, derive_public_key(seckey)))
+
+    recipient_list.append((0, seckey, derive_public_key(seckey)))
+
     return set(recipient_list)
 
 
