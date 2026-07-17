@@ -11,7 +11,6 @@ References
 .. [2] https://github.com/EGA-archive/crypt4gh
 """
 
-from typing import List, Optional, Set, Tuple
 import os
 from pathlib import Path
 
@@ -24,8 +23,8 @@ from nacl.public import PrivateKey
 
 
 def get_secret_key(
-    seckey_path: Optional[os.PathLike] = None,
-    passphrase: Optional[str] = None,
+    seckey_path: os.PathLike | None = None,
+    passphrase: str | None = None,
 ) -> bytes:
     """
     Get the secret key for encryption/decryption.
@@ -71,8 +70,8 @@ def derive_public_key(seckey: bytes) -> bytes:
 
 
 def get_keys(
-    recipient_pubkeys: List[os.PathLike] | os.PathLike, seckey: bytes
-) -> Set[Tuple[int, bytes, bytes]]:
+    recipient_pubkeys: list[os.PathLike] | os.PathLike, seckey: bytes
+) -> set[tuple[int, bytes, bytes]]:
     """Retrieves recipient public keys and builds a collection of "key tuples".
 
     Parameters
@@ -87,7 +86,7 @@ def get_keys(
     {(method, seckey, recipient_pubkey)}
         Set of key triplets, one for each recipient.
     """
-    if not isinstance(recipient_pubkeys, List):
+    if not isinstance(recipient_pubkeys, list):
         recipient_pubkeys = [recipient_pubkeys]
     recipient_list = []
     for pubkey in recipient_pubkeys:
@@ -102,11 +101,11 @@ def get_keys(
 
 
 def encrypt_file(
-    recipient_pubkeys: List[os.PathLike] | os.PathLike,
+    recipient_pubkeys: list[os.PathLike] | os.PathLike,
     infile: Path | str,
     outfile: Path | str,
-    seckey_path: Optional[os.PathLike] = None,
-    passphrase: Optional[str] = None,
+    seckey_path: os.PathLike | None = None,
+    passphrase: str | None = None,
 ):
     """Encrypt a file using the crypt4gh algorithm (authenticated encryption)."""
     seckey = get_secret_key(seckey_path, passphrase=passphrase)
@@ -119,8 +118,8 @@ def decrypt_file(
     seckey_path: os.PathLike,
     infile: Path | str,
     outfile: Path | str,
-    sender_pubkey: Optional[os.PathLike] = None,
-    passphrase: Optional[str] = None,
+    sender_pubkey: os.PathLike | None = None,
+    passphrase: str | None = None,
 ):
     if not seckey_path:
         raise ValueError(
