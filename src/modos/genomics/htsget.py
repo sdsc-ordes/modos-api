@@ -45,18 +45,26 @@ import tempfile
 from typing import Any
 from urllib.parse import urlparse, parse_qs
 
+from crypt4gh import CIPHER_SEGMENT_SIZE
+from crypt4gh.lib import decrypt
 from pydantic import HttpUrl, validate_call
 from pydantic.dataclasses import dataclass
 import pysam
 import requests
 
 from modos.remote import get_session
+from modos.genomics.c4gh import derive_public_key, get_secret_key
 from modos.genomics.region import Region
 from modos.genomics.formats import GenomicFileSuffix, read_pysam
 
 
 @validate_call
-def build_htsget_url(host: HttpUrl, path: Path, region: Region | None) -> str:
+def build_htsget_url(
+    host: HttpUrl,
+    path: Path,
+    region: Region | None,
+    encrypted: bool = False,
+) -> str:
     """Build an htsget URL from a host, path, and region.
 
     Examples
@@ -67,6 +75,13 @@ def build_htsget_url(host: HttpUrl, path: Path, region: Region | None) -> str:
     ...   Region("chr1", 0, 1000)
     ... )
     'http://localhost:8000/reads/file?format=BAM&referenceName=chr1&start=0&end=1000'
+    >>> build_htsget_url(
+    ...   "http://localhost:8000",
+    ...   Path("file.bam"),
+    ...   Region("chr1", 0, 1000),
+    ...   encrypted=True,
+    ... )
+    'http://localhost:8000/reads/file?format=BAM&referenceName=chr1&start=0&end=1000&encryptionScheme=C4GH'
     """
     format = GenomicFileSuffix.from_path(path)
     endpoint = format.to_htsget_endpoint()
@@ -79,6 +94,8 @@ def build_htsget_url(host: HttpUrl, path: Path, region: Region | None) -> str:
     url = f"{netloc}{endpoint}/{stem}?format={format.name}"
     if region:
         url += f"&{region.to_htsget_query()}"
+    if encrypted:
+        url += "&encryptionScheme=C4GH"
     return url
 
 
@@ -231,29 +248,94 @@ class HtsgetConnection:
     host: HttpUrl
     path: Path
     region: Region | None
+    secret_key_path: Path | None = None
+    passphrase: str | None = None
+
+    @property
+    def _encrypted(self) -> bool:
+        return self.secret_key_path is not None
 
     @property
     def url(self) -> str:
         """URL to fetch the ticket."""
-        return build_htsget_url(self.host, Path(self.path), self.region)
+        return build_htsget_url(
+            self.host, Path(self.path), self.region, encrypted=self._encrypted
+        )
+
+    @cached_property
+    def _seckey(self) -> bytes:
+        return get_secret_key(self.secret_key_path, self.passphrase)
 
     @cached_property
     def ticket(self) -> dict[str, Any]:
         """Ticket containing the URLs to fetch the data."""
-        return get_session().get(self.url).json()
+        headers = {}
+        if self._encrypted:
+            headers["Client-Public-Key"] = base64.b64encode(
+                derive_public_key(self._seckey)
+            ).decode()
+        return get_session().get(self.url, headers=headers).json()
 
-    def open(self) -> io.RawIOBase:
-        """Open a connection to the stream data."""
+    def _stream(self) -> HtsgetStream:
+        """Assemble the raw (still encrypted) htsget stream from the ticket."""
         try:
             return HtsgetStream(self.ticket["htsget"]["urls"])
         except KeyError:
             raise KeyError(f"No htsget urls found in ticket: {self.ticket}")
 
+    def open(self) -> io.IOBase:
+        """Open a connection to the stream data (decrypted if a key is set).
+
+        Encrypted streams are buffered to a temporary file for decryption,
+        so the requested region is materialized before this returns.
+        """
+        stream = self._stream()
+        if not self._encrypted:
+            return stream
+
+        # TODO: decrypt on the stream, and return a wrapped stream instead
+        # of using a temp file
+        plaintext = tempfile.TemporaryFile("w+b")
+        try:
+            self._decrypt_into(stream, plaintext)
+        except BaseException:
+            plaintext.close()
+            raise
+        plaintext.seek(0)
+        return plaintext
+
+    def _decrypt_into(self, stream: io.RawIOBase, outfile: io.IOBase) -> None:
+        """Decrypt the whole stream at once, writing plaintext to outfile."""
+        # decrypt expects a full cipher segment per read; BufferedReader
+        # wraps HtsgetStream's per-block reads to deliver one.
+        with io.BufferedReader(
+            stream, buffer_size=CIPHER_SEGMENT_SIZE
+        ) as encrypted:
+            try:
+                decrypt(
+                    keys=[(0, self._seckey, None)],
+                    infile=encrypted,
+                    outfile=outfile,
+                )
+            except Exception as err:
+                raise ValueError(
+                    "Failed to decrypt htsget stream. Ensure the "
+                    "secret key matches the public key registered "
+                    "with the server."
+                ) from err
+
     def to_file(self, path: Path):
-        """Save all data from the stream to a file."""
-        with self.open() as source, open(path, "wb") as sink:
-            for block in source:
-                sink.write(block)
+        """Save all data from the stream to a file.
+
+        Decryption writes straight into the destination, so an encrypted
+        stream is never materialized to an intermediate temporary file.
+        """
+        with self._stream() as stream, open(path, "wb") as sink:
+            if self._encrypted:
+                self._decrypt_into(stream, sink)
+            else:
+                for block in stream:
+                    sink.write(block)
 
     @classmethod
     def from_url(cls, url: str):
