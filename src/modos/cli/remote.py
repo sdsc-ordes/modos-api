@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-from typing import Optional
 from typing_extensions import Annotated
 from loguru import logger
 import typer
