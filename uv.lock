@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.12, <3.14"
 
 [[package]]
@@ -774,6 +774,22 @@ wheels = [
 ]
 
 [[package]]
+name = "htslurp"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a6/25/e3628765dc84259ab6f52e7b7a8cfdd39e0a2ac488681565d66d2980d6b4/htslurp-0.1.0.tar.gz", hash = "sha256:c75f8b93f80e1169eb5c7a31c68d8e31c27f4ea4e4ffe5a57b5b28fcc7fce820", size = 4316995, upload-time = "2026-06-16T00:29:49.632Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d4/22/c3128625c2b4364f27174972907721c98a2f48c74ce2a21a6a40722f3de7/htslurp-0.1.0-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:49d678ec9de417f2f5a89b065db0f5ec2b92c1ad2adde8fd9299bc820a08f710", size = 2166147, upload-time = "2026-06-16T00:29:38.576Z" },
+    { url = "https://files.pythonhosted.org/packages/60/67/7e022f4908daacea287322bf3f4af01f8676f8ec48615767865019d3c1db/htslurp-0.1.0-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:a7b67d894be801bbb531dc7f385f04ce67009bcbbe2edc6aaab4bda4faef700f", size = 2063815, upload-time = "2026-06-16T00:29:39.929Z" },
+    { url = "https://files.pythonhosted.org/packages/05/b1/14409f743becafa5f602a894dba6f7e2a8db8edd6403fbc04b348ae5fcb0/htslurp-0.1.0-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:15d54ffb04ebb66ffa502fb96daac0b88935c4826f67928bc386fe8050378e45", size = 2354094, upload-time = "2026-06-16T00:29:41.418Z" },
+    { url = "https://files.pythonhosted.org/packages/0b/c3/e2a0ff6b2b79df3f285a6ccdd79721038454520ee61b91f07102535e2bfe/htslurp-0.1.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d57a69e62ec650ad1e5d2d929575b403ba20a0f3f723f0adc910c1e62ead5696", size = 2376349, upload-time = "2026-06-16T00:29:42.778Z" },
+    { url = "https://files.pythonhosted.org/packages/b1/1f/e7a9f0b60aa39c9cc26f2707c4ac385a346c1421e143f0cf76eea09ba040/htslurp-0.1.0-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:44e125229856cba304997c1c1a505f649b6bcac4ac8f005d64d1564c3d09a0a3", size = 2519663, upload-time = "2026-06-16T00:29:44.253Z" },
+    { url = "https://files.pythonhosted.org/packages/af/b5/5f1d24cfc0e427ceb52c9d93dcc7b1e05d4da021bc2f4ecb26f0ff1f0f61/htslurp-0.1.0-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:1aaa5fd71f6a9627af640bc15f0e9ac3f4ef4981afea86280d031086bd872688", size = 2588379, upload-time = "2026-06-16T00:29:45.592Z" },
+    { url = "https://files.pythonhosted.org/packages/30/25/52c7f4ed90588522acba6d9022df93344e39e28ee6e8b720dc04927203d7/htslurp-0.1.0-cp310-abi3-win32.whl", hash = "sha256:bf1a9b666bf39fcdd90f1e9f7f7c90649dde6e84d940d7fa9004f4e1bdcaafc5", size = 1667977, upload-time = "2026-06-16T00:29:47.059Z" },
+    { url = "https://files.pythonhosted.org/packages/d7/d4/015b8f78fc51aca206dde72b78a0d9d289c285aee359bc9982104787d25c/htslurp-0.1.0-cp310-abi3-win_amd64.whl", hash = "sha256:0deea36b71d443942f18fb5185f83433294e691670100405600f9c88b120596e", size = 1966171, upload-time = "2026-06-16T00:29:48.335Z" },
+]
+
+[[package]]
 name = "identify"
 version = "2.6.19"
 source = { registry = "https://pypi.org/simple" }
@@ -1049,6 +1065,7 @@ dependencies = [
     { name = "click" },
     { name = "crypt4gh" },
     { name = "gtars" },
+    { name = "htslurp" },
     { name = "linkml-runtime" },
     { name = "loguru" },
     { name = "modos-schema" },
@@ -1097,6 +1114,7 @@ requires-dist = [
     { name = "click", specifier = ">=8.1.3,<8.2.0" },
     { name = "crypt4gh", specifier = ">=1.7,<2.0" },
     { name = "gtars", specifier = ">=0.2.2,<0.3.0" },
+    { name = "htslurp", specifier = ">=0.1.0" },
     { name = "linkml-runtime", specifier = ">=1.9.5,<2.0.0" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "modos-schema", specifier = ">=0.3.4" },

@@ -36,6 +36,7 @@ dependencies = [
     "zarr>=3.0.0",
     "platformdirs>=4.4.0",
     "obstore>=0.8.2",
+    "htslurp>=0.1.0",
 ]
 
 [dependency-groups]
