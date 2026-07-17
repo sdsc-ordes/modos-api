@@ -1,0 +1,168 @@
+modos.codes
+===========
+
+.. py:module:: modos.codes
+
+.. autoapi-nested-parse::
+
+   Utilities to automatically find / recommend terminology codes from text.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   modos.codes.SLOT_TERMINOLOGIES
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.codes.Code
+   modos.codes.CodeMatcher
+   modos.codes.LocalCodeMatcher
+   modos.codes.RemoteCodeMatcher
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.codes.get_slot_matcher
+   modos.codes.get_slot_matchers
+
+
+Module Contents
+---------------
+
+.. py:data:: SLOT_TERMINOLOGIES
+
+.. py:class:: Code
+
+   .. py:attribute:: label
+      :type:  str
+
+
+   .. py:attribute:: uri
+      :type:  str
+
+
+.. py:class:: CodeMatcher
+
+   Bases: :py:obj:`Protocol`
+
+
+   Base class for protocol classes.
+
+   Protocol classes are defined as::
+
+       class Proto(Protocol):
+           def meth(self) -> int:
+               ...
+
+   Such classes are primarily used with static type checkers that recognize
+   structural subtyping (static duck-typing).
+
+   For example::
+
+       class C:
+           def meth(self) -> int:
+               return 0
+
+       def func(x: Proto) -> int:
+           return x.meth()
+
+       func(C())  # Passes static type check
+
+   See PEP 544 for details. Protocol classes decorated with
+   @typing.runtime_checkable act as simple-minded runtime protocols that check
+   only the presence of given attributes, ignoring their type signatures.
+   Protocol classes can be generic, they are defined as::
+
+       class GenProto[T](Protocol):
+           def meth(self) -> T:
+               ...
+
+
+   .. py:attribute:: endpoint
+      :type:  str
+
+
+   .. py:attribute:: slot
+      :type:  str
+
+
+   .. py:attribute:: top
+      :type:  int
+
+
+   .. py:method:: find_codes(query)
+
+
+.. py:class:: LocalCodeMatcher(slot, top = 50)
+
+   Bases: :py:obj:`CodeMatcher`
+
+
+   Find ontology codes for a given text by running a local term matcher.
+
+
+   .. py:attribute:: endpoint
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: slot
+      :type:  str
+
+
+   .. py:attribute:: top
+      :type:  int
+      :value: 50
+
+
+
+   .. py:method:: find_codes(query)
+
+
+.. py:class:: RemoteCodeMatcher(slot, endpoint, top = 50)
+
+   Bases: :py:obj:`CodeMatcher`
+
+
+   Find ontology codes for a given text relying on a remote term matcher.
+
+
+   .. py:attribute:: endpoint
+      :type:  str
+
+
+   .. py:attribute:: slot
+      :type:  str
+
+
+   .. py:attribute:: top
+      :type:  int
+      :value: 50
+
+
+
+   .. py:method:: find_codes(query)
+
+
+.. py:function:: get_slot_matcher(slot, endpoint = None)
+
+   Instantiates a code matcher based on input slot name.
+
+
+.. py:function:: get_slot_matchers(endpoint = None)
+
+   Instantiates a code matcher for each slot. If the endpoint is provided, remote matchers are used.
+
+

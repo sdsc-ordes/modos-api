@@ -1,0 +1,95 @@
+modos.prompt
+============
+
+.. py:module:: modos.prompt
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.prompt.SlotCodeCompleter
+   modos.prompt.SlotPrompter
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.prompt.is_fuzon_available
+   modos.prompt.fuzzy_complete
+
+
+Module Contents
+---------------
+
+.. py:function:: is_fuzon_available(endpoint)
+
+   Check if fuzon is available on server or client side.
+
+
+.. py:class:: SlotCodeCompleter(matcher)
+
+   Bases: :py:obj:`prompt_toolkit.completion.Completer`
+
+
+   Auto-suggestions for terminology codes.
+
+
+   .. py:attribute:: matcher
+      :type:  modos.codes.CodeMatcher
+
+
+   .. py:method:: get_completions(document, complete_event)
+
+      This should be a generator that yields :class:`.Completion` instances.
+
+      If the generation of completions is something expensive (that takes a
+      lot of time), consider wrapping this `Completer` class in a
+      `ThreadedCompleter`. In that case, the completer algorithm runs in a
+      background thread and completions will be displayed as soon as they
+      arrive.
+
+      :param document: :class:`~prompt_toolkit.document.Document` instance.
+      :param complete_event: :class:`.CompleteEvent` instance.
+
+
+
+.. py:function:: fuzzy_complete(prompt_txt, matcher)
+
+   Given a pre-configured matcher, prompt the user with live auto-suggestions.
+
+
+.. py:class:: SlotPrompter(endpoint = None, suggest = True, prompt = None)
+
+   Introspects the schema to prompt the user for values based on input class/slot.
+
+   :param endpoint: Endpoint running a fuzon server for code matching.
+   :param suggest: Whether to generate auto-suggestion dynamically.
+   :param prompt: Override the default prompt messages.
+
+
+   .. py:attribute:: prompt
+      :value: None
+
+
+
+   .. py:method:: prompt_for_slot(slot_name, optional = False)
+
+
+   .. py:method:: prompt_for_slots(target_class, exclude = None)
+
+      Prompt the user to provide values for the slots of input class.
+      values of required fields can be excluded to repeat the prompt.
+
+      Parameters
+          ----------
+          target_class
+              Class to build
+          exclude
+              Mapping with the name of a slot as key  and list of invalid entries as values.
+
+
+

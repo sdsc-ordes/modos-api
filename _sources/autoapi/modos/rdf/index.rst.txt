@@ -1,0 +1,22 @@
+modos.rdf
+=========
+
+.. py:module:: modos.rdf
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.rdf.attrs_to_graph
+
+
+Module Contents
+---------------
+
+.. py:function:: attrs_to_graph(meta, uri_prefix)
+
+   Convert a attribute dictionary to an RDF graph of metadata.
+
+

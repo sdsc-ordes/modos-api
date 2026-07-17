@@ -1,0 +1,115 @@
+modos.helpers.enums
+===================
+
+.. py:module:: modos.helpers.enums
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   modos.helpers.enums.UserElementType
+   modos.helpers.enums.ElementType
+
+
+Module Contents
+---------------
+
+.. py:class:: UserElementType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Enumeration of element types exposed to the user.
+
+
+   .. py:attribute:: SAMPLE
+      :value: 'sample'
+
+
+
+   .. py:attribute:: ASSAY
+      :value: 'assay'
+
+
+
+   .. py:attribute:: DATA_ENTITY
+      :value: 'data'
+
+
+
+   .. py:attribute:: REFERENCE_GENOME
+      :value: 'reference'
+
+
+
+   .. py:method:: get_target_class()
+
+      Return the target class for the element type.
+
+
+
+   .. py:method:: from_object(obj)
+      :classmethod:
+
+
+      Return the element type from an object.
+
+
+
+.. py:class:: ElementType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Enumeration of all element types.
+
+
+   .. py:attribute:: SAMPLE
+      :value: 'sample'
+
+
+
+   .. py:attribute:: ASSAY
+      :value: 'assay'
+
+
+
+   .. py:attribute:: DATA_ENTITY
+      :value: 'data'
+
+
+
+   .. py:attribute:: REFERENCE_GENOME
+      :value: 'reference'
+
+
+
+   .. py:attribute:: REFERENCE_SEQUENCE
+      :value: 'sequence'
+
+
+
+   .. py:method:: get_target_class()
+
+      Return the target class for the element type.
+
+
+
+   .. py:method:: from_object(obj)
+      :classmethod:
+
+
+      Return the element type from an object.
+
+
+
+   .. py:method:: from_model_name(name)
+      :classmethod:
+
+
+      Return the element type from an object name.
+
+
+

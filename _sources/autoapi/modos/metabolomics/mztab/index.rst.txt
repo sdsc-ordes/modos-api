@@ -1,0 +1,36 @@
+modos.metabolomics.mztab
+========================
+
+.. py:module:: modos.metabolomics.mztab
+
+.. autoapi-nested-parse::
+
+   Module for extracting metabolomics metadata from mzTab-M 2.0 files.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   modos.metabolomics.mztab.load_mztab
+   modos.metabolomics.mztab.get_samples
+   modos.metabolomics.mztab.get_assay
+   modos.metabolomics.mztab.extract_metadata
+   modos.metabolomics.mztab.extract_tables
+
+
+Module Contents
+---------------
+
+.. py:function:: load_mztab(path)
+
+.. py:function:: get_samples(mz)
+
+.. py:function:: get_assay(mz, data_id)
+
+.. py:function:: extract_metadata(instance, base_path)
+
+.. py:function:: extract_tables(path)
+
