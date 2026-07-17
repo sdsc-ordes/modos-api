@@ -1,0 +1,103 @@
+"""Tests for the htsget client."""
+
+import base64
+from pathlib import Path
+
+import pytest
+from crypt4gh.keys import get_public_key
+from modos import remote
+from modos.genomics.c4gh import encrypt_file
+from modos.genomics.htsget import HtsgetConnection
+
+
+def test_ticket_sends_client_public_key(
+    httpserver, c4gh_keypair, monkeypatch, tmp_path
+):
+    """The ticket request carries the client public key when encrypted."""
+    # Avoid touching the real token cache (keep auth out of the way).
+    monkeypatch.setattr(remote, "get_cache_dir", lambda: tmp_path)
+    httpserver.expect_request("/reads/file").respond_with_json(
+        {"htsget": {"urls": []}}
+    )
+
+    con = HtsgetConnection(
+        host=httpserver.url_for("/"),
+        path=Path("file.cram"),
+        region=None,
+        secret_key_path=c4gh_keypair["private_key"],
+    )
+    _ = con.ticket
+
+    request, _ = httpserver.log[0]
+    assert "Client-Public-Key" in request.headers
+    sent = base64.b64decode(request.headers["Client-Public-Key"])
+    assert sent == get_public_key(str(c4gh_keypair["public_key"]))
+
+
+def test_ticket_omits_client_public_key_when_plaintext(
+    httpserver, monkeypatch, tmp_path
+):
+    """No client key header is sent for a plaintext connection."""
+    monkeypatch.setattr(remote, "get_cache_dir", lambda: tmp_path)
+    httpserver.expect_request("/reads/file").respond_with_json(
+        {"htsget": {"urls": []}}
+    )
+
+    con = HtsgetConnection(
+        host=httpserver.url_for("/"), path=Path("file.cram"), region=None
+    )
+    _ = con.ticket
+
+    request, _ = httpserver.log[0]
+    assert "Client-Public-Key" not in request.headers
+
+
+def test_open_decrypts_encrypted_stream(c4gh_keypair, tmp_path):
+    """open() reassembles and decrypts a multi-block encrypted stream.
+
+    The payload spans several crypt4gh cipher segments and the ciphertext
+    is split into small, segment-unaligned htsget blocks. This exercises
+    the BufferedReader that guarantees full-segment reads on decryption.
+    """
+    payload = b"##fileformat=VCFv4.3\nchr1\t1\t.\tA\tT\t.\t.\t.\n" * 5000
+    plain_path = tmp_path / "payload.vcf"
+    plain_path.write_bytes(payload)
+    enc_path = tmp_path / "payload.vcf.c4gh"
+    encrypt_file(c4gh_keypair["public_key"], plain_path, enc_path)
+
+    ciphertext = enc_path.read_bytes()
+    step = 7000  # deliberately not a cipher-segment multiple
+    blocks = [
+        {"url": f"data:;base64,{base64.b64encode(chunk).decode()}"}
+        for chunk in (
+            ciphertext[i : i + step] for i in range(0, len(ciphertext), step)
+        )
+    ]
+    con = HtsgetConnection(
+        host="http://localhost:8000",
+        path=Path("payload.vcf"),
+        region=None,
+        secret_key_path=c4gh_keypair["private_key"],
+    )
+    # Inject the ticket directly to avoid an HTTP round-trip (cached_property).
+    con.__dict__["ticket"] = {"htsget": {"urls": blocks}}
+
+    with con.open() as handle:
+        assert handle.read() == payload
+
+
+def test_open_wraps_decryption_failure(c4gh_keypair):
+    """A stream that is not valid crypt4gh raises a clear error."""
+    block = base64.b64encode(b"not encrypted data").decode()
+    con = HtsgetConnection(
+        host="http://localhost:8000",
+        path=Path("payload.vcf"),
+        region=None,
+        secret_key_path=c4gh_keypair["private_key"],
+    )
+    con.__dict__["ticket"] = {
+        "htsget": {"urls": [{"url": f"data:;base64,{block}"}]}
+    }
+
+    with pytest.raises(ValueError, match="decrypt"):
+        con.open()

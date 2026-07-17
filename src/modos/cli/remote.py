@@ -169,6 +169,23 @@ def stream(
             help="Restrict stream to genomic region (chr:start-end).",
         ),
     ] = None,
+    secret_key_path: Annotated[
+        Path | None,
+        typer.Option(
+            "--secret-key",
+            "-s",
+            help="Secret key to decrypt an encrypted stream. Its public "
+            "key is sent to the htsget server.",
+        ),
+    ] = None,
+    passphrase: Annotated[
+        Path | None,
+        typer.Option(
+            "--passphrase",
+            "-pw",
+            help="Path to file with passphrase to unlock the secret key.",
+        ),
+    ] = None,
 ):
     """Stream genomic file from a remote modo into stdout."""
     from modos.genomics.htsget import HtsgetConnection
@@ -189,7 +206,13 @@ def stream(
     if not endpoint.htsget:
         raise ValueError("No htsget service found.")
 
-    con = HtsgetConnection(endpoint.htsget, source, _region)
+    con = HtsgetConnection(
+        endpoint.htsget,
+        source,
+        _region,
+        secret_key_path=secret_key_path,
+        passphrase=passphrase.read_text() if passphrase else None,
+    )
     with con.open() as f:
         for chunk in f:
             sys.stdout.buffer.write(chunk)
