@@ -171,7 +171,7 @@ def stream(
         ),
     ] = None,
     secret_key_path: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option(
             "--secret-key",
             "-s",
