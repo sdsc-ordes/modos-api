@@ -41,6 +41,7 @@ from functools import cached_property
 import io
 from pathlib import Path
 import re
+import tempfile
 from typing import Any
 from urllib.parse import urlparse, parse_qs
 
