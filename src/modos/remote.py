@@ -179,7 +179,7 @@ class JWT:
 
     Examples
     --------
-    >>> token = JWT(access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzI5MjU2MDB9.DummySignature")
+    >>> token = JWT(access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzI5MjU2MDB9.RHVtbXlTaWduYXR1cmU")
     >>> token.is_expired
     True
     >>> token.to_cache()
