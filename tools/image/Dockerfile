@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.14-slim
 ARG VERSION_BUILD
 
 # metadata
@@ -9,7 +9,7 @@ LABEL org.opencontainers.image.licenses=Apache-2.0
 LABEL org.opencontainers.image.version=${VERSION_BUILD}
 
 # install uv
-COPY --from=ghcr.io/astral-sh/uv:0.6.3 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.4 /uv /uvx /bin/
 
 # include source files
 WORKDIR /app
@@ -23,7 +23,7 @@ RUN chmod -R 755 /app
 USER modos_user
 
 # modos setup
-RUN uv venv -p 3.12
+RUN uv venv -p 3.14
 RUN uv sync --frozen
 
 # Test run
