@@ -170,7 +170,7 @@ class S3Path:
     )
 
     def __truediv__(self, other):
-        return S3Path(f"{self.url}/{other}")
+        return S3Path(f"{self.url.rstrip('/')}/{other}")
 
     def __str__(self):
         return str(self.url)

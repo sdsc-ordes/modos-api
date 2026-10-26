@@ -5,7 +5,7 @@ from typing import Protocol
 
 from pathlib import Path
 
-from modos.remote import get_session
+from modos.remote import get_session, join_url
 
 
 SLOT_TERMINOLOGIES = {
@@ -76,7 +76,12 @@ class RemoteCodeMatcher(CodeMatcher):
         codes: list[dict[str, str]] = (
             get_session()
             .get(
-                f"{self.endpoint}/codes/top?collection={self.slot}&query={query}&num={self.top}"
+                join_url(self.endpoint, "codes/top"),
+                params={
+                    "collection": self.slot,
+                    "query": query,
+                    "num": self.top,
+                },
             )
             .json()["codes"]
         )
