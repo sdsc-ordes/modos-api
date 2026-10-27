@@ -9,7 +9,8 @@
   lib,
   namespace,
   ...
-}: [
+}:
+[
   {
     packages = [
       pkgs.stdenv.cc.cc.lib # fix: libstdc++ required by jupyter.
@@ -37,6 +38,7 @@
 
     env = {
       RUFF_CACHE_DIR = ".output/cache/ruff";
+      UV_SYSTEM_CERTS = "true";
     };
   }
 ]

@@ -85,9 +85,9 @@ def sample():
 ## testcontainers setup
 # minio
 
-minio = MinioContainer(
-    image="minio/minio:RELEASE.2025-02-03T21-03-04Z"
-).with_env("AWS_REQUEST_CHECKSUM_CALCULATION", "WHEN_REQUIRED")
+minio = MinioContainer(image="ghcr.io/coollabsio/minio").with_env(
+    "AWS_REQUEST_CHECKSUM_CALCULATION", "WHEN_REQUIRED"
+)
 
 
 @pytest.fixture(scope="module")

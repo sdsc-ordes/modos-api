@@ -20,7 +20,7 @@ References
 import json
 from typing import Dict, Optional
 
-from gtars.digests import digest_fasta, sha512t24u_digest, md5_digest
+from gtars.refget import digest_fasta, sha512t24u_digest, md5_digest
 from loguru import logger
 from pydantic import ConfigDict
 from pydantic.dataclasses import dataclass
@@ -90,8 +90,11 @@ class RefgetStorage:
         digest = digest_fasta(fasta_file)
         fasta = pysam.FastaFile(fasta_file)
         for ref in digest:
-            seq = fasta.fetch(ref.id)
-            checksums = {"md5": ref.md5, "ga4gh": f"SQ.{ref.sha512t24u}"}
+            seq = fasta.fetch(ref.metadata.name)
+            checksums = {
+                "md5": ref.metadata.md5,
+                "ga4gh": f"SQ.{ref.metadata.sha512t24u}",
+            }
             self.upload_seq(seq, checksums=checksums)
 
 

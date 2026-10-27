@@ -107,10 +107,15 @@ class EndpointManager:
         return self.list().get("refget")
 
 
+def join_url(base: HttpUrl | str, path: str) -> str:
+    """Join a path to a base URL, regardless of trailing slashes."""
+    return f"{str(base).rstrip('/')}/{path.lstrip('/')}"
+
+
 @validate_call
 def list_remote_items(url: HttpUrl) -> list[HttpUrl]:
     session = get_session()
-    return session.get(url=f"{url}/list").json()["data"]
+    return session.get(url=join_url(url, "list")).json()["data"]
 
 
 @validate_call
@@ -127,7 +132,7 @@ def get_metadata_from_remote(
         id of the modo to retrieve metadata from. Will return all if not specified (default).
     """
     session = get_session()
-    meta = session.get(url=f"{url}/meta").json()
+    meta = session.get(url=join_url(url, "meta")).json()
     if modo_id is not None:
         try:
             return meta[modo_id]
@@ -160,7 +165,7 @@ def get_s3_path(
     """
     session = get_session()
     return session.get(
-        url=f"{url}/get",
+        url=join_url(url, "get"),
         params={"query": query, "exact_match": exact_match},
     ).json()
 
@@ -179,7 +184,7 @@ class JWT:
 
     Examples
     --------
-    >>> token = JWT(access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzI5MjU2MDB9.DummySignature")
+    >>> token = JWT(access_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzI5MjU2MDB9.RHVtbXlTaWduYXR1cmU")
     >>> token.is_expired
     True
     >>> token.to_cache()

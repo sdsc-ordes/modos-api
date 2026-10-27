@@ -39,7 +39,13 @@ def login(
     from pyocli import start_device_code_flow, finish_device_code_flow
     import requests
 
-    from modos.remote import EndpointManager, get_cache_dir, JWT, S3Key
+    from modos.remote import (
+        EndpointManager,
+        get_cache_dir,
+        join_url,
+        JWT,
+        S3Key,
+    )
 
     endpoint = EndpointManager(ctx.obj["endpoint"])
 
@@ -71,7 +77,7 @@ def login(
 
     # Request temporary S3 credentials to test login
     resp = requests.get(
-        url=f"{endpoint.kms}/create",
+        url=join_url(endpoint.kms, "create"),
         headers={"Authorization": f"Bearer {token.access_token}"},
     )
     resp.raise_for_status()
